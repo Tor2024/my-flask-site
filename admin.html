@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Bereich - Kreuztaler Werkstatt</title>
+    <link rel="icon" type="image/avif" href="static/images/kw.avif">
+    <meta name="description" content="Admin-Bereich Kreuztaler Werkstatt GmbH">
+    <meta property="og:title" content="Admin-Bereich - Kreuztaler Werkstatt">
+    <meta property="og:description" content="Haupt panel">
+    <meta property="og:image" content="static/images/kw.avif">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            zoom: 90%;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .status-completed {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .appointment-item {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .appointment-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status.ожидает {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.подтверждено {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.отменено {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.завершено {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .appointment-details p {
+            margin: 8px 0;
+            color: #666;
+        }
+
+        .appointment-details strong {
+            color: #333;
+        }
+
+        .appointment-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .appointment-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .appointment-actions button:first-child {
+            background: #28a745;
+            color: white;
+        }
+
+        .appointment-actions button:last-child {
+            background: #dc3545;
+            color: white;
+        }
+
+        .appointment-actions button:hover {
+            opacity: 0.9;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Цвет строки по статусу */
+        .row-status-ожидает { background: #fffbe6 !important; color: #856404; }
+        .row-status-подтверждено { background: #f4f4f4 !important; color: #383d41; }
+        .row-status-отменено { background: #ffe6e6 !important; color: #721c24; }
+        .row-status-завершено { background: #e6ffed !important; color: #155724; }
+        .message-cell {
+            max-width: 600px;
+            min-width: 200px;
+            width: 100px;
+            word-break: break-word;
+            white-space: pre-line;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <script>
+    (function(){
+      var pass = prompt('Введите пароль:');
+      if (pass !== '1') {
+        alert('Неверный пароль. Доступ запрещен.');
+        window.location.replace('/access_denied');
+      }
+    })();
+    </script>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
+                        <div class="text-blue-600 font-bold text-2xl">Kreuztaler Werkstatt</div>
+                        <span class="text-gray-500 ml-2">Админ-панель</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="refreshBtn" class="p-2 hover:bg-gray-100 rounded-full">
+                            <i class="ri-refresh-line ri-lg"></i>
+                        </button>
+                        <button id="logoutBtn" class="p-2 hover:bg-gray-100 rounded-full">
+                            <i class="ri-logout-box-line ri-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-primary mb-6">Admin-Bereich</h1>
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name, Telefon, E-Mail</label>
+                        <input type="text" id="searchInput" placeholder="Имя, телефон, email" class="w-full px-3 py-2 border rounded-md">
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+                        <input type="date" id="dateFilter" class="w-full px-3 py-2 border rounded-md">
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="statusFilter" class="w-full px-3 py-2 border rounded-md">
+                            <option value="">Alle</option>
+                            <option value="ожидает">Offen</option>
+                            <option value="подтверждено">Bestätigt</option>
+                            <option value="отменено">Storniert</option>
+                            <option value="завершено">Abgeschlossen</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Leistung</label>
+                        <select id="serviceFilter" class="w-full px-3 py-2 border rounded-md">
+                            <option value="">Alle</option>
+                            <option value="wartung">Wartung</option>
+                            <option value="diagnose">Fahrzeugsdiagnose</option>
+                            <option value="motor">Motorreparatur</option>
+                            <option value="getriebe">Getriebereparatur</option>
+                            <option value="fahrwerk">Reparatur von Fahrwerk und Aufhängung</option>
+                            <option value="bremsen">Bremsenservice</option>
+                            <option value="elektrik">Autoelektrik und Elektronik</option>
+                            <option value="karosserie">Karosseriereparatur und Lackierung</option>
+                            <option value="klima">Klimaanlagenservice</option>
+                            <option value="reifen">Reifenmontage und Auswuchten</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Analytics -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <label for="analyticsPeriod" class="text-sm font-medium text-gray-700">Zeitraum:</label>
+                    <select id="analyticsPeriod" class="px-3 py-2 border rounded-md">
+                        <option value="30">Letzte 30 Tage</option>
+                        <option value="365">Letztes Jahr</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="text-center">
+                        <div class="text-xl font-bold" id="analyticsAppointments">0</div>
+                        <div class="text-sm text-gray-500">Termine</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-bold" id="analyticsVisits">0</div>
+                        <div class="text-sm text-gray-500">Besuche</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+                <button id="exportCsvBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">CSV exportieren</button>
+            </div>
+
+            <!-- Appointments List -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th data-sort="datetime" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Datum & Uhrzeit<span class="ml-1 sort-indicator"></span></th>
+                                <th data-sort="client" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kunde<span class="ml-1 sort-indicator"></span></th>
+                                <th data-sort="service" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leistung<span class="ml-1 sort-indicator"></span></th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="max-width:100px; width:100px;">Nachricht</th>
+                                <th data-sort="status" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status<span class="ml-1 sort-indicator"></span></th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsList" class="bg-white divide-y divide-gray-200">
+                            <!-- Appointments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Telegram Settings -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Настройки Telegram</h3>
+                <form id="telegramConfigForm" class="space-y-4">
+                    <div>
+                        <label for="telegramToken" class="block text-sm font-medium text-gray-700 mb-1">Token бота</label>
+                        <input type="text" id="telegramToken" name="token" class="w-full px-3 py-2 border rounded-md" required>
+                    </div>
+                    <div>
+                        <label for="telegramChatId" class="block text-sm font-medium text-gray-700 mb-1">Chat ID</label>
+                        <input type="text" id="telegramChatId" name="chat_id" class="w-full px-3 py-2 border rounded-md" required>
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Speichern</button>
+                    <span id="telegramConfigStatus" class="ml-4 text-sm"></span>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center mb-4">
+                <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
+                <div class="text-white font-bold text-2xl">Kreuztaler Werkstatt</div>
+            </div>
+            <div class="text-center text-gray-400 text-sm">
+                © 2025 Kreuztaler Werkstatt GmbH. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // глобальная переменная для текущих отфильтрованных записей
+        let lastFilteredAppointments = [];
+
+        // Функция для загрузки записей
+        function loadAppointments() {
+            console.log('Загрузка списка записей...');
+            fetch('/api/appointments')
+                .then(response => {
+                    if (!response.ok) throw new Error('Ошибка при загрузке записей');
+                    return response.json();
+                })
+                .then(data => {
+                    const appointmentsContainer = document.getElementById('appointmentsList');
+                    appointmentsContainer.innerHTML = '';
+
+                    if (data.appointments && data.appointments.length > 0) {
+                        // Начальная фильтрация: копируем все записи
+                        let filteredAppointments = data.appointments.slice();
+                        // Фильтр по дате (или только будущие по умолчанию)
+                        const dateVal = document.getElementById('dateFilter').value;
+                        if (dateVal) {
+                            filteredAppointments = filteredAppointments.filter(a => a.date === dateVal);
+                        } else {
+                            const today = new Date(); today.setHours(0,0,0,0);
+                            filteredAppointments = filteredAppointments.filter(a => {
+                                const [y,m,d] = a.date.split('-').map(Number);
+                                return new Date(y,m-1,d) >= today;
+                            });
+                        }
+                        // Фильтр по статусу
+                        const statusVal = document.getElementById('statusFilter').value;
+                        if (statusVal) {
+                            filteredAppointments = filteredAppointments.filter(a => a.status === statusVal);
+                        }
+                        // Фильтр по услуге
+                        const serviceVal = document.getElementById('serviceFilter').value;
+                        if (serviceVal) {
+                            filteredAppointments = filteredAppointments.filter(a => a.service === serviceVal);
+                        }
+                        // Общий поиск (имя, телефон, email, услуга, статус)
+                        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+                        if (searchTerm) {
+                            filteredAppointments = filteredAppointments.filter(a => {
+                                const { name, phone, email } = a.client;
+                                const svc = getServiceName(a.service, a).toLowerCase();
+                                const st = getStatusName(a.status).toLowerCase();
+                                return name.toLowerCase().includes(searchTerm) ||
+                                       phone.toLowerCase().includes(searchTerm) ||
+                                       email.toLowerCase().includes(searchTerm) ||
+                                       svc.includes(searchTerm) ||
+                                       st.includes(searchTerm);
+                            });
+                        }
+                        // сортировка
+                        filteredAppointments.sort((a, b) => {
+                            const [yA, mA, dA] = a.date.split('-').map(Number);
+                            const [yB, mB, dB] = b.date.split('-').map(Number);
+                            return new Date(yA, mA-1, dA) - new Date(yB, mB-1, dB);
+                        });
+                        // сохраняем текущий набор для экспорта
+                        lastFilteredAppointments = filteredAppointments;
+
+                        if (filteredAppointments.length > 0) {
+                            filteredAppointments.forEach(appointment => {
+                                const appointmentElement = createAppointmentElement(appointment);
+                                appointmentsContainer.appendChild(appointmentElement);
+                            });
+                        } else {
+                            appointmentsContainer.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Нет предстоящих записей</td></tr>';
+                        }
+                    } else {
+                        appointmentsContainer.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Нет доступных записей</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке записей:', error);
+                    alert('Произошла ошибка при загрузке записей');
+                });
+        }
+
+        // Функция для обновления статуса записи
+        function updateAppointmentStatus(appointmentId, newStatus) {
+            console.log('Обновление статуса записи:', { appointmentId, newStatus });
+            
+            fetch(`/api/appointments/${appointmentId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при обновлении статуса');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Статус успешно обновлен:', data);
+                loadAppointments(); // Перезагружаем список записей
+            })
+            .catch(error => {
+                console.error('Ошибка при обновлении статуса:', error);
+                alert('Произошла ошибка при обновлении статуса записи');
+            });
+        }
+
+        // Вспомогательные функции
+        function formatDate(dateString) {
+            // Разбиваем дату на компоненты и создаем объект Date
+            const [year, month, day] = dateString.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('de-DE', options);
+        }
+
+        function getServiceName(serviceCode, appointment) {
+            // Используем service_label, если есть
+            if (appointment && appointment.service_label) return appointment.service_label;
+            // fallback
+            const services = {
+                'wartung': 'Wartung',
+                'diagnose': 'Fahrzeugsdiagnose',
+                'motor': 'Motorreparatur',
+                'getriebe': 'Getriebereparatur',
+                'fahrwerk': 'Reparatur von Fahrwerk und Aufhängung',
+                'bremsen': 'Bremsenservice',
+                'elektrik': 'Autoelektrik und Elektronik',
+                'karosserie': 'Karosseriereparatur und Lackierung',
+                'klima': 'Klimaanlagenservice',
+                'reifen': 'Reifenmontage und Auswuchten'
+            };
+            return services[serviceCode] || serviceCode;
+        }
+
+        function getStatusName(status) {
+            const statuses = {
+                'ожидает': 'Offen',
+                'подтверждено': 'Bestätigt',
+                'отменено': 'Storniert',
+                'завершено': 'Abgeschlossen'
+            };
+            return statuses[status] || status;
+        }
+
+        function createAppointmentElement(appointment) {
+            console.log('Создание элемента записи:', appointment);
+            
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-gray-50 row-status-' + appointment.status;
+            
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">${formatDate(appointment.date)}</div>
+                    <div class="text-sm text-gray-500">${appointment.time}</div>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="text-sm text-gray-900">${appointment.client.name}</div>
+                    <div class="text-sm text-gray-500">${appointment.client.phone}</div>
+                    <div class="text-sm text-gray-500">${appointment.client.email}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">${getServiceName(appointment.service, appointment)}</div>
+                </td>
+                <td class="px-6 py-4 message-cell">
+                    <div class="text-sm text-gray-900">${appointment.message ? appointment.message : '—'}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <select class="status-select px-3 py-1 rounded-md ${appointment.status}" 
+                            onchange="updateAppointmentStatus('${appointment.id}', this.value)">
+                        <option value="ожидает" ${appointment.status === 'ожидает' ? 'selected' : ''}>Offen</option>
+                        <option value="подтверждено" ${appointment.status === 'подтверждено' ? 'selected' : ''}>Bestätigt</option>
+                        <option value="отменено" ${appointment.status === 'отменено' ? 'selected' : ''}>Storniert</option>
+                        <option value="завершено" ${appointment.status === 'завершено' ? 'selected' : ''}>Abgeschlossen</option>
+                    </select>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="delete-btn" onclick="deleteAppointment('${appointment.id}')">
+                        <i class="ri-delete-bin-line"></i>
+                        Löschen
+                    </button>
+                </td>
+            `;
+            
+            return tr;
+        }
+
+        // Функция для удаления записи
+        function deleteAppointment(appointmentId) {
+            if (confirm('Вы уверены, что хотите удалить эту запись?')) {
+                fetch(`/api/appointments/${appointmentId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка при удалении записи');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Запись успешно удалена:', data);
+                    loadAppointments(); // Перезагружаем список записей
+                })
+                .catch(error => {
+                    console.error('Ошибка при удалении записи:', error);
+                    alert('Произошла ошибка при удалении записи');
+                });
+            }
+        }
+
+        // Экспорт записей в CSV
+        function exportToCsv() {
+            if (!lastFilteredAppointments.length) {
+                alert('Нет данных для экспорта');
+                return;
+            }
+            // Заголовки CSV
+            const headers = ['Дата','Время','Клиент','Телефон','Email','Услуга','Сообщение','Статус'];
+            let csv = headers.join(';') + '\n';
+            // Формируем строки, оборачивая значения для Excel как текст (через формулу)
+            lastFilteredAppointments.forEach(a => {
+                const row = [
+                    `="${a.date}"`,
+                    `="${a.time}"`,
+                    `="${a.client.name}"`,
+                    `="${a.client.phone}"`,
+                    `="${a.client.email}"`,
+                    `="${getServiceName(a.service, a)}"`,
+                    `="${a.message ? a.message.replace(/"/g, '""') : ''}"`,
+                    `="${getStatusName(a.status)}"`
+                ];
+                csv += row.join(';') + '\n';
+            });
+            // Добавляем BOM (UTF-8) для корректного отображения кириллицы в Excel
+            const bom = '\uFEFF';
+            const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'appointments.csv';
+            link.click();
+        }
+
+        // Загрузка аналитики
+        function loadAnalytics() {
+            const period = parseInt(document.getElementById('analyticsPeriod').value, 10);
+            fetch(`/api/analytics?period=${period}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('analyticsAppointments').textContent = data.appointments;
+                    document.getElementById('analyticsVisits').textContent = data.visits;
+                })
+                .catch(err => console.error('Ошибка загрузки аналитики:', err));
+        }
+
+        // Telegram config
+        function loadTelegramConfig() {
+            fetch('/api/telegram_config')
+                .then(res => res.json())
+                .then(cfg => {
+                    document.getElementById('telegramToken').value = cfg.token || '';
+                    document.getElementById('telegramChatId').value = cfg.chat_id || '';
+                });
+        }
+        document.getElementById('telegramConfigForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const token = document.getElementById('telegramToken').value.trim();
+            const chat_id = document.getElementById('telegramChatId').value.trim();
+            fetch('/api/telegram_config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, chat_id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const status = document.getElementById('telegramConfigStatus');
+                if (data.success) {
+                    status.textContent = 'Сохранено!';
+                    status.style.color = 'green';
+                } else {
+                    status.textContent = data.error || 'Ошибка';
+                    status.style.color = 'red';
+                }
+            })
+            .catch(() => {
+                const status = document.getElementById('telegramConfigStatus');
+                status.textContent = 'Ошибка сохранения';
+                status.style.color = 'red';
+            });
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAppointments();
+            
+            // Обработчики фильтров
+            document.getElementById('dateFilter').addEventListener('change', loadAppointments);
+            document.getElementById('statusFilter').addEventListener('change', loadAppointments);
+            document.getElementById('serviceFilter').addEventListener('change', loadAppointments);
+            document.getElementById('searchInput').addEventListener('input', loadAppointments);
+            document.getElementById('exportCsvBtn').addEventListener('click', exportToCsv);
+            
+            // Кнопка обновления
+            document.getElementById('refreshBtn').addEventListener('click', loadAppointments);
+
+            // Обработчики аналитики
+            document.getElementById('analyticsPeriod').addEventListener('change', loadAnalytics);
+            loadAnalytics();
+
+            // Настройка сортировки по столбцам
+            let currentSort = { key: null, asc: true };
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const key = th.getAttribute('data-sort');
+                    if (currentSort.key === key) currentSort.asc = !currentSort.asc;
+                    else { currentSort.key = key; currentSort.asc = true; }
+                    // Сброс индикаторов
+                    document.querySelectorAll('.sort-indicator').forEach(si => si.textContent = '');
+                    th.querySelector('.sort-indicator').textContent = currentSort.asc ? ' ↑' : ' ↓';
+                    // Сортировка данных
+                    lastFilteredAppointments.sort((a, b) => {
+                        let valA, valB;
+                        switch(key) {
+                            case 'datetime':
+                                valA = new Date(a.date + ' ' + a.time);
+                                valB = new Date(b.date + ' ' + b.time);
+                                break;
+                            case 'client':
+                                valA = a.client.name.toLowerCase();
+                                valB = b.client.name.toLowerCase();
+                                break;
+                            case 'service':
+                                valA = getServiceName(a.service, a).toLowerCase();
+                                valB = getServiceName(b.service, b).toLowerCase();
+                                break;
+                            case 'status':
+                                valA = getStatusName(a.status).toLowerCase();
+                                valB = getStatusName(b.status).toLowerCase();
+                                break;
+                            default:
+                                valA = ''; valB = '';
+                        }
+                        if (valA < valB) return currentSort.asc ? -1 : 1;
+                        if (valA > valB) return currentSort.asc ? 1 : -1;
+                        return 0;
+                    });
+                    // Перерисовка таблицы
+                    const container = document.getElementById('appointmentsList');
+                    container.innerHTML = '';
+                    lastFilteredAppointments.forEach(item => container.appendChild(createAppointmentElement(item)));
+                });
+            });
+            // Обработчик выхода
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                window.location.replace('/admin');
+            });
+            loadTelegramConfig();
+        });
+    </script>
+</body>
+</html>
