@@ -1,23 +1,37 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kreuztaler Werkstatt GmbH - Ваш автосервис в Кройцтале</title>
+    <title>Kreuztaler Werkstatt GmbH - Ihr Autoservice in Kreuztal</title>
     <link rel="icon" type="image/avif" href="static/images/kw.avif">
-    <meta name="description" content="Kreuztaler Werkstatt GmbH - профессиональный автосервис в Кройцтале. Техническое обслуживание, ремонт после аварии, диагностика.">
-    <meta name="keywords" content="автосервис, Кройцталь, техническое обслуживание, ремонт автомобилей, диагностика">
-    <meta property="og:title" content="Kreuztaler Werkstatt GmbH">
-    <meta property="og:description" content="Профессиональный автосервис в Кройцтале">
+    <meta name="description" content="Kreuztaler Werkstatt GmbH - Ihr professioneller Autoservice in Kreuztal. Inspektion, Wartung, Unfallreparatur, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten und mehr.">
+    <meta name="keywords" content="Autowerkstatt, Kreuztal, Kfz-Service, Fahrzeugwartung, Unfallreparatur, Inspektion, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten, Klimaanlagenservice, Reifenservice, Kfz-Meisterbetrieb, Siegerland">
+    <meta property="og:title" content="Kreuztaler Werkstatt GmbH - Ihr Autoservice in Kreuztal">
+    <meta property="og:description" content="Professioneller Autoservice in Kreuztal - Inspektion, Wartung, Reparatur und Service für alle Fahrzeugmarken">
     <meta property="og:image" content="static/images/kw.avif">
     <meta property="og:type" content="website">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Kreuztaler Werkstatt GmbH">
+    <meta name="geo.region" content="DE-NW">
+    <meta name="geo.placename" content="Kreuztal">
+    <meta name="geo.position" content="50.9606;7.9912">
+    <meta name="ICBM" content="50.9606, 7.9912">
+    <meta name="service:service_name" content="Kreuztaler Werkstatt GmbH">
+    <meta name="service:service_type" content="Autowerkstatt">
+    <meta name="service:service_area" content="Kreuztal, Siegerland">
+    <meta name="service:opening_hours" content="Mo-Fr 09:00-17:00">
+    <meta name="service:phone" content="02732 277 17">
+    <meta name="service:email" content="info@kreuztaler-werkstatt.de">
+    <meta name="service:address" content="Hagener Str. 40, 57223 Kreuztal">
+    <meta name="service:services" content="Inspektion, Wartung, Unfallreparatur, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten, Klimaanlagenservice, Reifenservice">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <style>
@@ -373,7 +387,7 @@
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                <div class="text-primary font-['Pacifico'] text-2xl mr-2">Kreuztaler Werkstatt</div>
+                <div class="text-primary font-['Arimo'] text-2xl mr-2 font-bold">Kreuztaler Werkstatt</div>
                 <span class="text-gray-500 text-sm">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-8">
@@ -418,40 +432,40 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-block">
-                    <div class="icon-wrapper">
-                        <i class="ri-tools-fill"></i>
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/inspektion.jpg" alt="Inspektion" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Inspektion</h3>
+                        <p>Regelmäßige Inspektion nach den Empfehlungen des Herstellers für alle Automarken. Wir halten Ihr Fahrzeug in einem ausgezeichneten Zustand.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-bold text-primary mb-3">Wartung</h3>
-                    <p>Regelmäßige Wartung nach den Empfehlungen des Herstellers für alle Automarken. Wir halten Ihr Fahrzeug in einem ausgezeichneten Zustand.</p>
-                    <a href="#services" class="text-primary font-medium flex items-center">
-                        Mehr erfahren 
-                        <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                    </a>
                 </div>
                 
-                <div class="text-block">
-                    <div class="icon-wrapper">
-                        <i class="ri-car-washing-fill"></i>
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/Achsvermessung.jpg" alt="Achsvermessung" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Achsvermessung</h3>
+                        <p>Eine exakte Achsvermessung sorgt für optimale Fahrsicherheit, weniger Reifenverschleiß und besseren Fahrkomfort. In unserer Kreuztaler Werkstatt verwenden wir moderne 3D-Technik, um Spur und Sturz Ihres Fahrzeugs perfekt einzustellen.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-bold text-primary mb-3">Unfallreparatur</h3>
-                    <p>Professionelle Unfallreparatur für alle Fahrzeugtypen. Wir bringen Ihr Fahrzeug in seinen ursprünglichen Zustand zurück.</p>
-                    <a href="#services" class="text-primary font-medium flex items-center">
-                        Mehr erfahren 
-                        <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                    </a>
                 </div>
                 
-                <div class="text-block">
-                    <div class="icon-wrapper">
-                        <i class="ri-settings-5-fill"></i>
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/Diagnose.jpg" alt="Diagnose & Elektronik" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Diagnose & Elektronik</h3>
+                        <p>Modernes Diagnose- und Elektroniksystem für alle Fahrzeugsysteme. Wir finden und beheben elektronische Defekte schnell und zuverlässig.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
                     </div>
-                    <h3 class="text-2xl font-bold text-primary mb-3">Diagnose & Elektronik</h3>
-                    <p>Modernes Diagnose- und Elektroniksystem für alle Fahrzeugsysteme. Wir finden und beheben elektronische Defekte schnell und zuverlässig.</p>
-                    <a href="#services" class="text-primary font-medium flex items-center">
-                        Mehr erfahren 
-                        <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -609,17 +623,20 @@
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
                             <input type="text" id="name" name="name" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="Maxim Müller">
                         </div>
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail *</label>
                             <input type="email" id="email" name="email" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="max.mueller@email.de">
                         </div>
                         <div>
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
                             <input type="tel" id="phone" name="phone" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="+49 123 4567890">
                         </div>
                         <div>
                             <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Leistung *</label>
@@ -641,7 +658,8 @@
                         <div>
                             <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
                             <textarea id="message" name="message" rows="3" 
-                                      class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"></textarea>
+                                      class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                      placeholder="z.B. Inspektion für VW Golf, Baujahr 2018"></textarea>
                         </div>
                         <div class="flex items-center mb-2">
                             <input type="checkbox" id="privacy-consent" name="privacy-consent" required class="mr-2">
@@ -969,7 +987,7 @@
                         <div class="mt-8">
                             <h4 class="font-medium text-gray-800 mb-3">Folgen Sie uns</h4>
                             <div class="flex space-x-4">
-                                <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
+                                <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
                                     <i class="ri-facebook-fill ri-lg text-primary"></i>
                                 </a>
                                 <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
@@ -1017,11 +1035,11 @@
                 <div>
                     <div class="flex items-center mb-4">
                         <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                        <div class="text-white font-['Pacifico'] text-2xl">Kreuztaler Werkstatt</div>
+                        <div class="text-white font-['Arimo'] text-2xl font-bold">Kreuztaler Werkstatt</div>
                     </div>
                     <p class="text-gray-400 mb-6">Ihr zuverlässiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
+                        <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
                             <i class="ri-facebook-fill ri-lg"></i>
                         </a>
                         <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
@@ -1090,14 +1108,40 @@
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Kreuztaler Werkstatt GmbH. Alle Rechte vorbehalten.</p>
                     <div class="flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Impressum</a>
+                        <a href="#" onclick="openImpressumModal()" class="text-gray-400 hover:text-white text-sm transition-colors">Impressum</a>
                         <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Datenschutz</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Nutzungsbedingungen</a>
+                        <a href="static/Nutzungsbedingungen.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Nutzungsbedingungen</a>
                     </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="https://resume-oleg-kalchenko-65tzgo4.gamma.site" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Webentwicklung und Design</a>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Impressum Modal -->
+    <div id="impressumModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg max-w-2xl w-full mx-4 relative">
+            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="ri-close-line ri-lg"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-primary mb-6">Impressum</h2>
+            <div class="text-gray-600 space-y-4">
+                <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
+                <p>Vertreten durch den Geschäftsführer: Andre Hovanski</p>
+                <p>Hagener Straße 40</p>
+                <p>57223 Kreuztal</p>
+                <p>Deutschland</p>
+                <div class="my-4"></div>
+                <p>Telefon: 02732 27717</p>
+                <p>E-Mail: info@kreuztaler-werkstatt.de</p>
+                <div class="my-4"></div>
+                <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>
+                <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE351358022</p>
+            </div>
+        </div>
+    </div>
 
     <script src="static/e.js"></script>
     <script>
@@ -1153,7 +1197,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center">
                         <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                        <div class="text-primary font-['Pacifico'] text-2xl">Kreuztaler Werkstatt</div>
+                        <div class="text-primary font-['Arimo'] text-2xl">Kreuztaler Werkstatt</div>
                     </div>
                     <button id="closeMobileMenu" class="text-gray-600 hover:text-primary">
                         <i class="ri-close-line ri-lg"></i>
@@ -1186,6 +1230,24 @@
                     mobileMenu.classList.remove('active');
                 });
             });
+        });
+
+        // Функции для работы с модальным окном Impressum
+        function openImpressumModal() {
+            document.getElementById('impressumModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImpressumModal() {
+            document.getElementById('impressumModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Закрытие модального окна при клике вне его области
+        document.getElementById('impressumModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImpressumModal();
+            }
         });
     </script>
 </body>
