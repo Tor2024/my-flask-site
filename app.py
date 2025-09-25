@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Инициализация бота с новым токеном
-bot = telegram.Bot(token='7842118463:AAFLqUQjLN8Xw3fXuOhridXILMQMeWBuvuw')
+bot = telegram.Bot(token='8493320536:AAECrkyZA8ixT-NG4ku3unObf21rRk_vNNc')
 
 # Путь к файлу с данными
 DATA_DIR = 'data'
