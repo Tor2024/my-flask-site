@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreuztaler Werkstatt GmbH - Ihr Autoservice in Kreuztal</title>
+    <link rel="icon" type="image/avif" href="static/images/kw.avif">
+    <meta name="description" content="Kreuztaler Werkstatt GmbH - Ihr professioneller Autoservice in Kreuztal. Inspektion, Wartung, Unfallreparatur, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten und mehr.">
+    <meta name="keywords" content="Autowerkstatt, Kreuztal, Kfz-Service, Fahrzeugwartung, Unfallreparatur, Inspektion, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten, Klimaanlagenservice, Reifenservice, Kfz-Meisterbetrieb, Siegerland">
+    <meta property="og:title" content="Kreuztaler Werkstatt GmbH - Ihr Autoservice in Kreuztal">
+    <meta property="og:description" content="Professioneller Autoservice in Kreuztal - Inspektion, Wartung, Reparatur und Service für alle Fahrzeugmarken">
+    <meta property="og:image" content="static/images/kw.avif">
+    <meta property="og:type" content="website">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Kreuztaler Werkstatt GmbH">
+    <meta name="geo.region" content="DE-NW">
+    <meta name="geo.placename" content="Kreuztal">
+    <meta name="geo.position" content="50.9606;7.9912">
+    <meta name="ICBM" content="50.9606, 7.9912">
+    <meta name="service:service_name" content="Kreuztaler Werkstatt GmbH">
+    <meta name="service:service_type" content="Autowerkstatt">
+    <meta name="service:service_area" content="Kreuztal, Siegerland">
+    <meta name="service:opening_hours" content="Mo-Fr 09:00-17:00">
+    <meta name="service:phone" content="02732 277 17">
+    <meta name="service:email" content="info@kreuztaler-werkstatt.de">
+    <meta name="service:address" content="Hagener Str. 40, 57223 Kreuztal">
+    <meta name="service:services" content="Inspektion, Wartung, Unfallreparatur, Fahrzeugdiagnose, Motorreparatur, Getriebereparatur, Fahrwerkservice, Bremsenservice, Autoelektrik, Karosseriearbeiten, Klimaanlagenservice, Reifenservice">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Inter', sans-serif;
+            zoom: 90%;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .custom-checkbox input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+        }
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: #0055a5;
+            border-color: #0055a5;
+        }
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        .custom-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .custom-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .custom-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        .custom-switch input:checked + .switch-slider {
+            background-color: #0055a5;
+        }
+        .custom-switch input:checked + .switch-slider:before {
+            transform: translateX(24px);
+        }
+        .custom-radio {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .custom-radio input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .radiomark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+        }
+        .custom-radio input:checked ~ .radiomark {
+            border-color: #0055a5;
+        }
+        .radiomark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        .custom-radio input:checked ~ .radiomark:after {
+            display: block;
+        }
+        .custom-radio .radiomark:after {
+            top: 4px;
+            left: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0055a5;
+        }
+        .custom-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            outline: none;
+        }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #0055a5;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .custom-range::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #0055a5;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover {
+            background-color: #f3f4f6;
+        }
+        .calendar-day.available {
+            background-color: rgba(0, 200, 83, 0.1);
+            color: #00c853;
+        }
+        .calendar-day.partially {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        .calendar-day.booked {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        .calendar-day.selected {
+            background-color: #0055a5;
+            color: white;
+        }
+        .time-slot {
+            position: relative;
+        }
+        .time-slot.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .time-slot.disabled::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 4px;
+        }
+        .text-block {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .text-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .text-block h2 {
+            color: #1a1a1a;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        .text-block h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #0055a5, #4a4a4a);
+            border-radius: 3px;
+        }
+        .text-block p {
+            color: #4a4a4a;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .text-block ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .text-block ul li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        .text-block ul li:last-child {
+            border-bottom: none;
+        }
+        .text-block ul li i {
+            color: #0055a5;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+        }
+        .text-block .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #0055a5, #4a4a4a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .text-block .icon-wrapper i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        .bg-white {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa) !important;
+        }
+        .shadow-sm {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        }
+        .hover\:shadow-md:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+        /* Добавляем стили для меню */
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #0055a5;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .nav-link.active {
+            color: #0055a5;
+            font-weight: 600;
+        }
+        
+        /* Стили для мобильного меню */
+        #mobileMenu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        #mobileMenu.active {
+            display: block;
+        }
+        
+        .mobile-nav-link {
+            display: block;
+            padding: 1rem;
+            color: #4a4a4a;
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-nav-link:hover {
+            background-color: #f3f4f6;
+            color: #0055a5;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
+                <div class="text-primary font-['Arimo'] text-2xl mr-2 font-bold">Kreuztaler Werkstatt</div>
+                <span class="text-gray-500 text-sm">GmbH</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Startseite</a>
+                <a href="#about" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Über uns</a>
+                <a href="#services" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Leistungen</a>
+                <a href="#reviews" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kundenbewertungen</a>
+                <a href="#contact" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kontakt</a>
+            </nav>
+            <div class="md:hidden flex items-center">
+                <button type="button" id="mobileMenuBtn" class="text-gray-600 hover:text-primary focus:outline-none w-8 h-8 flex items-center justify-center">
+                    <i class="ri-menu-line ri-lg"></i>
+                </button>
+            </div>
+            <div class="hidden md:flex">
+                <a href="#appointment" class="bg-primary text-white px-6 py-2 !rounded-button whitespace-nowrap hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">Termin vereinbaren</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden" style="background-image: url('static/images/hero2.webp'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
+        <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
+            <div class="max-w-2xl text-white">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Ihre spezialisierte Autowerkstatt für alle Automarken</h1>
+                <p class="text-lg md:text-xl mb-8">Professioneller Service, moderne Technik und individuelle Betreuung für Ihr Fahrzeug in Kreuztal.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#appointment" class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-gray-100 transition-colors">Termin vereinbaren</a>
+                    <a href="#services" class="bg-transparent border-2 border-white text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-white/10 transition-colors">Unsere Leistungen</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary mb-4">Unsere Hauptleistungen</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Wir bieten ein umfassendes Leistungsspektrum für Ihr Fahrzeug – von Wartung bis Unfallreparatur.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/inspektion.jpg" alt="Inspektion" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Inspektion</h3>
+                        <p>Regelmäßige Inspektion nach den Empfehlungen des Herstellers für alle Automarken. Wir halten Ihr Fahrzeug in einem ausgezeichneten Zustand.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/Achsvermessung.jpg" alt="Achsvermessung" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Achsvermessung</h3>
+                        <p>Eine exakte Achsvermessung sorgt für optimale Fahrsicherheit, weniger Reifenverschleiß und besseren Fahrkomfort. In unserer Kreuztaler Werkstatt verwenden wir moderne 3D-Technik, um Spur und Sturz Ihres Fahrzeugs perfekt einzustellen.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-block p-0 overflow-hidden">
+                    <img src="static/images/Diagnose.jpg" alt="Diagnose & Elektronik" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-primary mb-3">Diagnose & Elektronik</h3>
+                        <p>Modernes Diagnose- und Elektroniksystem für alle Fahrzeugsysteme. Wir finden und beheben elektronische Defekte schnell und zuverlässig.</p>
+                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
+                            Mehr erfahren 
+                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section id="about" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <img src="static/images/uuu1.webp" alt="Unser Team" class="rounded shadow-lg object-cover w-full h-auto object-top">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Über Kreuztaler Werkstatt</h2>
+                    <p class="text-gray-600 mb-4">Die Wurzeln der heutigen Kreuztaler Werkstatt reichen bis ins Jahr 1946 zurück. Damals gründete Jürgen Pfeifer auf der Hagener Straße eine kleine Lkw-Werkstatt mit dem Schwerpunkt Autoelektrik. Mit viel Engagement und handwerklichem Geschick wurde der Betrieb Stück für Stück erweitert.</p>
+                    <p class="text-gray-600 mb-4">Zwischen 1962 und 1965 kam eine eigene Tankstelle hinzu. In den Jahren 1972 bis 1976 wurden weitere Werkstatthallen errichtet, um dem wachsenden Bedarf gerecht zu werden.</p>
+                    <p class="text-gray-600 mb-4">1995 wurde der Betrieb Teil des Bosch Car Service-Netzwerks und um ein Autohaus ergänzt. Es folgten kontinuierliche Ausbauten und technische Modernisierungen.</p>
+                    <p class="text-gray-600 mb-4">Im Jahr 2014 übernahm Andre Hovanski, Kfz-Technikermeister, die Werkstatt. Unter seiner Leitung wurde der Betrieb umfassend modernisiert und wird seither als Familienunternehmen weitergeführt.</p>
+                    <p class="text-gray-600 mb-6">2021 erfolgte die Gründung der Kreuztaler Werkstatt GmbH. Seither wird der Standort kontinuierlich weiterentwickelt – mit moderner Diagnosetechnik, erweitertem Serviceangebot und dem Anspruch, Kundinnen und Kunden stets höchste Qualität zu bieten.</p>
+                    <!-- Карусель истории развития -->
+                    <div id="history-carousel" class="relative w-full max-w-xl mx-auto mb-8 select-none">
+                      <button id="carousel-prev" type="button" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow p-2 rounded-full border border-gray-200 transition disabled:opacity-30"><i class="ri-arrow-left-s-line ri-xl text-primary"></i></button>
+                      <div class="overflow-hidden rounded-xl shadow-lg">
+                        <div id="carousel-track" class="flex transition-transform duration-500">
+                          <div class="min-w-full flex flex-col items-center relative">
+                            <img src="static/images/1946.jpg" alt="1946" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1946</div>
+                          </div>
+                          <div class="min-w-full flex flex-col items-center relative">
+                            <img src="static/images/1965.jpg" alt="1965" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1965</div>
+                          </div>
+                          <div class="min-w-full flex flex-col items-center relative">
+                            <img src="static/images/1989.jpg" alt="1989" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1989</div>
+                          </div>
+                          <div class="min-w-full flex flex-col items-center relative">
+                            <img src="static/images/2014.jpg" alt="2014" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">2014</div>
+                          </div>
+                          <div class="min-w-full flex flex-col items-center relative">
+                            <img src="static/images/2025.jpg" alt="2025" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">2025</div>
+                          </div>
+                        </div>
+                      </div>
+                      <button id="carousel-next" type="button" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow p-2 rounded-full border border-gray-200 transition disabled:opacity-30"><i class="ri-arrow-right-s-line ri-xl text-primary"></i></button>
+                      <div class="flex justify-center mt-4 gap-2" id="carousel-dots">
+                        <button class="w-3 h-3 rounded-full bg-primary"></button>
+                        <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                        <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                        <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                        <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                      </div>
+                    </div>
+                    <a href="#contact" class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap inline-block font-medium hover:bg-primary/90 transition-colors">Kontakt aufnehmen</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary mb-4">Unsere Leistungen</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Entdecken Sie unser umfassendes Leistungsspektrum für Fahrzeuge aller Marken.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-tools-fill ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Wartung</h3>
+                    <p class="text-gray-600 mb-4">Regelmäßige Wartung nach Herstellervorgaben, Ölwechsel, Filterwechsel, Inspektion und Systemchecks für alle Automarken.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-car-washing-fill ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Unfallreparatur</h3>
+                    <p class="text-gray-600 mb-4">Fachgerechte Reparatur aller Unfallschäden. Wir stellen die Optik und Sicherheit Ihres Fahrzeugs wieder her.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-stethoscope-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Fahrzeugsdiagnose</h3>
+                    <p class="text-gray-600 mb-4">Computergestützte Diagnose aller Fahrzeugsysteme. Schnelle Fehlererkennung und Behebung von Störungen.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-engine-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Motorreparatur</h3>
+                    <p class="text-gray-600 mb-4">Fachmännische Reparatur und Wartung aller Motortypen – von Dichtungswechsel bis zur Komplettüberholung.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-settings-6-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Getriebereparatur</h3>
+                    <p class="text-gray-600 mb-4">Reparatur und Wartung von Schalt- und Automatikgetrieben, Diagnose und Behebung von Getriebestörungen.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-car-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Fahrwerk & Aufhängung</h3>
+                    <p class="text-gray-600 mb-4">Reparatur und Austausch von Fahrwerksteilen, Stoßdämpfern, Lenkung und Stabilisatoren für sicheres Fahrverhalten.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-brake-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Bremsenservice</h3>
+                    <p class="text-gray-600 mb-4">Wartung und Reparatur der Bremsanlage: Austausch von Belägen, Scheiben, Diagnose und Beseitigung von Geräuschen und Vibrationen.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-flashlight-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Autoelektrik & Elektronik</h3>
+                    <p class="text-gray-600 mb-4">Reparatur und Einstellung von Elektrik: Starter, Generator, Batterien, Beleuchtung, Komfort- und Sicherheitssysteme.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-paint-brush-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Karosserie & Lackierung</h3>
+                    <p class="text-gray-600 mb-4">Karosseriereparatur aller Schwierigkeitsgrade, Beulenentfernung, Richtarbeiten, Lackierung und Unfallinstandsetzung.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-snowy-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Klimaanlagenservice</h3>
+                    <p class="text-gray-600 mb-4">Wartung und Reparatur von Klimaanlagen: Befüllung, Reinigung, Lecksuche und Beseitigung von Gerüchen.</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mb-4">
+                        <i class="ri-tire-line ri-lg text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-primary mb-3">Reifenservice & Auswuchten</h3>
+                    <p class="text-gray-600 mb-4">Montage, Demontage, Auswuchten, saisonaler Wechsel und Einlagerung von Rädern, Beratung und Verkauf neuer Reifen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment Section -->
+    <section id="appointment" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-12">
+                <!-- Календарь и выбор времени теперь всегда первый -->
+                <div class="md:w-1/2">
+                    <div class="bg-white p-6 rounded shadow-sm mb-8">
+                        <!-- Перенесённый заголовок и легенда -->
+                        <h2 class="text-3xl font-bold text-primary mb-6">Termin vereinbaren</h2>
+                        <div class="flex flex-wrap items-center gap-6 mb-8 w-full justify-between">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-green-100 border border-green-300 mr-2"></div>
+                                <span class="text-sm text-gray-600">Verfügbar</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-yellow-100 border border-yellow-300 mr-2"></div>
+                                <span class="text-sm text-gray-600">Teilweise verfügbar</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-red-100 border border-red-300 mr-2"></div>
+                                <span class="text-sm text-gray-600">Ausgebucht</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 rounded-full bg-primary mr-2"></div>
+                                <span class="text-sm text-gray-600">Ausgewählt</span>
+                            </div>
+                        </div>
+                        <!-- /Перенесённый блок -->
+                        <h3 class="text-xl font-semibold text-gray-500 mb-4">Verfügbare Termine</h3>
+                        <p class="text-gray-500 text-sm mb-4">Bitte warten Sie einen Moment, bis der Kalender geladen ist, bevor Sie ein Datum auswählen.</p>
+                        <div class="mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <button class="p-2 hover:bg-gray-100 rounded-full">
+                                    <i class="ri-arrow-left-s-line ri-lg"></i>
+                                </button>
+                                <h4 class="text-lg font-medium">Апрель 2025</h4>
+                                <button class="p-2 hover:bg-gray-100 rounded-full">
+                                    <i class="ri-arrow-right-s-line ri-lg"></i>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                                <div class="text-sm text-gray-500">Пн</div>
+                                <div class="text-sm text-gray-500">Вт</div>
+                                <div class="text-sm text-gray-500">Ср</div>
+                                <div class="text-sm text-gray-500">Чт</div>
+                                <div class="text-sm text-gray-500">Пт</div>
+                                <div class="text-sm text-gray-400">Сб</div>
+                                <div class="text-sm text-gray-400">Вс</div>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1">
+                                <div class="calendar-day text-gray-400">31</div>
+                                <div class="calendar-day available">1</div>
+                                <div class="calendar-day available">2</div>
+                                <div class="calendar-day available">3</div>
+                                <div class="calendar-day available">4</div>
+                                <div class="calendar-day text-gray-400">5</div>
+                                <div class="calendar-day text-gray-400">6</div>
+                                <div class="calendar-day available">7</div>
+                                <div class="calendar-day available">8</div>
+                                <div class="calendar-day available">9</div>
+                                <div class="calendar-day available">10</div>
+                                <div class="calendar-day available">11</div>
+                                <div class="calendar-day text-gray-400">12</div>
+                                <div class="calendar-day text-gray-400">13</div>
+                                <div class="calendar-day available">14</div>
+                                <div class="calendar-day available">15</div>
+                                <div class="calendar-day available">16</div>
+                                <div class="calendar-day available">17</div>
+                                <div class="calendar-day available">18</div>
+                                <div class="calendar-day text-gray-400">19</div>
+                                <div class="calendar-day text-gray-400">20</div>
+                                <div class="calendar-day available">21</div>
+                                <div class="calendar-day available">22</div>
+                                <div class="calendar-day available">23</div>
+                                <div class="calendar-day available">24</div>
+                                <div class="calendar-day available">25</div>
+                                <div class="calendar-day text-gray-400">26</div>
+                                <div class="calendar-day text-gray-400">27</div>
+                                <div class="calendar-day available">28</div>
+                                <div class="calendar-day available">29</div>
+                                <div class="calendar-day available">30</div>
+                                <div class="calendar-day text-gray-400">1</div>
+                                <div class="calendar-day text-gray-400">2</div>
+                                <div class="calendar-day text-gray-400">3</div>
+                                <div class="calendar-day text-gray-400">4</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-500 mb-4">Verfügbare Uhrzeit</h4>
+                            <div class="time-slots-container grid grid-cols-3 gap-2">
+                                <!-- Временные слоты будут добавлены динамически -->
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-date" name="date">
+                        <input type="hidden" id="selected-time" name="time">
+                    </div>
+                </div>
+                <!-- Форма теперь всегда вторая -->
+                <div class="md:w-1/2">
+                    <!-- Удаляю заголовок и легенду из формы -->
+                    <form id="appointment-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                            <input type="text" id="name" name="name" required 
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="Maxim Müller">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail *</label>
+                            <input type="email" id="email" name="email" required 
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="max.mueller@email.de">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
+                            <input type="tel" id="phone" name="phone" required 
+                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                   placeholder="+49 123 4567890">
+                        </div>
+                        <div>
+                            <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Leistung *</label>
+                            <select id="service" name="service" required 
+                                    class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
+                                <option value="">Bitte wählen Sie eine Dienstleistung</option>
+                                <option value="wartung">Wartung</option>
+                                <option value="diagnose">Fahrzeugsdiagnose</option>
+                                <option value="motor">Motorreparatur</option>
+                                <option value="getriebe">Getriebereparatur</option>
+                                <option value="fahrwerk">Reparatur von Fahrwerk und Aufhängung</option>
+                                <option value="bremsen">Bremsenservice</option>
+                                <option value="elektrik">Autoelektrik und Elektronik</option>
+                                <option value="karosserie">Karosseriereparatur und Lackierung</option>
+                                <option value="klima">Klimaanlagenservice</option>
+                                <option value="reifen">Reifenmontage und Auswuchten</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+                            <textarea id="message" name="message" rows="3" 
+                                      class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
+                                      placeholder="z.B. Inspektion für VW Golf, Baujahr 2018"></textarea>
+                        </div>
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" id="privacy-consent" name="privacy-consent" required class="mr-2">
+                            <label for="privacy-consent" class="text-sm text-gray-600">Ich stimme der Verarbeitung meiner Daten gemäß der <a href="static/Datenschutz.pdf" target="_blank" class="underline hover:text-primary">Datenschutzerklärung</a> zu.</label>
+                        </div>
+                        <input type="hidden" id="selected-date" name="date">
+                        <input type="hidden" id="selected-time" name="time">
+                        <button type="submit" 
+                                class="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors">
+                            Termin vereinbaren
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="reviews" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary mb-4">Kundenbewertungen</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Lesen Sie, was unsere Kunden über unseren Service sagen.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 2 Wochen</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Sehr freundliches Team, schnelle Terminvergabe und professionelle Arbeit. Ich komme gerne wieder!"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">AK</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Andreas Klein</h4>
+                            <p class="text-sm text-gray-500">Kreuztal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 1 Monat</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Nach einem Unfall wurde mein Auto schnell und transparent repariert. Preis-Leistung top!"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">SW</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Sabine Weber</h4>
+                            <p class="text-sm text-gray-500">Siegen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-half-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 3 Monaten</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Die Werkstatt hat meine Klimaanlage perfekt gewartet. Sehr kompetente Beratung und faire Preise."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">TM</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Thomas Müller</h4>
+                            <p class="text-sm text-gray-500">Hilchenbach</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 2 Monaten</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Top Service! Die Mitarbeiter sind sehr hilfsbereit und erklären alles verständlich. Absolute Empfehlung."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">LS</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Lena Schmidt</h4>
+                            <p class="text-sm text-gray-500">Netphen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 4 Monaten</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Schnelle Diagnose und Reparatur. Ich wurde stets über alle Schritte informiert. Sehr zu empfehlen!"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">MB</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Markus Becker</h4>
+                            <p class="text-sm text-gray-500">Freudenberg</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-fill"></i>
+                            <i class="ri-star-half-fill"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-500">vor 5 Monaten</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Sehr gute Werkstatt mit fairen Preisen. Die Terminvereinbarung war unkompliziert und schnell."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span class="font-medium text-gray-700">JS</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Julia Schneider</h4>
+                            <p class="text-sm text-gray-500">Siegerland</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center bg-primary/10 px-4 py-2 rounded-full mb-8">
+                    <div class="flex text-yellow-400 mr-2">
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-fill"></i>
+                        <i class="ri-star-half-fill"></i>
+                    </div>
+                    <span class="font-medium">4.8 / 5 basierend auf 127 Bewertungen</span>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#" class="flex items-center px-4 py-2 bg-white border border-gray-200 rounded shadow-sm hover:shadow-md transition-shadow">
+                        <i class="ri-google-fill ri-lg text-[#4285F4] mr-2"></i>
+                        <span>Google Bewertungen</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-2 bg-white border border-gray-200 rounded shadow-sm hover:shadow-md transition-shadow">
+                        <i class="ri-facebook-fill ri-lg text-[#1877F2] mr-2"></i>
+                        <span>Facebook Bewertungen</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary mb-4">Kontakt</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto">Haben Sie Fragen oder möchten Sie einen Termin vereinbaren? Kontaktieren Sie uns – wir helfen Ihnen gerne weiter!</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2">
+                    <div class="bg-white p-6 rounded shadow-sm mb-8">
+                        <h3 class="text-xl font-semibold mb-6">Kontaktinformationen</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex">
+                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
+                                    <i class="ri-map-pin-line ri-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Adresse</h4>
+                                    <p class="text-gray-600">Hagener Str. 40, 57223 Kreuztal, Deutschland</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
+                                    <i class="ri-phone-line ri-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Telefon</h4>
+                                    <p class="text-gray-600">02732  277  17</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
+                                    <i class="ri-mail-line ri-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">E-Mail</h4>
+                                    <p class="text-gray-600">info@kreuztaler-werkstatt.de</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex">
+                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
+                                    <i class="ri-time-line ri-lg text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Öffnungszeiten</h4>
+                                    <p class="text-gray-600">Montag - Freitag: 9:00 - 17:00 Uhr</p>
+                                    <p class="text-gray-600">Mittagspause: 13:00 - 14:00 Uhr</p>
+                                    <p class="text-gray-600">Samstag-Sonntag: geschlossen</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-medium text-gray-800 mb-3">Folgen Sie uns</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
+                                    <i class="ri-facebook-fill ri-lg text-primary"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
+                                    <i class="ri-instagram-line ri-lg text-primary"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors">
+                                    <i class="ri-youtube-line ri-lg text-primary"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="bg-white p-6 rounded shadow-sm h-full">
+                        <h3 class="text-xl font-semibold mb-6">Standort</h3>
+                        <div class="rounded overflow-hidden h-80 relative">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2507.9999999999995!2d7.9912!3d50.9606!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b9b9b9b9b9b9b9%3A0x47b9b9b9b9b9b9b9!2sHagener%20Stra%C3%9Fe%2040%2C%2057223%20Kreuztal%2C%20Deutschland!5e0!3m2!1sde!2sde!4v1620000000000!5m2!1sde!2sde" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy">
+                            </iframe>
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <a href="https://www.google.com/maps/place/Hagener+Stra%C3%9Fe+40,+57223+Kreuztal,+Deutschland/@50.9606,7.9912,17z/data=!3m1!4b1!4m5!3m4!1s0x47b9b9b9b9b9b9b9:0x47b9b9b9b9b9b9b9!8m2!3d50.9606!4d7.9934" 
+                               target="_blank" 
+                               class="flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
+                                <span>In Google Maps öffnen</span>
+                                <i class="ri-external-link-line ri-sm ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
+                        <div class="text-white font-['Arimo'] text-2xl font-bold">Kreuztaler Werkstatt</div>
+                    </div>
+                    <p class="text-gray-400 mb-6">Ihr zuverlässiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
+                            <i class="ri-facebook-fill ri-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
+                            <i class="ri-instagram-line ri-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors">
+                            <i class="ri-youtube-line ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Schnellzugriff</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">Über uns</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
+                        <li><a href="#reviews" class="text-gray-400 hover:text-white transition-colors">Kundenbewertungen</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Leistungen</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Wartung</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Unfallreparatur</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">3D-Achsvermessung</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Diagnose</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Service für alle Marken</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Kontakt</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="ri-map-pin-line ri-lg mr-2 mt-1"></i>
+                            <span>Hagener Str. 40, 57223 Kreuztal</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="ri-phone-line ri-lg mr-2 mt-1"></i>
+                            <span>02732  277  17</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="ri-mail-line ri-lg mr-2 mt-1"></i>
+                            <span>info@kreuztaler-werkstatt.de</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
+                            <span>Mo-Fr: 9:00 - 17:00 Uhr</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
+                            <span>Mittagspause: 13:00 - 14:00 Uhr</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
+                            <span>Sa-So: geschlossen</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Kreuztaler Werkstatt GmbH. Alle Rechte vorbehalten.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" onclick="openImpressumModal()" class="text-gray-400 hover:text-white text-sm transition-colors">Impressum</a>
+                        <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Datenschutz</a>
+                        <a href="static/Nutzungsbedingungen.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Nutzungsbedingungen</a>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="https://curious-medovik-3a4dff.netlify.app" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Webentwicklung und Design</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Impressum Modal -->
+    <div id="impressumModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg max-w-2xl w-full mx-4 relative">
+            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="ri-close-line ri-lg"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-primary mb-6">Impressum</h2>
+            <div class="text-gray-600 space-y-4">
+                <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
+                <p>Vertreten durch den Geschäftsführer: Andre Hovanski</p>
+                <p>Hagener Straße 40</p>
+                <p>57223 Kreuztal</p>
+                <p>Deutschland</p>
+                <div class="my-4"></div>
+                <p>Telefon: 02732 27717</p>
+                <p>E-Mail: info@kreuztaler-werkstatt.de</p>
+                <div class="my-4"></div>
+                <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>
+                <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE351358022</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра фото -->
+    <div id="carousel-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+      <div class="relative max-w-3xl w-full flex items-center justify-center">
+        <button id="carousel-modal-close" class="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-lg focus:outline-none">
+          <i class="ri-close-line ri-2x"></i>
+        </button>
+        <img id="carousel-modal-img" src="" alt="Фото" class="max-h-[80vh] max-w-full rounded-xl shadow-2xl object-contain bg-white">
+      </div>
+    </div>
+
+    <script src="static/e.js"></script>
+    <script>
+        !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
+        posthog.init('phc_t9tkQZJiyi2ps9zUYm8TDsL6qXo4YmZx0Ot5rBlAlEd', {
+            api_host: 'https://us.i.posthog.com',
+            autocapture: false,
+            capture_pageview: false,
+            capture_pageleave: false,
+            capture_performance: {
+                web_vitals: false,
+            },
+            rageclick: false,
+        })
+        window.shareKey = 'gpM2hyMas5u547UU7UxR_Q';
+        window.host = 'readdy.ai';
+    </script>
+    <script src="static/share.js"></script>
+    <script>
+        // Добавляем функционал для меню
+        document.addEventListener('DOMContentLoaded', function() {
+            // Обработка активного состояния пунктов меню
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+            
+            function setActiveLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - sectionHeight/3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.classList.add('active');
+                }
+            });
+            }
+            
+            window.addEventListener('scroll', setActiveLink);
+            
+            // Мобильное меню
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.createElement('div');
+            mobileMenu.id = 'mobileMenu';
+            
+            // Создаем мобильное меню
+            const mobileMenuContent = `
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center">
+                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
+                        <div class="text-primary font-['Arimo'] text-2xl">Kreuztaler Werkstatt</div>
+                    </div>
+                    <button id="closeMobileMenu" class="text-gray-600 hover:text-primary">
+                        <i class="ri-close-line ri-lg"></i>
+                    </button>
+                </div>
+                <nav class="flex flex-col">
+                    <a href="#home" class="mobile-nav-link">Startseite</a>
+                    <a href="#about" class="mobile-nav-link">Über uns</a>
+                    <a href="#services" class="mobile-nav-link">Leistungen</a>
+                    <a href="#reviews" class="mobile-nav-link">Kundenbewertungen</a>
+                    <a href="#contact" class="mobile-nav-link">Kontakt</a>
+                    <a href="#appointment" class="mobile-nav-link bg-primary text-white text-center mt-4">Termin vereinbaren</a>
+                </nav>
+            `;
+            
+            mobileMenu.innerHTML = mobileMenuContent;
+            document.body.appendChild(mobileMenu);
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+            
+            document.getElementById('closeMobileMenu').addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+            
+            // Закрываем мобильное меню при клике на ссылку
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        });
+
+        // Функции для работы с модальным окном Impressum
+        function openImpressumModal() {
+            document.getElementById('impressumModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImpressumModal() {
+            document.getElementById('impressumModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Закрытие модального окна при клике вне его области
+        document.getElementById('impressumModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImpressumModal();
+            }
+        });
+    </script>
+    <script>
+    // Карусель истории развития (About)
+    (function() {
+      const track = document.getElementById('carousel-track');
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
+      const dots = document.querySelectorAll('#carousel-dots button');
+      const slidesCount = 5;
+      let current = 0;
+
+      function updateCarousel() {
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('bg-primary', idx === current);
+          dot.classList.toggle('bg-gray-300', idx !== current);
+        });
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === slidesCount - 1;
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (current > 0) {
+          current--;
+          updateCarousel();
+        }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (current < slidesCount - 1) {
+          current++;
+          updateCarousel();
+        }
+      });
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          current = idx;
+          updateCarousel();
+        });
+      });
+      updateCarousel();
+    })();
+    </script>
+    <script>
+    // Клик по фото в карусели — открыть в модальном окне
+    (function() {
+      const modal = document.getElementById('carousel-modal');
+      const modalImg = document.getElementById('carousel-modal-img');
+      const closeBtn = document.getElementById('carousel-modal-close');
+      const images = document.querySelectorAll('#carousel-track img');
+
+      images.forEach(img => {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function() {
+          modalImg.src = this.src;
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function closeModal() {
+        modal.classList.add('hidden');
+        modalImg.src = '';
+        document.body.style.overflow = '';
+      }
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (!modal.classList.contains('hidden') && (e.key === 'Escape' || e.key === 'Esc')) closeModal();
+      });
+    })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Управление расписанием</title>
+    <link rel="icon" type="image/avif" href="static/images/kw.avif">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            zoom: 90%;
+            background-color: #f8f9fa;
+        }
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover {
+            background-color: #f3f4f6;
+        }
+        .calendar-day.available {
+            background-color: rgba(0, 200, 83, 0.1);
+            color: #00c853;
+        }
+        .calendar-day.partially {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        .calendar-day.booked {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        .calendar-day.blocked-admin {
+            background-color: rgba(0, 85, 165, 0.1);
+            color: #0055a5;
+        }
+        .calendar-day.selected {
+            background-color: #0055a5;
+            color: white;
+        }
+        .time-slot {
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #e0e0e0;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            text-align: center;
+        }
+        .time-slot.available {
+            background-color: #e6ffe6; /* Light green for available */
+            color: #00c853;
+        }
+        .time-slot.available:hover {
+            background-color: #ccffcc;
+        }
+        .time-slot.selected {
+            background-color: #0055a5;
+            color: white;
+        }
+        .time-slot.booked {
+            background-color: #ffe6e6; /* Light red for booked by user */
+            color: #f44336;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .time-slot.blocked-admin {
+            background-color: #ede7f6; /* pale violet for admin blocked */
+            color: #7c4dff;
+            cursor: pointer;
+        }
+        .time-slot.blocked-admin:hover {
+            background-color: #ffb3b3;
+        }
+        .time-slot.booked::after, .time-slot.blocked-admin::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent overlay */
+            border-radius: 4px;
+        }
+        .time-slot.booked, .time-slot.blocked-admin {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-primary mb-8 text-center">Admin-Panel: Terminverwaltung</h1>
+
+        <!-- Таблица записей клиентов -->
+        <div class="bg-white p-6 rounded shadow-sm mb-8">
+            <h2 class="text-2xl font-bold text-primary mb-4">Kundenbuchungen</h2>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <input id="search-input" type="text" placeholder="Suche nach Name, E-Mail, Leistung..." class="border px-3 py-2 rounded w-64">
+                <button id="export-csv" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90">Export nach Excel (CSV)</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="appointments-table" class="min-w-full bg-white border rounded">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="py-2 px-3 cursor-pointer" data-sort="date">Datum</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="time">Uhrzeit</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="name">Name</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="email">E-Mail</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="phone">Telefon</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="service">Leistung</th>
+                            <th class="py-2 px-3 cursor-pointer" data-sort="status">Status</th>
+                            <th class="py-2 px-3">Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Записи будут добавляться через JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+            <h2 class="text-3xl font-bold text-primary mb-6">Datum und Uhrzeit blockieren</h2>
+
+            <div class="flex flex-wrap items-center gap-6 mb-8 w-full justify-between">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 rounded-full bg-green-100 border border-green-300 mr-2"></div>
+                    <span class="text-sm text-gray-600">Verfügbar</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 rounded-full bg-red-100 border border-red-300 mr-2"></div>
+                    <span class="text-sm text-gray-600">Vom Nutzer blockiert</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 rounded-full bg-[#ffcccc] border border-[#cc0000] mr-2"></div>
+                    <span class="text-sm text-gray-600">Vom Admin blockiert</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 rounded-full bg-primary mr-2"></div>
+                    <span class="text-sm text-gray-600">Ausgewählt</span>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-500 mb-4">Datum auswählen</h3>
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <button id="prev-month" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i class="ri-arrow-left-s-line ri-lg"></i>
+                    </button>
+                    <h4 id="current-month-year" class="text-lg font-medium"></h4>
+                    <button id="next-month" class="p-2 hover:bg-gray-100 rounded-full">
+                        <i class="ri-arrow-right-s-line ri-lg"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                    <div class="text-sm text-gray-500">Пн</div>
+                    <div class="text-sm text-gray-500">Вт</div>
+                    <div class="text-sm text-gray-500">Ср</div>
+                    <div class="text-sm text-gray-500">Чт</div>
+                    <div class="text-sm text-gray-500">Пт</div>
+                    <div class="text-sm text-gray-500">Сб</div>
+                    <div class="text-sm text-gray-500">Вс</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                    <!-- Дни календаря будут генерироваться здесь -->
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-medium text-gray-500 mb-4">Uhrzeit auswählen</h4>
+                <div id="time-slots-container" class="grid grid-cols-3 gap-2">
+                    <!-- Временные слоты будут генерироваться здесь -->
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <button id="block-unblock-button" class="bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors" disabled>
+                    Blockieren/Freigeben
+                </button>
+                <button id="block-date-button" class="bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-colors ml-4" style="display:inline-block;">
+                    Gesamtes Datum blockieren
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JS для admin.html будет здесь
+    let currentMonth = new Date();
+    let selectedDate = null;
+    let selectedTime = null;
+    let appointmentsData = { appointments: [], blocked_slots: {} };
+    let filteredAppointments = [];
+    let sortField = '';
+    let sortAsc = true;
+
+        const calendarGrid = document.getElementById('calendar-grid');
+        const currentMonthYear = document.getElementById('current-month-year');
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        const blockUnblockButton = document.getElementById('block-unblock-button');
+        const prevMonthButton = document.getElementById('prev-month');
+        const nextMonthButton = document.getElementById('next-month');
+
+        const TIME_SLOTS = [
+            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+            "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+        ];
+
+        async function fetchAppointmentsData() {
+            try {
+                const response = await fetch('/api/admin/appointments');
+                if (!response.ok) throw new Error('Ошибка при загрузке данных о записях');
+                const data = await response.json();
+                console.log('Ответ от /api/admin/appointments:', data);
+                if (!data.appointments || !Array.isArray(data.appointments)) {
+                    console.error('Структура данных некорректна:', data);
+                    alert('Некорректные данные о записях.');
+                    return;
+                }
+                appointmentsData = data;
+                filteredAppointments = appointmentsData.appointments.slice();
+                renderAppointmentsTable();
+                renderCalendar();
+                renderTimeSlots();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                alert('Не удалось загрузить данные о записях.');
+            }
+        }
+
+        function renderAppointmentsTable() {
+            const tableBody = document.querySelector('#appointments-table tbody');
+            tableBody.innerHTML = '';
+            filteredAppointments.forEach(appt => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-2 px-3">${appt.date}</td>
+                    <td class="py-2 px-3">${appt.time}</td>
+                    <td class="py-2 px-3">${appt.client.name}</td>
+                    <td class="py-2 px-3">${appt.client.email}</td>
+                    <td class="py-2 px-3">${appt.client.phone}</td>
+                    <td class="py-2 px-3">${appt.service_label || appt.service}</td>
+                    <td class="py-2 px-3">
+                        <select class="status-select border rounded px-2 py-1" data-id="${appt.id}">
+                            <option value="ожидает" ${appt.status === 'ожидает' ? 'selected' : ''}>Ожидает</option>
+                            <option value="выполнено" ${appt.status === 'выполнено' ? 'selected' : ''}>Выполнено</option>
+                            <option value="отменено" ${appt.status === 'отменено' ? 'selected' : ''}>Отменено</option>
+                        </select>
+                    </td>
+                    <td class="py-2 px-3">
+                        <button class="bg-red-500 text-white px-2 py-1 rounded delete-btn" data-id="${appt.id}">Löschen</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Поиск по таблице
+        document.addEventListener('input', function(e) {
+            if (e.target.id === 'search-input') {
+                const val = e.target.value.toLowerCase();
+                filteredAppointments = appointmentsData.appointments.filter(appt =>
+                    appt.client.name.toLowerCase().includes(val) ||
+                    appt.client.email.toLowerCase().includes(val) ||
+                    appt.client.phone.toLowerCase().includes(val) ||
+                    (appt.service_label || appt.service).toLowerCase().includes(val)
+                );
+                renderAppointmentsTable();
+            }
+        });
+
+        // Сортировка
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('th') && e.target.closest('table').id === 'appointments-table') {
+                const field = e.target.closest('th').dataset.sort;
+                if (!field) return;
+                sortAsc = sortField === field ? !sortAsc : true;
+                sortField = field;
+                filteredAppointments.sort((a, b) => {
+                    let va = field === 'name' ? a.client.name : field === 'email' ? a.client.email : field === 'phone' ? a.client.phone : field === 'service' ? (a.service_label || a.service) : a[field];
+                    let vb = field === 'name' ? b.client.name : field === 'email' ? b.client.email : field === 'phone' ? b.client.phone : field === 'service' ? (b.service_label || b.service) : b[field];
+                    return sortAsc ? (va > vb ? 1 : va < vb ? -1 : 0) : (va < vb ? 1 : va > vb ? -1 : 0);
+                });
+                renderAppointmentsTable();
+            }
+        });
+
+        // Экспорт в CSV
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'export-csv') {
+                let csv = 'Дата,Время,Имя,Email,Телефон,Услуга,Статус\n';
+                filteredAppointments.forEach(appt => {
+                    csv += `${appt.date},${appt.time},${appt.client.name},${appt.client.email},${appt.client.phone},${appt.service_label || appt.service},${appt.status}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'appointments.csv';
+                link.click();
+            }
+        });
+
+        // Управление статусом заявки
+        document.addEventListener('change', async function(e) {
+            if (e.target.classList.contains('status-select')) {
+                const id = e.target.dataset.id;
+                const status = e.target.value;
+                try {
+                    const response = await fetch(`/api/appointments/${id}/status`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status })
+                    });
+                    if (!response.ok) throw new Error('Ошибка обновления статуса');
+                } catch (err) {
+                    alert('Не удалось обновить статус заявки');
+                }
+            }
+        });
+
+        // Удаление заявки
+        document.addEventListener('click', async function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const id = e.target.dataset.id;
+                if (!confirm('Удалить заявку?')) return;
+                try {
+                    const response = await fetch(`/api/appointments/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) throw new Error('Ошибка удаления');
+                    appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
+                    filteredAppointments = filteredAppointments.filter(a => a.id !== id);
+                    renderAppointmentsTable();
+                } catch (err) {
+                    alert('Не удалось удалить заявку');
+                }
+            }
+        });
+
+        function renderCalendar() {
+            calendarGrid.innerHTML = '';
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            currentMonthYear.textContent = new Date(year, month).toLocaleString('de-DE', { month: 'long', year: 'numeric' });
+
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const daysInMonth = lastDayOfMonth.getDate();
+            const startDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // Понедельник = 0
+
+            // Добавляем пустые дни перед началом месяца
+            for (let i = 0; i < startDayOfWeek; i++) {
+                const prevMonthDay = new Date(year, month, 0).getDate() - startDayOfWeek + i + 1;
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day', 'text-gray-400');
+                dayElement.textContent = prevMonthDay;
+                calendarGrid.appendChild(dayElement);
+            }
+
+            // Добавляем дни текущего месяца
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+                dayElement.dataset.date = dateString;
+
+                // Проверяем, есть ли заблокированные слоты или записи на этот день
+                const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
+                const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
+                const totalSlots = TIME_SLOTS.length;
+                const blockedByAdminCount = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
+                const bookedByUserCount = bookedSlots.length;
+                const blockedByAdmin = blockedByAdminCount > 0;
+                const bookedByUser = bookedByUserCount > 0;
+
+                if (blockedByAdminCount === totalSlots) {
+                    dayElement.classList.add('blocked-admin');
+                } else if (bookedByUserCount === totalSlots) {
+                    dayElement.classList.add('booked');
+                } else if ((blockedByAdminCount + bookedByUserCount) > 0) {
+                    dayElement.classList.add('partially');
+                } else {
+                    dayElement.classList.add('available');
+                }
+
+                if (selectedDate === dateString) {
+                    dayElement.classList.add('selected');
+                }
+
+                dayElement.addEventListener('click', () => {
+                    selectedDate = dateString;
+                    selectedTime = null; // Сбрасываем выбранное время при смене даты
+                    renderCalendar();
+                    renderTimeSlots();
+                    updateBlockUnblockButton();
+                });
+                calendarGrid.appendChild(dayElement);
+            }
+
+            // Добавляем пустые дни после окончания месяца
+            const totalCells = startDayOfWeek + daysInMonth;
+            const remainingCells = 42 - totalCells; // 6 недель * 7 дней
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day', 'text-gray-400');
+                dayElement.textContent = i;
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function renderTimeSlots() {
+            timeSlotsContainer.innerHTML = '';
+            blockUnblockButton.disabled = true;
+
+            if (!selectedDate) return;
+
+            // Получаем все слоты для выбранной даты
+            const slotsForDate = TIME_SLOTS.map(slot => {
+                const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot);
+                const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
+                return {
+                    time: slot,
+                    isBlockedByAdmin,
+                    isBookedByUser
+                };
+            });
+
+            slotsForDate.forEach(({ time, isBlockedByAdmin, isBookedByUser }) => {
+                const timeSlotElement = document.createElement('div');
+                timeSlotElement.classList.add('time-slot');
+                timeSlotElement.textContent = time;
+                timeSlotElement.dataset.time = time;
+
+                if (isBlockedByAdmin) {
+                    timeSlotElement.classList.add('blocked-admin');
+                    timeSlotElement.title = 'Заблокировано администратором';
+                } else if (isBookedByUser) {
+                    timeSlotElement.classList.add('booked', 'disabled');
+                    timeSlotElement.title = 'Занято пользователем';
+                } else {
+                    timeSlotElement.classList.add('available');
+                    timeSlotElement.title = 'Доступно';
+                }
+
+                if (selectedTime === time) {
+                    timeSlotElement.classList.add('selected');
+                }
+
+                // Только доступные и заблокированные админом слоты можно выбирать
+                timeSlotElement.addEventListener('click', () => {
+                    if (isBookedByUser) return;
+                    selectedTime = time;
+                    renderTimeSlots();
+                    updateBlockUnblockButton();
+                });
+                timeSlotsContainer.appendChild(timeSlotElement);
+            });
+        }
+
+        function updateBlockUnblockButton() {
+            if (selectedDate && selectedTime) {
+                const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
+                blockUnblockButton.textContent = isCurrentlyBlocked ? 'Freigeben' : 'Blockieren';
+                blockUnblockButton.disabled = false;
+            } else {
+                blockUnblockButton.textContent = 'Blockieren/Freigeben';
+                blockUnblockButton.disabled = true;
+            }
+        }
+
+        // Глобальное определение функции для блокировки/разблокировки слота
+        async function handleBlockUnblock() {
+            if (!selectedDate || !selectedTime) return;
+
+            const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
+            const action = isCurrentlyBlocked ? 'unblock' : 'block';
+
+            try {
+                const response = await fetch('/api/admin/blocked_slots', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ date: selectedDate, time: selectedTime, action: action })
+                });
+
+                if (!response.ok) throw new Error('Ошибка при обновлении статуса блокировки');
+                await fetchAppointmentsData(); // Обновляем данные после операции
+                selectedTime = null; // Сбрасываем выбранное время после операции
+                renderCalendar();
+                renderTimeSlots();
+                alert(`Slot ${selectedDate} ${selectedTime || ''} wurde ${action === 'block' ? 'blockiert' : 'freigegeben'}!`);
+            } catch (error) {
+                console.error('Ошибка при блокировке/разблокировке слота:', error);
+                alert('Status des Slots konnte nicht обновить.');
+            }
+        }
+
+        prevMonthButton.addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            selectedDate = null; // Сбрасываем выбранную дату при смене месяца
+            selectedTime = null;
+            renderCalendar();
+            renderTimeSlots();
+            updateBlockUnblockButton();
+        });
+
+        nextMonthButton.addEventListener('click', () => {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            selectedDate = null; // Сбрасываем выбранную дату при смене месяца
+            selectedTime = null;
+            renderCalendar();
+            renderTimeSlots();
+            updateBlockUnblockButton();
+        });
+
+        blockUnblockButton.addEventListener('click', handleBlockUnblock);
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAppointmentsData();
+            // Добавляем обработчик для кнопки блокировки всей даты только один раз
+            document.getElementById('block-date-button').addEventListener('click', async function() {
+                if (!selectedDate) return;
+                if (!confirm('Заблокировать все слоты на выбранную дату?')) return;
+                try {
+                    const response = await fetch('/api/admin/blocked_slots', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ date: selectedDate, time: null, action: 'block_all' })
+                    });
+                    if (!response.ok) throw new Error('Ошибка при блокировке даты');
+                    await fetchAppointmentsData(); // Обновляем данные после блокировки
+                    alert('Дата полностью заблокирована!');
+                } catch (error) {
+                    alert('Не удалось заблокировать дату');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
