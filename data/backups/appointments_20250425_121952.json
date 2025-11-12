@@ -1,0 +1,1 @@
+{"appointments": [{"id": "2025-04-30_17:00_1745576243.032557", "date": "2025-04-30", "time": "17:00", "client": {"name": "Kolza", "email": "3@3.com", "phone": "+635441177558"}, "service": "achsvermessung", "message": "пфукпукк", "status": "подтверждено", "created_at": "2025-04-25T12:17:23.032557"}], "blocked_slots": {"2025-04-30": ["17:00"]}}
