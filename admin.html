@@ -361,11 +361,18 @@
         // Экспорт в CSV
         document.addEventListener('click', function(e) {
             if (e.target.id === 'export-csv') {
-                let csv = 'Дата,Время,Имя,Email,Телефон,Услуга,Статус\n';
+                // Маппинг статусов на немецкий
+                const statusMap = {
+                    'ожидает': 'Ausstehend',
+                    'выполнено': 'Erledigt',
+                    'отменено': 'Storniert'
+                };
+                let csv = '\ufeffDatum,Uhrzeit,Name,E-Mail,Telefon,Leistung,Status\n'; // UTF-8 BOM для корректного отображения в Excel
                 filteredAppointments.forEach(appt => {
-                    csv += `${appt.date},${appt.time},${appt.client.name},${appt.client.email},${appt.client.phone},${appt.service_label || appt.service},${appt.status}\n`;
+                    const germanStatus = statusMap[appt.status] || appt.status;
+                    csv += `${appt.date},${appt.time},"${appt.client.name}","${appt.client.email}","${appt.client.phone}","${appt.service_label || appt.service}","${germanStatus}"\n`;
                 });
-                const blob = new Blob([csv], { type: 'text/csv' });
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = 'appointments.csv';
