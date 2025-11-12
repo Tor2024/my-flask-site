@@ -5,6 +5,11 @@ import json
 from datetime import datetime, timedelta
 import requests
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 app = Flask(__name__)
 
@@ -115,6 +120,85 @@ def send_telegram_message(message):
             logger.error(f"Ошибка при отправке Telegram сообщения: {response.text}")
     except Exception as e:
         logger.error(f"Ошибка при отправке Telegram сообщения: {e}")
+
+# === ФУНКЦИИ НАПОМИНАНИЙ ===
+def send_reminder_email(to_email, to_name, date_str, time_str):
+    """Отправка email-напоминания о записи"""
+    GMAIL_USER = os.environ.get('GMAIL_USER')
+    GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
+
+    if not GMAIL_USER or not GMAIL_PASSWORD:
+        logger.error('Gmail credentials not set in environment variables')
+        return False
+
+    subject = 'Erinnerung an Ihren Termin bei Kreuztaler Werkstatt'
+    body = f"""
+Sehr geehrter Herr/Frau {to_name},
+
+wir erinnern Sie an Ihren Termin am {date_str} um {time_str} in der Kreuztaler Werkstatt GmbH.
+
+Diese E-Mail-Adresse dient ausschließlich zur Versendung von Terminerinnerungen und wird nicht überwacht. Wenn Sie uns kontaktieren möchten, nutzen Sie bitte die E-Mail-Adresse auf unserer offiziellen Webseite.
+
+Mit freundlichen Grüßen,
+Kreuztaler Werkstatt GmbH
+"""
+
+    msg = MIMEMultipart()
+    msg['From'] = f'Kreuztaler Werkstatt GmbH <{GMAIL_USER}>'
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain', 'utf-8'))
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(GMAIL_USER, GMAIL_PASSWORD)
+            server.sendmail(GMAIL_USER, to_email, msg.as_string())
+        logger.info(f"Reminder email sent to {to_email} for {date_str} {time_str}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send reminder email to {to_email}: {e}")
+        return False
+
+def send_daily_reminders():
+    """Ежедневная отправка напоминаний клиентам на следующие 24 часа"""
+    logger.info("Starting daily reminder check...")
+
+    # Получаем дату завтра
+    tomorrow = (datetime.now() + timedelta(days=1)).date().isoformat()
+
+    try:
+        # Загружаем записи
+        data = read_appointments()
+        appointments = data.get('appointments', [])
+
+        reminders_sent = 0
+        errors = 0
+
+        # Проходим по всем записям
+        for appt in appointments:
+            if appt.get('date') == tomorrow and appt.get('status') != 'отменен':
+                client = appt.get('client', {})
+                email = client.get('email')
+                name = client.get('name')
+                time_str = appt.get('time')
+
+                if email and name and time_str:
+                    # Форматируем дату для немецкого языка
+                    try:
+                        date_obj = datetime.strptime(tomorrow, '%Y-%m-%d')
+                        date_formatted = date_obj.strftime('%d.%m.%Y')  # DD.MM.YYYY
+                    except:
+                        date_formatted = tomorrow
+
+                    if send_reminder_email(email, name, date_formatted, time_str):
+                        reminders_sent += 1
+                    else:
+                        errors += 1
+
+        logger.info(f"Daily reminders completed: {reminders_sent} sent, {errors} errors")
+
+    except Exception as e:
+        logger.error(f"Error in send_daily_reminders: {e}")
 
 @app.route('/')
 def index():
@@ -483,9 +567,22 @@ def find_free_port(start_port=8080, max_port=9000):
 
 if __name__ == '__main__':
     try:
+        # Настройка планировщика для ежедневных напоминаний
+        scheduler = BackgroundScheduler()
+        # Запуск каждый день в 9:00 утра
+        scheduler.add_job(
+            send_daily_reminders,
+            trigger=CronTrigger(hour=9, minute=0),
+            id='daily_reminders',
+            name='Send daily appointment reminders'
+        )
+        scheduler.start()
+        logger.info("APScheduler started - daily reminders scheduled for 9:00 AM")
+
         port = find_free_port()
         print(f"Запуск сервера на порту {port}...")
         print(f"Сайт будет доступен по адресу: http://localhost:{port}")
+        print("Ежедневные напоминания будут отправляться в 9:00 утра")
         print("Для остановки сервера нажмите Ctrl+C")
         app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
     except Exception as e:

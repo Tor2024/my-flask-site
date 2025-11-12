@@ -2,3 +2,4 @@ Flask==3.0.2
 python-telegram-bot>=20.0
 gunicorn
 requests
+APScheduler==3.10.4
