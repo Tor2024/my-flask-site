@@ -371,7 +371,7 @@
                 let csv = '\ufeffDatum;Uhrzeit;Name;E-Mail;Telefon;Leistung;Status\n'; // UTF-8 BOM для корректного отображения в Excel, semicolon для немецкой локали
                 filteredAppointments.forEach(appt => {
                     const germanStatus = statusMap[appt.status] || appt.status;
-                    csv += `${appt.date};${appt.time};"${appt.client.name}";"${appt.client.email}";"${appt.client.phone}";"${appt.service_label || appt.service}";"${germanStatus}"\n`;
+                    csv += `${appt.date};${appt.time};"${appt.client.name}";"${appt.client.email}";"'${appt.client.phone}";"${appt.service_label || appt.service}";"${germanStatus}"\n`;
                 });
                 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
                 const link = document.createElement('a');
