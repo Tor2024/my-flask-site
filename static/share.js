@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const startMorning = 9; // 09:00
         const endMorning = 13; // 13:00
         const startAfternoon = 14; // 14:00
-        const endAfternoon = 18; // 18:00
+        const endAfternoon = 17; // 17:00
         
         // Добавляем утренние слоты
         for (let hour = startMorning; hour < endMorning; hour++) {
@@ -492,4 +492,4 @@ document.addEventListener('DOMContentLoaded', function() {
             weekRow[idx].textContent = name;
         });
     }
-}); 
+});
