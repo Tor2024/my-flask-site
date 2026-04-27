@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) {
-                throw new Error('Ошибка при сохранении записи');
+                throw new Error('Fehler beim Speichern der Buchung');
             }
 
             const result = await response.json();
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('/api/appointments');
             if (!response.ok) {
-                throw new Error('Ошибка при получении данных');
+                throw new Error('Fehler beim Abrufen der Daten');
             }
             const data = await response.json();
             console.log('Получены данные с сервера:', data);
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 appointmentForm.insertBefore(displayContainer, appointmentForm.firstChild);
             }
             
-            displayContainer.textContent = `Выбрано: ${formattedDate}, ${time}`;
+            displayContainer.textContent = `Ausgewählt: ${formattedDate}, ${time}`;
         }
     }
     
