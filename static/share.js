@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Переводим сообщения для формы записи
     const MSG_REQUIRED_FIELDS = 'Bitte füllen Sie alle Pflichtfelder aus';
     const MSG_SELECT_DATE_TIME = 'Bitte wählen Sie Datum und Uhrzeit';
-    const MSG_SUCCESS = 'Ihre Anfrage wurde erfolgreich gesendet! Wir werden Sie in Kürze kontaktieren, um den Termin zu bestätigen.';
+    const MSG_SUCCESS = 'Ihre Anfrage wurde успешно gesendet! Wir werden Sie в ближайшее время контакт, чтобы подтвердить Termin.';
     const MSG_ERROR = 'Fehler beim Senden des Formulars: ';
     
     // Функция для обновления отображения месяца и года
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
                 
                 // Формируем текст для WhatsApp
-                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n\nBitte bestätigen Sie meine Anfrage.`);
+                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin на вашей Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte подтвердите meine Anfrage.`);
                 // Номер телефона WhatsApp из примера
                 const waUrl = `https://wa.me/491701234567?text=${waText}`;
 
@@ -470,10 +470,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="ri-check-line ri-3x"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-green-800 mb-2">Terminanfrage erfolgreich!</h3>
-                    <p class="text-green-700 mb-6 leading-relaxed">Ihre Anfrage wurde sicher übermittelt. Wir werden uns in Kürze bei Ihnen melden.</p>
+                    <p class="text-green-700 mb-6 leading-relaxed">Ihre Anfrage wurde sicher übermittelt. Wir werden uns в ближайшее время melden.</p>
                     
                     <div class="bg-white p-5 rounded-xl shadow-sm mb-6 inline-block text-left w-full max-w-sm border border-gray-100">
-                        <p class="text-sm text-gray-600 mb-4 text-center">Für eine besonders schnelle Bestätigung können Sie uns Ihre Details direkt per WhatsApp senden:</p>
+                        <p class="text-sm text-gray-600 mb-4 text-center">Для особо быстрого подтверждения вы можете отправить нам свои данные напрямую через WhatsApp:</p>
                         <a href="${waUrl}" target="_blank" rel="noopener" class="flex items-center justify-center w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                             <i class="ri-whatsapp-line ri-xl mr-2"></i>
                             Details per WhatsApp senden
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Вставка дней недели на немецком
-    // Найти контейнер с днями недели и заменить их на немецкие
+    // Найти контейнер с днями недели и заменять их на немецкие
     const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
     const weekRow = document.querySelectorAll('.grid.grid-cols-7.gap-1.text-center.mb-2 > div');
     if (weekRow && weekRow.length === 7) {
