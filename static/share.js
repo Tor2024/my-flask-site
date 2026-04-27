@@ -454,20 +454,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Показ сообщения об успехе
                 const successMessage = document.createElement('div');
-                successMessage.className = 'mt-4 p-4 bg-green-100 text-green-700 rounded';
-                successMessage.textContent = MSG_SUCCESS;
+                successMessage.className = 'mt-6 p-6 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl shadow-sm text-center transform transition-all success-message-container';
                 
-                appointmentForm.appendChild(successMessage);
+                // Получаем текстовое название выбранной услуги
+                const serviceSelect = document.getElementById('service');
+                const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
+                
+                // Формируем текст для WhatsApp
+                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n\nBitte bestätigen Sie meine Anfrage.`);
+                // Номер телефона WhatsApp из примера
+                const waUrl = `https://wa.me/491701234567?text=${waText}`;
+
+                successMessage.innerHTML = `
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white shadow-md">
+                        <i class="ri-check-line ri-3x"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-800 mb-2">Terminanfrage erfolgreich!</h3>
+                    <p class="text-green-700 mb-6 leading-relaxed">Ihre Anfrage wurde sicher übermittelt. Wir werden uns in Kürze bei Ihnen melden.</p>
+                    
+                    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 inline-block text-left w-full max-w-sm border border-gray-100">
+                        <p class="text-sm text-gray-600 mb-4 text-center">Für eine besonders schnelle Bestätigung können Sie uns Ihre Details direkt per WhatsApp senden:</p>
+                        <a href="${waUrl}" target="_blank" rel="noopener" class="flex items-center justify-center w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            <i class="ri-whatsapp-line ri-xl mr-2"></i>
+                            Details per WhatsApp senden
+                        </a>
+                    </div>
+                    <div>
+                        <button type="button" class="text-primary font-medium hover:text-primary/80 transition-colors underline" id="btn-new-appointment">
+                            Weitere Anfrage stellen
+                        </button>
+                    </div>
+                `;
+                
+                // Скрываем форму и показываем сообщение
+                appointmentForm.style.display = 'none';
+                appointmentForm.parentNode.insertBefore(successMessage, appointmentForm);
                 
                 // Очистка формы
                 appointmentForm.reset();
                 selectedDateInput.value = '';
                 selectedTimeInput.value = '';
                 
-                // Удаление сообщения через 5 секунд
-                setTimeout(() => {
+                // Обработчик для кнопки "Сделать новую запись"
+                document.getElementById('btn-new-appointment').addEventListener('click', function(e) {
+                    e.preventDefault();
                     successMessage.remove();
-                }, 5000);
+                    appointmentForm.style.display = 'block';
+                });
             } catch (error) {
                 console.error('Ошибка:', error);
                 alert(MSG_ERROR + error.message);

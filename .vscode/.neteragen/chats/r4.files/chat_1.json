@@ -1,0 +1,27 @@
+{
+    "chat_id": 1,
+    "topic": "",
+    "focus_section_id": "r4.files",
+    "last_agent_name": "Cody",
+    "last_modified_datetime": "2026-04-27T15:54:42.375429",
+    "messages": [
+        {
+            "name": "PO",
+            "message": "ты тут?\n",
+            "message_raw": "ты тут?\n",
+            "method": "USER",
+            "tasks": "",
+            "is_status_message": false,
+            "message_id": "2f108b78-795a-4014-b980-980dd594315f",
+            "timestamp": "2026-04-27T15:54:42.130190",
+            "variation_index": 0,
+            "variations": [],
+            "images_data": {},
+            "documents_data": {},
+            "hidden_from_agent": false,
+            "model_auto_switched": false
+        }
+    ],
+    "mentioned_files": [],
+    "additional_context": ""
+}
