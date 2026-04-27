@@ -479,11 +479,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             Details per WhatsApp senden
                         </a>
                     </div>
-                    <div>
-                        <button type="button" class="text-primary font-medium hover:text-primary/80 transition-colors underline" id="btn-new-appointment">
-                            Weitere Anfrage stellen
-                        </button>
-                    </div>
                 `;
                 
                 // Скрываем форму и показываем сообщение
@@ -494,13 +489,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 appointmentForm.reset();
                 selectedDateInput.value = '';
                 selectedTimeInput.value = '';
-                
-                // Обработчик для кнопки "Сделать новую запись"
-                document.getElementById('btn-new-appointment').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    successMessage.remove();
-                    appointmentForm.style.display = 'block';
-                });
             } catch (error) {
                 console.error('Ошибка:', error);
                 alert(MSG_ERROR + error.message);
