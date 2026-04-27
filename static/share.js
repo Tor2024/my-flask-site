@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Переводим сообщения для формы записи
     const MSG_REQUIRED_FIELDS = 'Bitte füllen Sie alle Pflichtfelder aus';
     const MSG_SELECT_DATE_TIME = 'Bitte wählen Sie Datum und Uhrzeit';
-    const MSG_SUCCESS = 'Ihre Anfrage wurde успешно gesendet! Wir werden Sie в ближайшее время контакт, чтобы подтвердить Termin.';
+    const MSG_SUCCESS = 'Ihre Anfrage wurde erfolgreich gesendet! Wir werden Sie in Kürze kontaktieren, um den Termin zu bestätigen.';
     const MSG_ERROR = 'Fehler beim Senden des Formulars: ';
     
     // Функция для обновления отображения месяца и года
