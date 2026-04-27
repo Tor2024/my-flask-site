@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Формируем текст для WhatsApp
                 const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte bestätigen Sie meine Anfrage.`);
                 // Номер телефона WhatsApp из примера
-                const waUrl = `https://wa.me/491701234567?text=${waText}`;
+                const waUrl = `https://wa.me/491797399039?text=${waText}`;
 
                 successMessage.innerHTML = `
                     <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white shadow-md">
