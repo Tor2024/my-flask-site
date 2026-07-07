@@ -410,13 +410,14 @@
             border: 0;
         }
 
-        /* History timeline: 3D perspective rotation handled by perspective-showcase.js */
-        #timeline-stack .timeline-era { will-change: transform, opacity; }
+    /* History timeline: stacking-cards effect handled by perspective-showcase.js */
+    #timeline-stack .timeline-era { will-change: transform, opacity; }
     </style>
 </head>
 <body class="bg-white">
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <a href="#hero" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] bg-primary text-white px-4 py-2 rounded">Zum Hauptinhalt</a>
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
                 <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
@@ -424,7 +425,7 @@
                 <span class="text-gray-500 text-sm">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Startseite</a>
+                <a href="#hero" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Startseite</a>
                 <a href="#about" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Über uns</a>
                 <a href="#services" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Leistungen</a>
                 <a href="#reviews" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kundenbewertungen</a>
@@ -443,7 +444,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="relative overflow-hidden">
+    <section id="hero" class="relative overflow-hidden">
         <div class="hero-bg-image absolute inset-0 -z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
         <canvas id="magic-dust" class="absolute inset-0 w-full h-full z-0 mix-blend-screen pointer-events-none"></canvas>
@@ -1256,7 +1257,7 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Schnellzugriff</h4>
                     <ul class="space-y-2">
-                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
+                        <li><a href="#hero" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
                         <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">Über uns</a></li>
                         <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
                         <li><a href="#reviews" class="text-gray-400 hover:text-white transition-colors">Kundenbewertungen</a></li>
@@ -1349,7 +1350,7 @@
 
     <script src="static/share.js"></script>
     <script src="static/motion.js?v=2" defer></script>
-    <script src="static/perspective-showcase.js?v=4" defer></script>
+    <script src="static/perspective-showcase.js?v=5" defer></script>
     <script src="static/magic-dust.js?v=14" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1399,7 +1400,7 @@
                     </button>
                 </div>
                 <nav class="flex flex-col">
-                    <a href="#home" class="mobile-nav-link">Startseite</a>
+                    <a href="#hero" class="mobile-nav-link">Startseite</a>
                     <a href="#about" class="mobile-nav-link">Über uns</a>
                     <a href="#services" class="mobile-nav-link">Leistungen</a>
                     <a href="#reviews" class="mobile-nav-link">Kundenbewertungen</a>

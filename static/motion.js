@@ -31,7 +31,7 @@
             yPercent: 18,
             ease: 'none',
             scrollTrigger: {
-                trigger: '#home',
+                trigger: '#hero',
                 start: 'top top',
                 end: 'bottom top',
                 scrub: true
