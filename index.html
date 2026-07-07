@@ -1595,8 +1595,9 @@ var aPos=gl.getAttribLocation(prog,'aVertexPosition');
 var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
 function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
 window.addEventListener('resize',resize);resize();
-var t0=Date.now();
-function frame(){var t=(Date.now()-t0)/1000;gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
+var t0=Date.now();var fsVisible=true;
+if('IntersectionObserver' in window){new IntersectionObserver(function(e){fsVisible=e[0].isIntersecting;},{rootMargin:'100px'}).observe(c);}
+function frame(){var t=(Date.now()-t0)/1000;if(!fsVisible){requestAnimationFrame(frame);return;}gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
 requestAnimationFrame(frame);})();
 </script>
 </body>
