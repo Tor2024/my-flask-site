@@ -501,6 +501,7 @@
     <!-- Hero Section -->
     <section id="hero" class="relative overflow-hidden">
         <div class="hero-bg-image absolute inset-0 -z-10"></div>
+        <div id="hero-shader" class="absolute inset-0 -z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
         <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
             <div class="max-w-2xl text-white">
@@ -1367,6 +1368,7 @@
     <script src="static/share.js"></script>
     <script src="static/motion.js?v=2" defer></script>
     <script src="static/perspective-showcase.js?v=5" defer></script>
+    <script type="module" src="static/hero-shader.js?v=1"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const lenis = new Lenis({duration:1.1,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
