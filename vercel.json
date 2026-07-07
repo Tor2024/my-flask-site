@@ -1,0 +1,11 @@
+{
+  "buildCommand": null,
+  "outputDirectory": null,
+  "framework": "flask",
+  "functions": {
+    "api/app.py": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  }
+}
