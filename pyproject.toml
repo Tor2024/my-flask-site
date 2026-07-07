@@ -1,2 +1,14 @@
+[project]
+name = "kreuztaler-werkstatt"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "Flask==3.0.2",
+    "python-telegram-bot>=20.0",
+    "gunicorn",
+    "requests",
+    "APScheduler==3.10.4",
+]
+
 [tool.vercel]
 entrypoint = "app:app"
