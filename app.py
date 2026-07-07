@@ -49,12 +49,9 @@ if not os.path.exists(VISITS_FILE):
 SERVICE_LABELS = {
     'wartung': 'Wartung',
     'diagnose': 'Fahrzeugsdiagnose',
-    'motor': 'Motorreparatur',
-    'getriebe': 'Getriebereparatur',
     'fahrwerk': 'Reparatur von Fahrwerk und Aufhängung',
     'bremsen': 'Bremsenservice',
     'elektrik': 'Autoelektrik und Elektronik',
-    'karosserie': 'Karosseriereparatur und Lackierung',
     'klima': 'Klimaanlagenservice',
     'reifen': 'Reifenmontage und Auswuchten'
 }

@@ -40,41 +40,6 @@ json_raw = r'''
         "cta": "F\u00e4llt bald eine Inspektion an oder leuchtet die Serviceanzeige? Vereinbaren Sie jetzt einen Wartungstermin."
     },
     {
-        "slug": "unfallreparatur", "title": "Unfallreparatur",
-        "subtitle": "Fachgerechte Reparatur aller Unfallsch\u00e4den \u2013 wir stellen die Optik und Sicherheit Ihres Fahrzeugs wieder her.",
-        "meta": "Unfallreparatur in Kreuztal: Karosserie, Lackierung, Richtbank, 3D-Vermessung. Unfallinstandsetzung aller Marken. Schnelle und fachgerechte Reparatur.",
-        "hero_img": "static/images/Unfallreparatur1.png",
-        "hero_icon": "ri-car-washing-line",
-        "intro": "Ein Unfall ist immer ein Schock. Wir helfen Ihnen, schnell wieder mobil zu sein. Von der Schadensbegutachtung \u00fcber die Abwicklung mit der Versicherung bis zur fachgerechten Reparatur \u2013 wir begleiten Sie durch den gesamten Prozess. Unfallsch\u00e4den aller Art werden bei uns fachgerecht instandgesetzt.",
-        "process": [
-            ["Schadensaufnahme & Gutachten", "Wir dokumentieren den Schaden, erstellen das Gutachten oder korrespondieren mit dem Gutachter Ihrer Versicherung. \u00dcbernahme des Gutachtens und der Reparaturplanung.", "ri-file-list-3-line"],
-            ["Reparatur & Instandsetzung", "Richtbank, 3D-Vermessung, Karosseriearbeiten, Lackierung \u2013 alles in einer Hand. Wir arbeiten nach Herstellervorgaben und gew\u00e4hrleisten Werksqualit\u00e4t.", "ri-tools-fill"],
-            ["Qualit\u00e4tssicherung & \u00dcbergabe", "Nach der Reparatur durchl\u00e4uft Ihr Fahrzeug eine mehrstufige Qualit\u00e4tskontrolle. Sie erhalten ein \u00dcbergabeprotokoll mit allen durchgef\u00fchrten Arbeiten.", "ri-check-double-line"]
-        ],
-        "sections": [
-            ["Karosserieinstandsetzung auf dem Richtbank", "Unsere computergesteuerte Richtbank erm\u00f6glicht millimetergenaue Vermessung und Instandsetzung der Karosserie. Wir richten Ihr Fahrzeug wieder in die urspr\u00fcngliche Form \u2013 nach Herstellervorgaben und mit modernster 3D-Messtechnik."],
-            ["Lackierung in Profi-Qualit\u00e4t", "In unserer beheizten Lackierkabine werden Reparaturlackierungen farbtongetreu ausgef\u00fchrt. Der Farbton wird elektronisch ermittelt und exakt angemischt. Ob Einzelteillackierung oder Komplettlackierung \u2013 wir liefern OEM-Qualit\u00e4t."],
-            ["Versicherungsabwicklung \u2013 wir k\u00fcmmern uns", "Sie m\u00fcssen sich um nichts k\u00fcmmern. Wir kommunizieren direkt mit Ihrer Versicherung, kl\u00e4ren die Kosten\u00fcbernahme und k\u00fcmmern uns um den Mietwagen. Sie holen Ihr repariertes Fahrzeug einfach wieder ab."],
-            ["Ersatzteilbeschaffung & Originalteile", "Wir verwenden ausschliesslich Originalteile oder zertifizierte Qualit\u00e4tsteile. Die Beschaffung erfolgt \u00fcber unsere Partner \u2013 schnell und verl\u00e4sslich. Auch bei seltenen Modellen haben wir Zugriff auf das europ\u00e4ische Teile-Netzwerk."]
-        ],
-        "benefits": [
-            "Alles aus einer Hand \u2013 Karosserie, Lack, Gutachten",
-            "Computergesteuerte Richtbank mit 3D-Vermessung",
-            "Direkte Versicherungsabwicklung \u2013 Sie haben keine Arbeit",
-            "Mietwagen-Organisation inklusive",
-            "Herstellergarantie bleibt erhalten",
-            "Schnelle Bearbeitung \u2013 in den meisten F\u00e4llen unter 5 Werktagen"
-        ],
-        "faq": [
-            ["Muss ich mein Fahrzeug vor der Reparatur zur Besichtigung vorlegen?", "Ja \u2013 wir m\u00fcssen den Schaden vor Auftragsbeginn sehen. Manchmal sind versteckte Sch\u00e4den vorhanden, die im Gutachten nicht aufgef\u00fchrt sind. Wir informieren Sie umgehend, falls w\u00e4hrend der Reparatur Zusatzsch\u00e4den entdeckt werden."],
-            ["Wie lange dauert eine Unfallreparatur?", "Das h\u00e4ngt vom Schadenumfang ab. Ein Kotfl\u00fcgel-Wechsel inkl. Lackierung: 2\u20133 Tage. Eine gr\u00f6ssere Karosseriereparatur: 5\u201310 Werktage. Wir nennen Ihnen vorab eine realistische Zeitschiene."],
-            ["Bekomme ich einen Mietwagen?", "Ja \u2013 wir organisieren einen Mietwagen f\u00fcr die Dauer der Reparatur. Die \u00dcbernahme kl\u00e4ren wir direkt mit Ihrer Versicherung. Sie k\u00f6nnen Ihr Fahrzeug bei uns abgeben und den Mietwagen gleich mitnehmen."],
-            ["Muss ich in Vorkasse gehen?", "Nein \u2013 bei Unfallreparaturen arbeiten wir direkt mit Ihrer Versicherung zusammen. Sie zahlen nur den vereinbarten Selbstbehalt."],
-            ["Bleibt meine Herstellergarantie erhalten?", "Ja \u2013 wir reparieren nach Herstellervorgaben und verwenden Originalteile. Ihre Herstellergarantie bleibt uneingeschr\u00e4nkt erhalten. Wir dokumentieren alle Arbeiten l\u00fcckenlos."]
-        ],
-        "cta": "Hatten Sie einen Unfall? Keine Panik \u2013 wir k\u00fcmmern uns um alles. Vereinbaren Sie einen Termin zur Schadensaufnahme."
-    },
-    {
         "slug": "fahrzeugsdiagnose", "title": "Fahrzeugsdiagnose",
         "subtitle": "Computergest\u00fctzte Diagnose aller Fahrzeugsysteme. Schnelle Fehlererkennung und Behebung von St\u00f6rungen.",
         "meta": "Fahrzeugdiagnose in Kreuztal: Fehlerauslese, Steuerger\u00e4te-Diagnose, Systemanalyse f\u00fcr alle Marken. Modernste Diagnosetechnik.",
@@ -108,76 +73,6 @@ json_raw = r'''
             ["Was passiert, wenn der Fehler nicht gefunden wird?", "Sollte der Fehler trotz Diagnose nicht eindeutig lokalisierbar sein, berechnen wir nur die Zeit f\u00fcr die durchgef\u00fchrten Pr\u00fcfungen \u2013 wir lassen Sie nicht mit einer offenen Rechnung und ungel\u00f6stem Problem gehen."]
         ],
         "cta": "Leuchtet eine Kontrollleuchte oder macht Ihr Fahrzeug Ger\u00e4usche? Vereinbaren Sie eine Diagnose."
-    },
-    {
-        "slug": "motorreparatur", "title": "Motorreparatur",
-        "subtitle": "Fachm\u00e4nnische Reparatur und Wartung aller Motortypen \u2013 vom Dichtungswechsel bis zur Komplett\u00fcberholung.",
-        "meta": "Motorreparatur in Kreuztal: Zylinderkopf, Steuerkette, Turbolader, \u00d6lverlust, Komplett\u00fcberholung. Reparatur aller Motortypen.",
-        "hero_img": "static/images/Motorreparatur1.png",
-        "hero_icon": "ri-engine-line",
-        "intro": "Der Motor ist das Herz Ihres Fahrzeugs. Ob \u00d6lverlust, Leistungseinbussen, unruhiger Lauf oder ein ernster Motorschaden \u2013 wir diagnostizieren und reparieren Motoren aller Hersteller und Bauarten fachgerecht und nach Herstellervorgaben.",
-        "process": [
-            ["Motordiagnose & Kompressionstest", "Wir f\u00fchren eine umfassende Motordiagnose durch inklusive Kompressionstest, Dichtheitspr\u00fcfung, Endoskopie und \u00d6ldruckmessung. So finden wir die genaue Ursache.", "ri-stethoscope-line"],
-            ["Reparatur & Instandsetzung", "Ob Zylinderkopfdichtung, Steuerkette, Turbolader oder Kolbenringe \u2013 unsere Techniker f\u00fchren die Reparatur fachgerecht durch. Bei Bedarf arbeiten wir mit spezialisierten Motoren-Instandsetzern zusammen.", "ri-tools-fill"],
-            ["Funktionspr\u00fcfung & Probefahrt", "Nach der Reparatur: \u00d6ldruckkontrolle, Dichtheitspr\u00fcfung, Probefahrt und erneute Diagnose. Erst wenn alle Werte im Sollbereich liegen, wird das Fahrzeug ausgeliefert.", "ri-check-double-line"]
-        ],
-        "sections": [
-            ["Zylinderkopfreparatur & Dichtungswechsel", "Die Zylinderkopfdichtung ist eine der h\u00e4ufigsten Motorreparaturen. Anzeichen: \u00d6l im K\u00fchlwasser, K\u00fchlwasserverlust, weisser Rauch aus dem Auspuff. Wir tauschen die Dichtung fachgerecht und planen den Zylinderkopf bei Bedarf."],
-            ["Steuerkette & Zahnriemen", "Ein Riss der Steuerkette oder des Zahnriemens kann den Motor zerst\u00f6ren. Wir wechseln Steuerketten, Zahnriemen, Spanner und F\u00fchrungsschienen nach Herstellervorgaben. Inklusive Kontrolle der Ventilsteuerzeiten."],
-            ["Turbolader-Reparatur & Austausch", "Typische Turboladersch\u00e4den: \u00d6lverlust, pfeifende Ger\u00e4usche, Leistungsverlust. Wir tauschen den Turbolader inklusive \u00d6lversorgung und Reinigung der \u00d6lr\u00fccklaufleitung. Anschliessend erfolgt eine Anpassung der Motorsteuerung."],
-            ["Komplett\u00fcberholung & Austauschmotor", "Bei Totalausfall des Motors bieten wir verschiedene Optionen: Instandsetzung des vorhandenen Motors, Austauschmotor mit Garantie oder Gebrauchtmotor von gepr\u00fcften Anbietern. Wir beraten Sie ehrlich, welche L\u00f6sung f\u00fcr Ihr Fahrzeug wirtschaftlich sinnvoll ist."]
-        ],
-        "benefits": [
-            "Fachgerechte Reparatur nach Herstellervorgaben",
-            "Modernes Werkzeug und Spezialkenntnisse f\u00fcr alle Marken",
-            "Detaillierte Aufstellung aller Arbeiten vor der Reparatur",
-            "Gepr\u00fcfte Austauschmotoren mit Garantie",
-            "Gerne Reparatur statt Austausch \u2013 wo wirtschaftlich sinnvoll",
-            "Gew\u00e4hrleistung auf alle durchgef\u00fchrten Arbeiten"
-        ],
-        "faq": [
-            ["Welche Motorreparaturen f\u00fchren Sie durch?", "Vom Dichtungswechsel \u00fcber Zylinderkopfreparatur bis zur kompletten Motor\u00fcberholung \u2013 wir arbeiten an allen Motortypen. Sie erhalten vorab eine detaillierte Aufstellung aller Arbeiten und eine klare Einsch\u00e4tzung, ob sich die Reparatur lohnt."],
-            ["Lohnt sich eine Motorreparatur oder lieber ein Austauschmotor?", "Das h\u00e4ngt vom Fahrzeugwert ab. Bei einem jungen Fahrzeug lohnt sich die Reparatur. Bei \u00e4lteren Fahrzeugen kann ein Austauschmotor wirtschaftlicher sein \u2013 wir beraten Sie ehrlich."],
-            ["Wie lange dauert eine Motorreparatur?", "Eine Zylinderkopfdichtung: 2\u20133 Tage. Steuerkette: 1\u20132 Tage. Turbolader: 1\u20132 Tage. Komplett\u00fcberholung: 1\u20132 Wochen. Wir nennen Ihnen vorab die realistische Dauer."],
-            ["Erhalte ich Garantie auf die Reparatur?", "Ja \u2013 wir gew\u00e4hren 2 Jahre Garantie auf alle Motorreparaturen (bei fachgerechter Wartung nach Reparatur)."],
-            ["Kann ich mein Fahrzeug nach der Reparatur sofort wieder fahren?", "Ja \u2013 nach der Probefahrt und Freigabe k\u00f6nnen Sie sofort losfahren. Wir geben Ihnen Tipps zum Einfahren nach einer Motor\u00fcberholung."]
-        ],
-        "cta": "Ihr Motor \u00f6lt, klopft oder hat Leistungsverlust? Vereinbaren Sie einen Diagnosetermin \u2013 wir finden die Ursache."
-    },
-    {
-        "slug": "getriebereparatur", "title": "Getriebereparatur",
-        "subtitle": "Reparatur und Wartung von Schalt- und Automatikgetrieben. Diagnose und Behebung von Getriebest\u00f6rungen.",
-        "meta": "Getriebereparatur in Kreuztal: Schaltgetriebe, Automatikgetriebe, DSG, CVT, Getriebe\u00f6lwechsel. Reparatur aller Getriebetypen.",
-        "hero_img": "static/images/Getriebereparatur1.png",
-        "hero_icon": "ri-settings-5-line",
-        "intro": "Schaltprobleme, Ruckeln beim Gangwechsel, Schleifger\u00e4usche oder ein pl\u00f6tzlicher Gangausfall \u2013 Getriebesch\u00e4den geh\u00f6ren zu den komplexesten Reparaturen am Fahrzeug. Wir diagnostizieren und reparieren Getriebe aller Bauarten fachgerecht und nach Herstellervorgaben.",
-        "process": [
-            ["Getriebediagnose & Fehleranalyse", "Wir lesen das Getriebesteuerger\u00e4t aus, pr\u00fcfen den \u00d6lzustand und f\u00fchren eine Fahrprobe durch. So ermitteln wir die genaue Ursache \u2013 ob mechanisch, hydraulisch oder elektronisch.", "ri-stethoscope-line"],
-            ["Reparatur oder Austausch", "Je nach Schaden entscheiden wir gemeinsam: Instandsetzung des vorhandenen Getriebes oder Einbau eines gepr\u00fcften Austauschgetriebes. Beide Optionen mit Garantie.", "ri-tools-fill"],
-            ["Funktionskontrolle & \u00d6lwechsel", "Nach der Reparatur: Getriebe\u00f6lwechsel, Adaption des Steuerger\u00e4ts (bei Automatikgetrieben), ausgiebige Probefahrt und Funktionskontrolle aller G\u00e4nge.", "ri-check-double-line"]
-        ],
-        "sections": [
-            ["Automatikgetriebe & DSG-Reparatur", "Moderne Automatikgetriebe und DSG sind Hightech-Komponenten. H\u00e4ufige Fehler: Ruckeln beim Anfahren, Schaltverz\u00f6gerungen, Notlaufprogramm. Wir tauschen Steuerger\u00e4te, Mechatronik-Einheiten, Kupplungspakete und f\u00fchren Adaptionen durch."],
-            ["Schaltgetriebe-Reparatur", "Synchronringe, Lager, Schaltgabeln oder Wellendichtringe \u2013 bei Schaltgetrieben sind h\u00e4ufig mechanische Teile verschlissen. Wir zerlegen und instandsetzen das Getriebe mit Originalteilen."],
-            ["Getriebe\u00f6lwechsel \u2013 wichtig f\u00fcr die Lebensdauer", "Viele Hersteller deklarieren Getriebe\u00f6l als \u201elebenslang\u201c, dennoch empfehlen wir einen Wechsel alle 60.000\u201380.000 km. Frisches \u00d6l verhindert Verschleiss und verl\u00e4ngert die Lebensdauer sp\u00fcrbar."],
-            ["Austauschgetriebe mit Garantie", "Wenn die Reparatur unwirtschaftlich ist, bieten wir gepr\u00fcfte Austauschgetriebe mit bis zu 3 Jahren Garantie. Einbau inklusive \u00d6lwechsel, Adaption und Probefahrt."]
-        ],
-        "benefits": [
-            "Diagnose und Reparatur aller Getriebetypen",
-            "DSG- und Mechatronik-Spezialisten",
-            "Getriebe\u00f6lwechsel mit Herstellerfreigabe",
-            "Austauschgetriebe mit Garantie",
-            "Steuerger\u00e4te-Adaption nach Reparatur",
-            "Detaillierte Aufstellung aller Arbeiten vorab"
-        ],
-        "faq": [
-            ["Wann muss ein Getriebe repariert werden?", "Typische Anzeichen: Ruckeln beim Schalten, schleifende Ger\u00e4usche, Gang springt heraus, G\u00e4nge lassen sich schwer einlegen oder das Notlaufprogramm leuchtet auf. Wir f\u00fchren eine Diagnose durch und empfehlen die wirtschaftlichste L\u00f6sung."],
-            ["Welche Reparatur ist bei meinem Getriebe n\u00f6tig?", "Das h\u00e4ngt vom Schadensbild ab. Wir empfehlen nach der Diagnose die wirtschaftlichste L\u00f6sung \u2013 ob Getriebe\u00f6lwechsel, Reparatur oder Austauschgetriebe. Sie erhalten vorab eine detaillierte Aufstellung."],
-            ["Kann man ein Automatikgetriebe selbst reparieren?", "Nein \u2013 moderne Automatikgetriebe sind hochkomplex und erfordern Spezialwerkzeug, Steuerger\u00e4te-Kenntnisse und Reinraumbedingungen f\u00fcr die Hydraulik."],
-            ["Wie lange h\u00e4lt ein Austauschgetriebe?", "Ein gepr\u00fcftes Austauschgetriebe h\u00e4lt bei regelm\u00e4ssigem \u00d6lwechsel genauso lange wie ein Neuteil \u2013 oft 150.000\u2013250.000 km."],
-            ["Muss nach dem Getriebeeinbau etwas codiert werden?", "Ja \u2013 bei modernen Fahrzeugen muss das Getriebesteuerger\u00e4t nach dem Einbau angelernt und adaptiert werden. Wir f\u00fchren die Adaption mit unserer Diagnose durch."]
-        ],
-        "cta": "Schaltet Ihr Getriebe nicht mehr sauber oder h\u00f6ren Sie Ger\u00e4usche? Vereinbaren Sie einen Diagnosetermin."
     },
     {
         "slug": "fahrwerk-aufhaengung", "title": "Fahrwerk & Aufh\u00e4ngung",
@@ -283,41 +178,6 @@ json_raw = r'''
             ["R\u00fcsten Sie auch Anh\u00e4ngerkupplungen mit Elektrik nach?", "Ja \u2013 inklusive fahrzeugspezifischem Elektrosatz, Codierung und Funktionstest."]
         ],
         "cta": "Die Batterie ist leer, eine Kontrollleuchte leuchtet oder ein elektrischer Verbraucher funktioniert nicht? Vereinbaren Sie einen Elektrik-Check."
-    },
-    {
-        "slug": "karosserie-lackierung", "title": "Karosserie & Lackierung",
-        "subtitle": "Vom kleinen Kratzer bis zur Komplettlackierung \u2013 alles aus einer Hand",
-        "meta": "Karosseriearbeiten und Lackierung in Kreuztal: Dellenentfernung, Beulen dr\u00fccken, Richtbank, Unfallinstandsetzung, Lackierung.",
-        "hero_img": "static/images/Karosserie-Lackierung1.png",
-        "hero_icon": "ri-paint-brush-line",
-        "intro": "Ob Parkdelle, Steinschlag oder Unfallschaden \u2013 unsere Karosserie- und Lackierabteilung bringt Ihr Fahrzeug wieder in Bestform. Mit Richtbank, 3D-Vermessung und Lackierkabine liefern wir Ergebnisse, die sich sehen lassen k\u00f6nnen.",
-        "process": [
-            ["Schadensbegutachtung", "Wir begutachten den Schaden gemeinsam mit Ihnen, zeigen Reparaturm\u00f6glichkeiten und den empfohlenen Ablauf. Oft gibt es mehrere Wege zum Ziel.", "ri-eye-line"],
-            ["Reparatur & Vorbereitung", "Karosserie richten, Dellen entfernen, Oberfl\u00e4che vorbereiten. Je nach Schaden: PDR (Ausbeulen ohne Lackieren) oder klassische Spachtelarbeit.", "ri-scissors-2-line"],
-            ["Lackierung & Qualit\u00e4tskontrolle", "In unserer beheizten Lackierkabine wird Ihr Fahrzeug farbtongetreu lackiert und nach dem Aush\u00e4rten im Lichtkanal gepr\u00fcft.", "ri-palette-line"]
-        ],
-        "sections": [
-            ["Ausbeulen ohne Lackieren (PDR)", "Kleine Dellen, Hagelsch\u00e4den und Beulen lassen sich oft ohne Lackierarbeit entfernen. PDR ist schnell, schonend zur Werkslackierung und sehr effizient."],
-            ["Richt- und Schweissarbeiten", "Mit computergesteuerter 3D-Vermessung wird die Karosserie millimetergenau in die Originalmasse zur\u00fcckgebracht. Schweissarbeiten nach Herstellervorgaben."],
-            ["Lackierarbeiten in Profi-Qualit\u00e4t", "Unsere Lackierkabine erf\u00fcllt h\u00f6chste Standards. Wir lackieren mit OEM-qualifizierten Lacksystemen. Der Farbton wird elektronisch ermittelt."],
-            ["Korrosionsschutz nach der Reparatur", "Wir versiegeln Hohlr\u00e4ume, bringen Steinschlagschutz auf und konservieren Unterbodenbereiche \u2013 f\u00fcr langfristigen Rostschutz."]
-        ],
-        "benefits": [
-            "Parkdellen-Entfernung ohne Neulackierung (PDR)",
-            "Computergesteuerte Richtbank mit 3D-Vermessung",
-            "Farbtongenaue Lackierung mit OEM-Lacksystemen",
-            "Professionelle Korrosionsschutzbehandlung",
-            "Karosseriearbeiten aller Schwierigkeitsgrade",
-            "Unverbindliche Begutachtung vor der Reparatur"
-        ],
-        "faq": [
-            ["Kann man jede Delle ohne Neulackierung entfernen?", "Nein \u2013 PDR funktioniert nur, wenn der Lack nicht besch\u00e4digt ist. Bei Steinschl\u00e4gen muss lackiert werden. Wir beraten Sie ehrlich."],
-            ["Wie lange dauert eine Parkdellen-Entfernung?", "Eine einzelne Delle ist oft in 1\u20132 Stunden erledigt. Wir sagen Ihnen vorab die Dauer."],
-            ["Was umfasst eine Lackierung?", "Wir lackieren einzelne Teile (Stossstangen, Kotfl\u00fcgel, T\u00fcren), Fahrzeugseiten oder komplette Fahrzeuge. Verwendet werden OEM-zertifizierte Lacksysteme mit Farbtongarantie."],
-            ["H\u00e4lt die Reparaturlackierung so lange wie die Werkslackierung?", "Moderne Lacksysteme erm\u00f6glichen Ergebnisse nahe der Werksqualit\u00e4t. 5 Jahre Garantie auf Lackierarbeiten."],
-            ["Was ist der Lichtkanal?", "Eine speziell beleuchtete Pr\u00fcfstation, die selbst kleinste Unebenheiten im Lack sichtbar macht. Jedes Fahrzeug durchl\u00e4uft diese Kontrolle."]
-        ],
-        "cta": "Ihr Fahrzeug hat eine Delle oder einen Kratzer? Vereinbaren Sie einen unverbindlichen Begutachtungstermin."
     },
     {
         "slug": "klimaanlagenservice", "title": "Klimaanlagenservice",
