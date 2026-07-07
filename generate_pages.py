@@ -183,7 +183,7 @@ json_raw = r'''
         "slug": "fahrwerk-aufhaengung", "title": "Fahrwerk & Aufh\u00e4ngung",
         "subtitle": "Reparatur und Austausch von Fahrwerksteilen, Stossd\u00e4mpfern, Lenkung und Stabilisatoren f\u00fcr sicheres Fahrverhalten.",
         "meta": "Fahrwerksreparatur in Kreuztal: Stossd\u00e4mpfer, Federn, Querlenker, Stabilisator, Lenkung, Spur- und Achsvermessung. Fahrwerksinstandsetzung.",
-        "hero_img": "static/images/Fahrwerk&Aufhängung1.png",
+        "hero_img": "static/images/Fahrwerk%26Aufhängung1.png",
         "hero_icon": "ri-steering-2-line",
         "intro": "Ein intaktes Fahrwerk ist die Grundlage f\u00fcr sicheres Fahren, guten Fahrkomfort und eine pr\u00e4zise Strassenlage. Abgefahrene Stossd\u00e4mpfer, ausgeschlagene Gummilager oder eine falsche Spur f\u00fchren nicht nur zu Unbehagen, sondern zu echten Sicherheitsrisiken.",
         "process": [
@@ -253,7 +253,7 @@ json_raw = r'''
         "slug": "autoelektrik-elektronik", "title": "Autoelektrik & Elektronik",
         "subtitle": "Reparatur und Einstellung von Elektrik: Starter, Generator, Batterien, Beleuchtung, Komfort- und Sicherheitssysteme.",
         "meta": "Autoelektrik in Kreuztal: Batterie, Generator, Starter, Beleuchtung, Steuerger\u00e4te, Codierung, Standheizung. Elektrik-Reparaturen aller Art.",
-        "hero_img": "static/images/Autoelektrik&Elektronik1.png",
+        "hero_img": "static/images/Autoelektrik%26Elektronik1.png",
         "hero_icon": "ri-flashlight-line",
         "intro": "Die Elektrik und Elektronik moderner Fahrzeuge wird immer komplexer. Ob defekter Generator, leere Batterie, ausgefallene Beleuchtung oder Probleme mit Steuerger\u00e4ten \u2013 wir diagnostizieren und reparieren elektrische Systeme aller Fahrzeugmarken professionell und zuverl\u00e4ssig.",
         "process": [
@@ -288,7 +288,7 @@ json_raw = r'''
         "slug": "karosserie-lackierung", "title": "Karosserie & Lackierung",
         "subtitle": "Vom kleinen Kratzer bis zur Komplettlackierung \u2013 alles aus einer Hand",
         "meta": "Karosseriearbeiten und Lackierung in Kreuztal: Dellenentfernung, Beulen dr\u00fccken, Richtbank, Unfallinstandsetzung, Lackierung.",
-        "hero_img": "static/images/Karosserie&Lackierung1.png",
+        "hero_img": "static/images/Karosserie%26Lackierung1.png",
         "hero_icon": "ri-paint-brush-line",
         "intro": "Ob Parkdelle, Steinschlag oder Unfallschaden \u2013 unsere Karosserie- und Lackierabteilung bringt Ihr Fahrzeug wieder in Bestform. Mit Richtbank, 3D-Vermessung und Lackierkabine liefern wir Ergebnisse, die sich sehen lassen k\u00f6nnen.",
         "process": [
@@ -358,7 +358,7 @@ json_raw = r'''
         "slug": "reifenservice-auswuchten", "title": "Reifenservice & Auswuchten",
         "subtitle": "Sicher unterwegs mit optimalen Reifen \u2013 Montage, Einlagerung, Beratung",
         "meta": "Reifenservice in Kreuztal: Montage, Demontage, Auswuchten, saisonaler Wechsel, Einlagerung. Reifen kaufen und beraten lassen.",
-        "hero_img": "static/images/Reifenservice&Auswuchten1.png",
+        "hero_img": "static/images/Reifenservice%26Auswuchten1.png",
         "hero_icon": "ri-steering-2-line",
         "intro": "Die Reifen sind die einzige Verbindung Ihres Fahrzeugs zur Strasse. Wir bieten den kompletten Reifenservice: saisonaler Wechsel, professionelles Auswuchten, fachgerechte Einlagerung und Beratung beim Neukauf.",
         "process": [
