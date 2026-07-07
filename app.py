@@ -210,8 +210,8 @@ def index():
         today_str = datetime.now().strftime('%Y-%m-%d')
         visits_data['visits'][today_str] = visits_data['visits'].get(today_str, 0) + 1
         save_visits(visits_data)
-        except OSError:
-            pass
+    except OSError:
+        pass
     try:
         return send_from_directory('.', 'index.html')
     except Exception as e:
