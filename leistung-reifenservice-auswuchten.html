@@ -87,15 +87,68 @@
             .reveal, .reveal-l, .reveal-r { opacity: 1 !important; transform: none !important; }
             .logo-glow { filter: none; }
         }
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: radial-gradient(ellipse at center, #1a2333 0%, #0a0f1a 100%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 32px;
+            transition: opacity .6s ease, visibility .6s ease;
+        }
+        #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; }
+        #preloader .pl-logo img {
+            height: 120px; width: auto;
+            filter: drop-shadow(0 8px 28px rgba(0, 85, 165, 0.55));
+            animation: pl-pulse 2.4s ease-in-out infinite;
+        }
+        #preloader .pl-name {
+            color: rgba(255,255,255,0.92);
+            font-size: 13px; font-weight: 500;
+            letter-spacing: 0.32em; text-transform: uppercase;
+            margin-top: -16px;
+        }
+        #preloader .pl-bar {
+            width: 240px; height: 2px;
+            background: rgba(255,255,255,0.10);
+            overflow: hidden; border-radius: 2px;
+        }
+        #preloader .pl-fill {
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, #0055a5, #5fa3e8);
+            box-shadow: 0 0 12px rgba(0, 85, 165, 0.65);
+            transition: width .3s ease;
+        }
+        #preloader .pl-pct {
+            color: rgba(255,255,255,0.45);
+            font-size: 11px; font-weight: 400;
+            letter-spacing: 0.28em;
+        }
+        .brand-blue { color: var(--accent); }
+        @keyframes pl-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.06); opacity: 0.82; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #preloader .pl-logo img { animation: none; }
+            #preloader, #preloader .pl-fill { transition: none; }
+        }
         </style>
 </head>
 <body>
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo"><img src="static/images/kw.avif" alt=""></div>
+        <div class="pl-name">Kreuztaler Werkstatt</div>
+        <div class="pl-bar"><div class="pl-fill" id="plFill"></div></div>
+        <div class="pl-pct" id="plPct">0%</div>
+    </div>
+    <noscript><style>#preloader{display:none !important}</style></noscript>
 
     <header class="sticky top-0 z-50" style="background:rgba(10,15,26,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2 logo-glow"></a>
-                <a href="/" class="text-white text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
+                <a href="/" class="brand-blue text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
                 <span class="text-gray-500 text-xs hidden sm:inline">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-6 text-sm">
@@ -281,7 +334,7 @@
                 <div>
                     <div class="flex items-center mb-3">
                         <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2 logo-glow">
-                        <div class="text-white text-lg font-bold">Kreuztaler Werkstatt</div>
+                        <div class="brand-blue text-lg font-bold">Kreuztaler Werkstatt</div>
                     </div>
                     <p class="text-gray-400 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
                 </div>
@@ -448,6 +501,26 @@
     function openImpressumModal(){document.getElementById('impressumModal').classList.remove('hidden');document.body.style.overflow='hidden';}
     function closeImpressumModal(){document.getElementById('impressumModal').classList.add('hidden');document.body.style.overflow='';}
     document.getElementById('impressumModal')?.addEventListener('click',function(e){if(e.target===this)closeImpressumModal();});
+    // Preloader
+    (function(){
+        var pl = document.getElementById('preloader');
+        if (!pl) return;
+        var fill = document.getElementById('plFill');
+        var pct  = document.getElementById('plPct');
+        var finished = false;
+        function setPct(p){ if(p>100)p=100; if(fill)fill.style.width=p+'%'; if(pct)pct.textContent=Math.round(p)+'%'; }
+        function done(){ if(finished)return; finished=true; setPct(100); setTimeout(function(){pl.classList.add('pl-done');},200); setTimeout(function(){if(pl.parentNode)pl.parentNode.removeChild(pl);},1000); }
+        var hard = setTimeout(done, 6000);
+        var assets = [];
+        Array.prototype.forEach.call(document.images, function(img){ var s=img.currentSrc||img.src; if(s&&s.indexOf('data:')!==0)assets.push(s); });
+        var seen = Object.create(null);
+        assets = assets.filter(function(s){ if(seen[s])return false; seen[s]=1; return true; });
+        if(!assets.length){ clearTimeout(hard); done(); return; }
+        var loaded = 0;
+        function bump(){ loaded++; setPct((loaded/assets.length)*100); if(loaded>=assets.length){clearTimeout(hard);setTimeout(done,250);} }
+        assets.forEach(function(src){ var im=new Image(); im.onload=bump; im.onerror=bump; im.src=src; });
+        window.addEventListener('load', function(){ setTimeout(done, 400); });
+    })();
     </script>
 </body>
 </html>

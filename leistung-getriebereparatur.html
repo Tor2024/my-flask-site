@@ -13,264 +13,320 @@
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#7a7a8a',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px','rounded':'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#5fa3e8'},borderRadius:{'none':'0px','sm':'2px','rounded':'4px','md':'6px','lg':'6px','xl':'6px','2xl':'6px','3xl':'8px','full':'9999px','button':'2px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
-
-        <style>
-        :root { --accent: #7a7a8a; --accent-dark: #555560; --accent-hsl: 240 8% 45%; }
-        body { font-family: 'Inter', sans-serif; }
-        .reveal { opacity: 0; transform: translateY(30px); }
-        .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .reveal-l { opacity: 0; transform: translateX(-24px); }
-        .reveal-l.visible { opacity: 1; transform: translateX(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .reveal-r { opacity: 0; transform: translateX(24px); }
-        .reveal-r.visible { opacity: 1; transform: translateX(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        details[open] summary { color: #7a7a8a; }
-        details summary::after { content: '+'; float: right; font-size: 1.5em; font-weight: 300; transition: transform 0.3s; }
-        details[open] summary::after { content: '\2013'; }
-        .float-up:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -8px rgba(0,0,0,0.1); transition: all 0.3s ease; }
-        #mobileMenu {
-            position: fixed;
-            top: 0; right: 0; bottom: 0; left: 0;
-            background: #fff;
-            z-index: 1000;
-            padding: 1.5rem;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            overflow-y: auto;
-        }
-        #mobileMenu.active {
-            transform: translateX(0);
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .reveal, .reveal-l, .reveal-r { opacity: 1 !important; transform: none !important; }
-        }
-        </style>
+    <style>
+    :root { --accent: #0055a5; --accent-light: #5fa3e8; }
+    html, body { background: #0a0f1a; }
+    body {
+        font-family: 'Inter', sans-serif;
+        color: rgba(255,255,255,0.86);
+        background:
+            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,85,165,0.22) 0%, transparent 60%),
+            radial-gradient(ellipse at center, #131c2e 0%, #0a0f1a 100%);
+        background-attachment: fixed;
+    }
+    .accent { color: var(--accent-light); }
+    .brand-blue { color: var(--accent); }
+    .hairline { border-color: rgba(255,255,255,0.08); }
+    .card-dark {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 6px;
+        transition: border-color .25s ease, background .25s ease;
+    }
+    .card-dark:hover { border-color: rgba(0,85,165,0.45); background: rgba(0,85,165,0.05); }
+    .btn-primary {
+        background: var(--accent); color: #fff;
+        border-radius: 2px; box-shadow: 0 0 24px rgba(0,85,165,0.4);
+        transition: background .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { background: #0061bd; box-shadow: 0 0 32px rgba(0,85,165,0.65); }
+    .btn-ghost {
+        background: transparent; color: rgba(255,255,255,0.86);
+        border: 1px solid rgba(255,255,255,0.18); border-radius: 2px;
+        transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent-light); color: #fff; }
+    .reveal { opacity: 0; transform: translateY(30px); }
+    .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+    .reveal-l { opacity: 0; transform: translateX(-24px); }
+    .reveal-l.visible { opacity: 1; transform: translateX(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+    details[open] summary { color: var(--accent-light); }
+    details summary::after { content: '+'; float: right; font-size: 1.5em; font-weight: 300; transition: transform 0.3s; color: rgba(255,255,255,0.4); }
+    details[open] summary::after { content: '\2013'; }
+    #mobileMenu {
+        position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+        background: #0a0f1a; z-index: 1000; padding: 1.5rem;
+        transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto;
+    }
+    #mobileMenu.active { transform: translateX(0); }
+    .logo-glow { filter: drop-shadow(0 0 14px rgba(0,85,165,0.45)); }
+    .check-dot {
+        width: 18px; height: 18px; border-radius: 9999px;
+        background: var(--accent); box-shadow: 0 0 12px rgba(0,85,165,0.5);
+        display: inline-flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .svc-row { border-top: 1px solid rgba(255,255,255,0.07); }
+    .svc-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .svc-num { font-feature-settings: 'tnum'; color: rgba(0,85,165,0.55); }
+    .step-node {
+        width: 14px; height: 14px; border-radius: 9999px;
+        background: var(--accent); box-shadow: 0 0 16px rgba(0,85,165,0.7);
+        border: 2px solid #0a0f1a;
+    }
+    /* ===== Preloader ===== */
+    #preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        background: radial-gradient(ellipse at center, #1a2333 0%, #0a0f1a 100%);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 32px;
+        transition: opacity .6s ease, visibility .6s ease;
+    }
+    #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; }
+    #preloader .pl-logo img {
+        height: 120px; width: auto;
+        filter: drop-shadow(0 8px 28px rgba(0, 85, 165, 0.55));
+        animation: pl-pulse 2.4s ease-in-out infinite;
+    }
+    #preloader .pl-name {
+        color: rgba(255,255,255,0.92);
+        font-size: 13px; font-weight: 500;
+        letter-spacing: 0.32em; text-transform: uppercase;
+        margin-top: -16px;
+    }
+    #preloader .pl-bar {
+        width: 240px; height: 2px;
+        background: rgba(255,255,255,0.10);
+        overflow: hidden; border-radius: 2px;
+    }
+    #preloader .pl-fill {
+        width: 0%; height: 100%;
+        background: linear-gradient(90deg, #0055a5, #5fa3e8);
+        box-shadow: 0 0 12px rgba(0, 85, 165, 0.65);
+        transition: width .3s ease;
+    }
+    #preloader .pl-pct {
+        color: rgba(255,255,255,0.45);
+        font-size: 11px; font-weight: 400;
+        letter-spacing: 0.28em;
+    }
+    @keyframes pl-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.06); opacity: 0.82; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .reveal, .reveal-l { opacity: 1 !important; transform: none !important; }
+        .logo-glow { filter: none; }
+        #preloader .pl-logo img { animation: none; }
+        #preloader, #preloader .pl-fill { transition: none; }
+    }
+    </style>
 </head>
-<body class="bg-gray-50">
+<body>
+    <!-- Preloader -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo"><img src="static/images/kw.avif" alt=""></div>
+        <div class="pl-name">Kreuztaler Werkstatt</div>
+        <div class="pl-bar"><div class="pl-fill" id="plFill"></div></div>
+        <div class="pl-pct" id="plPct">0%</div>
+    </div>
+    <noscript><style>#preloader{display:none !important}</style></noscript>
 
-    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+    <header class="sticky top-0 z-50" style="background:rgba(10,15,26,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
-                <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2"></a>
-                <a href="/" class="text-primary font-['Arimo'] text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
-                <span class="text-gray-400 text-xs hidden sm:inline">GmbH</span>
+                <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2 logo-glow"></a>
+                <a href="/" class="brand-blue text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
+                <span class="text-gray-500 text-xs hidden sm:inline">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-6 text-sm">
-                <a href="/#home" class="text-gray-600 hover:text-primary transition-colors">Startseite</a>
-                <a href="/#about" class="text-gray-600 hover:text-primary transition-colors">&Uuml;ber uns</a>
-                <a href="/#services" class="text-primary font-medium">Leistungen</a>
-                <a href="/#reviews" class="text-gray-600 hover:text-primary transition-colors">Bewertungen</a>
-                <a href="/#faq" class="text-gray-600 hover:text-primary transition-colors">FAQ</a>
-                <a href="/#contact" class="text-gray-600 hover:text-primary transition-colors">Kontakt</a>
+                <a href="/#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a>
+                <a href="/#about" class="text-gray-400 hover:text-white transition-colors">&Uuml;ber uns</a>
+                <a href="/#services" class="accent font-medium">Leistungen</a>
+                <a href="/#reviews" class="text-gray-400 hover:text-white transition-colors">Bewertungen</a>
+                <a href="/#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
+                <a href="/#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a>
             </nav>
             <div class="flex items-center space-x-3">
-                <a href="tel:+49273227717" class="hidden sm:flex items-center text-primary font-medium text-sm hover:underline"><i class="ri-phone-line mr-1"></i>02732 277 17</a>
-                <a href="/#appointment" class="bg-primary text-white text-sm px-4 py-2 !rounded-button whitespace-nowrap hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">Termin</a>
-                <button type="button" id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-primary p-1"><i class="ri-menu-line ri-lg"></i></button>
+                <a href="tel:+49273227717" class="hidden sm:flex items-center accent font-medium text-sm hover:text-white">02732 277 17</a>
+                <a href="/#appointment" class="btn-primary text-sm px-4 py-2 whitespace-nowrap font-semibold">Termin</a>
+                <button type="button" id="mobileMenuBtn" class="md:hidden text-gray-400 hover:text-white p-1 text-2xl leading-none">&equiv;</button>
             </div>
         </div>
     </header>
 
-    <section class="min-h-[55vh] flex overflow-hidden">
-        <div class="hidden md:block w-1/2 relative">
-            <img src="static/images/Getriebereparatur1.png" alt="Getriebereparatur" class="absolute inset-0 w-full h-full object-cover">
-            <div class="absolute inset-0" style="background: linear-gradient(to right, transparent 40%, #7a7a8a44 100%);"></div>
+    <section class="relative min-h-[72vh] flex items-end overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="w-full h-full object-cover" style="filter:brightness(0.45) saturate(0.85);">
+            <div class="absolute inset-0" style="background:linear-gradient(180deg, rgba(10,15,26,0.55) 0%, rgba(10,15,26,0.35) 40%, rgba(10,15,26,0.92) 100%);"></div>
+            <div class="absolute inset-0" style="background:radial-gradient(ellipse 50% 40% at 18% 80%, rgba(0,85,165,0.35) 0%, transparent 70%);"></div>
         </div>
-        <div class="w-full md:w-1/2 flex items-center relative" style="background:#7a7a8a;">
-            <div class="px-8 md:px-16 py-20 md:py-28 hero-content">
-                <span class="inline-block text-white/40 text-xs uppercase tracking-[0.25em] mb-4 font-mono">GETRIEBEREPARATUR</span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08]">Getriebereparatur</h1>
-                <p class="text-base md:text-lg text-white/80 leading-relaxed">Reparatur und Wartung von Schalt- und Automatikgetrieben. Diagnose und Behebung von Getriebestörungen.</p>
-                <div class="flex gap-3 mt-8">
-                    <a href="/#appointment" class="inline-flex items-center bg-white text-[#7a7a8a] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                    <a href="/tel:+49273227717" class="inline-flex items-center border border-white/20 text-white/80 px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors"><i class="ri-phone-line mr-2"></i>02732 277 17</a>
+        <div class="container mx-auto px-4 relative z-10 pb-16 md:pb-24 pt-32">
+            <div class="max-w-3xl hero-content">
+                <span class="inline-block text-xs uppercase tracking-[0.32em] mb-5 font-mono accent">Getriebereparatur</span>
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-[0.95] tracking-tight" style="letter-spacing:-0.035em;">Getriebereparatur</h1>
+                <p class="text-lg md:text-xl text-gray-300 leading-relaxed mt-7 max-w-xl">Schaltprobleme, Ruckeln beim Gangwechsel, Schleifgeräusche oder ein plötzlicher Gangausfall – Getriebeschäden gehören zu den komplexesten Reparaturen am Fahrzeug. Wir diagnostizieren und reparieren Getriebe aller Bauarten fachgerecht und nach Herstellervorgaben.</p>
+                <div class="flex flex-col sm:flex-row gap-3 mt-9">
+                    <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 font-semibold">Termin buchen</a>
+                    <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-7 py-3.5 font-medium">02732 277 17</a>
                 </div>
             </div>
         </div>
     </section>
-    <section class="py-20 md:py-24 bg-white">
+
+    <section class="py-20 md:py-28">
         <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto reveal">
-                <p class="text-lg md:text-xl text-gray-600 leading-relaxed text-center">Schaltprobleme, Ruckeln beim Gangwechsel, Schleifgeräusche oder ein plötzlicher Gangausfall – Getriebeschäden gehören zu den komplexesten Reparaturen am Fahrzeug. Wir diagnostizieren und reparieren Getriebe aller Bauarten fachgerecht und nach Herstellervorgaben.</p>
+            <div class="max-w-3xl mx-auto reveal">
+                <p class="text-xl md:text-2xl text-gray-200 leading-relaxed" style="font-weight:300;">Schaltprobleme, Ruckeln beim Gangwechsel, Schleifgeräusche oder ein plötzlicher Gangausfall – Getriebeschäden gehören zu den komplexesten Reparaturen am Fahrzeug. Wir diagnostizieren und reparieren Getriebe aller Bauarten fachgerecht und nach Herstellervorgaben.</p>
             </div>
         </div>
     </section>
-    <section class="py-20 md:py-24 bg-white">
+
+    <section class="pb-20 md:pb-28">
         <div class="container mx-auto px-4">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Das Wichtigste</h2>
-                <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Alle Details auf einen Blick</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="p-6 rounded-xl reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a12;">
-                        <div class="w-6 h-6 rounded flex items-center justify-center mb-3" style="background:#7a7a8a15;">
-                            <svg class="w-3 h-3" style="color:#7a7a8a;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <div class="max-w-5xl mx-auto">
+                <div class="flex items-baseline justify-between mb-10 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Das Wichtigste</h2>
+                    <span class="text-xs uppercase tracking-[0.25em] text-gray-500 font-mono hidden sm:inline">Leistungen</span>
+                </div>
+                <div>
+                                        <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
+                        <div class="md:col-span-2 svc-num text-2xl font-mono">01</div>
+                        <div class="md:col-span-4">
+                            <h3 class="font-semibold text-white text-lg">Automatikgetriebe &amp; DSG-Reparatur</h3>
                         </div>
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2">Automatikgetriebe & DSG-Reparatur</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Moderne Automatikgetriebe und DSG sind Hightech-Komponenten. Häufige Fehler: Ruckeln beim Anfahren, Schaltverzögerungen, Notlaufprogramm. Wir tauschen Steuergeräte, Mechatronik-Einheiten, Kupplungspakete und führen Adaptionen durch.</p>
+                        <div class="md:col-span-6">
+                            <p class="text-gray-400 leading-relaxed">Moderne Automatikgetriebe und DSG sind Hightech-Komponenten. Häufige Fehler: Ruckeln beim Anfahren, Schaltverzögerungen, Notlaufprogramm. Wir tauschen Steuergeräte, Mechatronik-Einheiten, Kupplungspakete und führen Adaptionen durch.</p>
+                        </div>
                     </div>
-                    <div class="p-6 rounded-xl reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a12;">
-                        <div class="w-6 h-6 rounded flex items-center justify-center mb-3" style="background:#7a7a8a15;">
-                            <svg class="w-3 h-3" style="color:#7a7a8a;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
+                        <div class="md:col-span-2 svc-num text-2xl font-mono">02</div>
+                        <div class="md:col-span-4">
+                            <h3 class="font-semibold text-white text-lg">Schaltgetriebe-Reparatur</h3>
                         </div>
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2">Schaltgetriebe-Reparatur</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Synchronringe, Lager, Schaltgabeln oder Wellendichtringe – bei Schaltgetrieben sind häufig mechanische Teile verschlissen. Wir zerlegen und instandsetzen das Getriebe mit Originalteilen.</p>
+                        <div class="md:col-span-6">
+                            <p class="text-gray-400 leading-relaxed">Synchronringe, Lager, Schaltgabeln oder Wellendichtringe – bei Schaltgetrieben sind häufig mechanische Teile verschlissen. Wir zerlegen und instandsetzen das Getriebe mit Originalteilen.</p>
+                        </div>
                     </div>
-                    <div class="p-6 rounded-xl reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a12;">
-                        <div class="w-6 h-6 rounded flex items-center justify-center mb-3" style="background:#7a7a8a15;">
-                            <svg class="w-3 h-3" style="color:#7a7a8a;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
+                        <div class="md:col-span-2 svc-num text-2xl font-mono">03</div>
+                        <div class="md:col-span-4">
+                            <h3 class="font-semibold text-white text-lg">Getriebeölwechsel – wichtig für die Lebensdauer</h3>
                         </div>
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2">Getriebeölwechsel – wichtig für die Lebensdauer</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Viele Hersteller deklarieren Getriebeöl als „lebenslang“, dennoch empfehlen wir einen Wechsel alle 60.000–80.000 km. Frisches Öl verhindert Verschleiss und verlängert die Lebensdauer spürbar.</p>
+                        <div class="md:col-span-6">
+                            <p class="text-gray-400 leading-relaxed">Viele Hersteller deklarieren Getriebeöl als „lebenslang“, dennoch empfehlen wir einen Wechsel alle 60.000–80.000 km. Frisches Öl verhindert Verschleiss und verlängert die Lebensdauer spürbar.</p>
+                        </div>
                     </div>
-                    <div class="p-6 rounded-xl reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a12;">
-                        <div class="w-6 h-6 rounded flex items-center justify-center mb-3" style="background:#7a7a8a15;">
-                            <svg class="w-3 h-3" style="color:#7a7a8a;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
+                        <div class="md:col-span-2 svc-num text-2xl font-mono">04</div>
+                        <div class="md:col-span-4">
+                            <h3 class="font-semibold text-white text-lg">Austauschgetriebe mit Garantie</h3>
                         </div>
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2">Austauschgetriebe mit Garantie</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">Wenn die Reparatur unwirtschaftlich ist, bieten wir geprüfte Austauschgetriebe mit bis zu 3 Jahren Garantie. Einbau inklusive Ölwechsel, Adaption und Probefahrt.</p>
+                        <div class="md:col-span-6">
+                            <p class="text-gray-400 leading-relaxed">Wenn die Reparatur unwirtschaftlich ist, bieten wir geprüfte Austauschgetriebe mit bis zu 3 Jahren Garantie. Einbau inklusive Ölwechsel, Adaption und Probefahrt.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="py-20 md:py-24" style="background:#7a7a8a03;">
+
+    <section class="py-20 md:py-28" style="background:rgba(255,255,255,0.015);">
         <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Ihre Vorteile</h2>
-                <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">Warum Sie uns vertrauen sollten</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">Diagnose und Reparatur aller Getriebetypen</span>
-                    </div>
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">DSG- und Mechatronik-Spezialisten</span>
-                    </div>
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">Getriebeölwechsel mit Herstellerfreigabe</span>
-                    </div>
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">Austauschgetriebe mit Garantie</span>
-                    </div>
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">Steuergeräte-Adaption nach Reparatur</span>
-                    </div>
-                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#7a7a8a;">
-                            <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                        </div>
-                        <span class="text-gray-700 text-sm">Detaillierte Aufstellung aller Arbeiten vorab</span>
-                    </div>
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-12 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">Ihre Vorteile</h2>
+                    <p class="text-gray-500 max-w-xl">Warum Sie uns vertrauen sollten.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
+                                        <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Diagnose und Reparatur aller Getriebetypen</span></div>
+                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">DSG- und Mechatronik-Spezialisten</span></div>
+                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Getriebeölwechsel mit Herstellerfreigabe</span></div>
+                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Austauschgetriebe mit Garantie</span></div>
+                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Steuergeräte-Adaption nach Reparatur</span></div>
+                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Detaillierte Aufstellung aller Arbeiten vorab</span></div>
                 </div>
             </div>
         </div>
     </section>
-    <section class="py-20 md:py-24 bg-gray-50">
+
+    <section class="py-20 md:py-28">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-14">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">So l&auml;uft es ab</h2>
-                <p class="text-gray-500 max-w-xl mx-auto">In 3 Schritten zu Ihrem Serviceerlebnis</p>
-            </div>
-            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-7 relative overflow-hidden reveal" style="box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);">
-                    <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#7a7a8a08;">1</div>
-                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style="background:#7a7a8a15;">
-                        <i class="ri-stethoscope-line text-xl" style="color:#7a7a8a;"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 mb-2">Getriebediagnose & Fehleranalyse</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Wir lesen das Getriebesteuergerät aus, prüfen den Ölzustand und führen eine Fahrprobe durch. So ermitteln wir die genaue Ursache – ob mechanisch, hydraulisch oder elektronisch.</p>
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-14 reveal">
+                    <span class="text-xs uppercase tracking-[0.32em] font-mono accent">Ablauf</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mt-3">So l&auml;uft es ab</h2>
                 </div>
-                <div class="bg-white rounded-xl p-7 relative overflow-hidden reveal" style="box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);">
-                    <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#7a7a8a08;">2</div>
-                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style="background:#7a7a8a15;">
-                        <i class="ri-tools-fill text-xl" style="color:#7a7a8a;"></i>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-2 left-0 right-0" style="height:1px;background:linear-gradient(90deg, transparent 0%, rgba(0,85,165,0.5) 8%, rgba(0,85,165,0.5) 92%, transparent 100%);"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative">
+                                                <div class="reveal">
+                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 01</span></div>
+                            <h3 class="font-bold text-white text-lg mb-2">Getriebediagnose &amp; Fehleranalyse</h3>
+                            <p class="text-gray-400 leading-relaxed text-sm">Wir lesen das Getriebesteuergerät aus, prüfen den Ölzustand und führen eine Fahrprobe durch. So ermitteln wir die genaue Ursache – ob mechanisch, hydraulisch oder elektronisch.</p>
+                        </div>
+                        <div class="reveal">
+                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 02</span></div>
+                            <h3 class="font-bold text-white text-lg mb-2">Reparatur oder Austausch</h3>
+                            <p class="text-gray-400 leading-relaxed text-sm">Je nach Schaden entscheiden wir gemeinsam: Instandsetzung des vorhandenen Getriebes oder Einbau eines geprüften Austauschgetriebes. Beide Optionen mit Garantie.</p>
+                        </div>
+                        <div class="reveal">
+                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 03</span></div>
+                            <h3 class="font-bold text-white text-lg mb-2">Funktionskontrolle &amp; Ölwechsel</h3>
+                            <p class="text-gray-400 leading-relaxed text-sm">Nach der Reparatur: Getriebeölwechsel, Adaption des Steuergeräts (bei Automatikgetrieben), ausgiebige Probefahrt und Funktionskontrolle aller Gänge.</p>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-gray-900 mb-2">Reparatur oder Austausch</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Je nach Schaden entscheiden wir gemeinsam: Instandsetzung des vorhandenen Getriebes oder Einbau eines geprüften Austauschgetriebes. Beide Optionen mit Garantie.</p>
-                </div>
-                <div class="bg-white rounded-xl p-7 relative overflow-hidden reveal" style="box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);">
-                    <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#7a7a8a08;">3</div>
-                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style="background:#7a7a8a15;">
-                        <i class="ri-check-double-line text-xl" style="color:#7a7a8a;"></i>
-                    </div>
-                    <h3 class="font-bold text-gray-900 mb-2">Funktionskontrolle & Ölwechsel</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Nach der Reparatur: Getriebeölwechsel, Adaption des Steuergeräts (bei Automatikgetrieben), ausgiebige Probefahrt und Funktionskontrolle aller Gänge.</p>
                 </div>
             </div>
         </div>
     </section>
-    <section id="faq-section" class="py-20 md:py-24 bg-white">
+
+    <section id="faq-section" class="py-20 md:py-28" style="background:rgba(255,255,255,0.015);">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">H&auml;ufige Fragen</h2>
-                <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">Antworten zu "Getriebereparatur"</p>
-                <div class="space-y-2">
-                    <details class="rounded-xl overflow-hidden reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">Wann muss ein Getriebe repariert werden?</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#7a7a8a15;">Typische Anzeichen: Ruckeln beim Schalten, schleifende Geräusche, Gang springt heraus, Gänge lassen sich schwer einlegen oder das Notlaufprogramm leuchtet auf. Wir führen eine Diagnose durch und empfehlen die wirtschaftlichste Lösung.</div>
-                    </details>
-                    <details class="rounded-xl overflow-hidden reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">Welche Reparatur ist bei meinem Getriebe nötig?</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#7a7a8a15;">Das hängt vom Schadensbild ab. Wir empfehlen nach der Diagnose die wirtschaftlichste Lösung – ob Getriebeölwechsel, Reparatur oder Austauschgetriebe. Sie erhalten vorab eine detaillierte Aufstellung.</div>
-                    </details>
-                    <details class="rounded-xl overflow-hidden reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">Kann man ein Automatikgetriebe selbst reparieren?</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#7a7a8a15;">Nein – moderne Automatikgetriebe sind hochkomplex und erfordern Spezialwerkzeug, Steuergeräte-Kenntnisse und Reinraumbedingungen für die Hydraulik.</div>
-                    </details>
-                    <details class="rounded-xl overflow-hidden reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">Wie lange hält ein Austauschgetriebe?</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#7a7a8a15;">Ein geprüftes Austauschgetriebe hält bei regelmässigem Ölwechsel genauso lange wie ein Neuteil – oft 150.000–250.000 km.</div>
-                    </details>
-                    <details class="rounded-xl overflow-hidden reveal" style="background:#7a7a8a04; border:1px solid #7a7a8a10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">Muss nach dem Getriebeeinbau etwas codiert werden?</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#7a7a8a15;">Ja – bei modernen Fahrzeugen muss das Getriebesteuergerät nach dem Einbau angelernt und adaptiert werden. Wir führen die Adaption mit unserer Diagnose durch.</div>
-                    </details>
+                <div class="mb-10 reveal">
+                    <span class="text-xs uppercase tracking-[0.32em] font-mono accent">FAQ</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mt-3">H&auml;ufige Fragen</h2>
+                </div>
+                <div class="space-y-3">
+                                        <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Wann muss ein Getriebe repariert werden?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Typische Anzeichen: Ruckeln beim Schalten, schleifende Geräusche, Gang springt heraus, Gänge lassen sich schwer einlegen oder das Notlaufprogramm leuchtet auf. Wir führen eine Diagnose durch und empfehlen die wirtschaftlichste Lösung.</div></details>
+                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Welche Reparatur ist bei meinem Getriebe nötig?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Das hängt vom Schadensbild ab. Wir empfehlen nach der Diagnose die wirtschaftlichste Lösung – ob Getriebeölwechsel, Reparatur oder Austauschgetriebe. Sie erhalten vorab eine detaillierte Aufstellung.</div></details>
+                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Kann man ein Automatikgetriebe selbst reparieren?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Nein – moderne Automatikgetriebe sind hochkomplex und erfordern Spezialwerkzeug, Steuergeräte-Kenntnisse und Reinraumbedingungen für die Hydraulik.</div></details>
+                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Wie lange hält ein Austauschgetriebe?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Ein geprüftes Austauschgetriebe hält bei regelmässigem Ölwechsel genauso lange wie ein Neuteil – oft 150.000–250.000 km.</div></details>
+                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Muss nach dem Getriebeeinbau etwas codiert werden?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Ja – bei modernen Fahrzeugen muss das Getriebesteuergerät nach dem Einbau angelernt und adaptiert werden. Wir führen die Adaption mit unserer Diagnose durch.</div></details>
                 </div>
             </div>
         </div>
     </section>
-    <section class="py-24 relative overflow-hidden" style="background: linear-gradient(135deg, #555560 0%, #0f0f0f 100%);">
-        <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"15\" r=\"1.5\" fill=\"white\"/></svg>'); background-size: 30px 30px;"></div>
+
+    <section class="py-24 md:py-32 relative overflow-hidden">
+        <div class="absolute inset-0" style="background:radial-gradient(ellipse 70% 100% at 50% 50%, rgba(0,85,165,0.28) 0%, transparent 70%);"></div>
         <div class="container mx-auto px-4 relative z-10 text-center">
-            <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed font-medium">Schaltet Ihr Getriebe nicht mehr sauber oder hören Sie Geräusche? Vereinbaren Sie einen Diagnosetermin.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/#appointment" class="inline-flex items-center justify-center bg-white text-[#7a7a8a] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl"><i class="ri-calendar-line mr-2"></i>Termin online buchen</a>
-                <a href="tel:+49273227717" class="inline-flex items-center justify-center bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-colors"><i class="ri-phone-line mr-2"></i>02732 277 17</a>
+            <p class="text-2xl md:text-3xl text-white max-w-3xl mx-auto mb-9 leading-snug font-medium reveal" style="font-weight:400;">Schaltet Ihr Getriebe nicht mehr sauber oder hören Sie Geräusche? Vereinbaren Sie einen Diagnosetermin.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
+                <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-8 py-4 font-bold text-lg">Termin online buchen</a>
+                <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-8 py-4 font-semibold text-lg">02732 277 17</a>
             </div>
         </div>
     </section>
     <footer id="footer" class="relative overflow-hidden text-white">
         <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
-        <div class="absolute inset-0 bg-gray-900/75"></div>
+        <div class="absolute inset-0" style="background:rgba(10,15,26,0.85);"></div>
         <div class="relative z-10 pt-12 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <div>
                     <div class="flex items-center mb-3">
-                        <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2">
-                        <div class="text-white font-['Arimo'] text-lg font-bold">Kreuztaler Werkstatt</div>
+                        <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2 logo-glow">
+                        <div class="brand-blue text-lg font-bold">Kreuztaler Werkstatt</div>
                     </div>
                     <p class="text-gray-400 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
                 </div>
@@ -305,18 +361,18 @@
                 <div>
                     <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Kontakt</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li class="flex items-start"><i class="ri-map-pin-line mr-2 mt-0.5"></i><span>Hagener Str. 40, 57223 Kreuztal</span></li>
-                        <li class="flex items-start"><i class="ri-phone-line mr-2 mt-0.5"></i><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></li>
-                        <li class="flex items-start"><i class="ri-mail-line mr-2 mt-0.5"></i><span>info@kreuztaler-werkstatt.de</span></li>
-                        <li class="flex items-start"><i class="ri-time-line mr-2 mt-0.5"></i><span>Mo-Fr: 9:00&ndash;17:00 Uhr</span></li>
-                        <li class="flex items-start text-gray-500"><i class="ri-time-line mr-2 mt-0.5"></i><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
+                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>Hagener Str. 40, 57223 Kreuztal</span></li>
+                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><a href="tel:+49273227717" class="hover:text-white transition-colors">Tel: 02732 277 17</a></li>
+                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>E-Mail: info@kreuztaler-werkstatt.de</span></li>
+                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>Mo&ndash;Fr: 9:00&ndash;17:00 Uhr</span></li>
+                        <li class="flex items-start text-gray-500"><span class="accent mr-2 mt-0.5">›</span><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="border-t pt-6 flex flex-col md:flex-row justify-between items-center gap-4" style="border-color:rgba(255,255,255,0.08);">
                 <p class="text-gray-500 text-xs">&copy; 2025 Kreuztaler Werkstatt GmbH.</p>
                 <div class="flex space-x-4 text-xs">
-                    <a href="#" onclick="openImpressumModal()" class="text-gray-500 hover:text-white">Impressum</a>
+                    <a href="#" onclick="openImpressumModal();return false;" class="text-gray-500 hover:text-white">Impressum</a>
                     <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-500 hover:text-white">Datenschutz</a>
                 </div>
             </div>
@@ -327,6 +383,8 @@
 (function(){
     var c = document.getElementById('footerShader');
     if(!c)return;
+    var fsVisible=true;
+    new IntersectionObserver(function(e){fsVisible=e[0].isIntersecting;}).observe(c);
     var gl = c.getContext('webgl');
     if(!gl)return;
     var vsSrc='attribute vec4 aVertexPosition;void main(){gl_Position=aVertexPosition;}';
@@ -334,25 +392,25 @@
     +'const float overallSpeed=0.2;\nconst float gridSmoothWidth=0.015;\nconst float axisWidth=0.05;\n'
     +'const float majorLineWidth=0.025;\nconst float minorLineWidth=0.0125;\nconst float majorLineFrequency=5.0;\n'
     +'const float minorLineFrequency=1.0;\nconst vec4 gridColor=vec4(0.5);\nconst float scale=5.0;\n'
-+'const vec4 lineColor=vec4(0.0,0.33,0.65,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
-+'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
-+'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
-+'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
-+'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
-+'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
-+'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
-+'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
-+'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
-+'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
-+'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
-+'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
-+'float getPlasmaY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
-+'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;\n'
-+'vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;\n'
-+'float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);\n'
-+'sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);\n'
-+'sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;\n'
-+'vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.07,0.2,1.0);vec4 bg2=vec4(0.0,0.15,0.35,1.0);\n'
+    +'const vec4 lineColor=vec4(0.0,0.33,0.65,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
+    +'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
+    +'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
+    +'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
+    +'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
+    +'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
+    +'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
+    +'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
+    +'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
+    +'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
+    +'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
+    +'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
+    +'float getPlasmaY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
+    +'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;\n'
+    +'vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;\n'
+    +'float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);\n'
+    +'sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);\n'
+    +'sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;\n'
+    +'vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.07,0.2,1.0);vec4 bg2=vec4(0.0,0.15,0.35,1.0);\n'
     +'for(int i=0;i<linesPerGroup;i++){float nli=float(i)/float(linesPerGroup);float ot=iTime*offsetSpeed;\n'
     +'float op=float(i)+sp.x*offsetFrequency;float rd=rand(op+ot)*0.5+0.5;\n'
     +'float hw=mix(minLineWidth,maxLineWidth,rd*hf)/2.0;\n'
@@ -372,13 +430,11 @@
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
     var aPos=gl.getAttribLocation(prog,'aVertexPosition');
     var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
-    function resize(){
-        c.width=c.offsetWidth;c.height=c.offsetHeight;
-        gl.viewport(0,0,c.width,c.height);
-    }
+    function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
     window.addEventListener('resize',resize);resize();
     var t0=Date.now();
     function frame(){
+        if(!fsVisible){requestAnimationFrame(frame);return;}
         var t=(Date.now()-t0)/1000;
         gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);
         gl.useProgram(prog);
@@ -390,19 +446,39 @@
     }
     requestAnimationFrame(frame);
 })();
+// ===== Preloader =====
+(function(){
+    var pl = document.getElementById('preloader');
+    if (!pl) return;
+    var fill = document.getElementById('plFill');
+    var pct  = document.getElementById('plPct');
+    var finished = false;
+    function setPct(p){ if(p>100)p=100; if(fill)fill.style.width=p+'%'; if(pct)pct.textContent=Math.round(p)+'%'; }
+    function done(){ if(finished)return; finished=true; setPct(100); setTimeout(function(){pl.classList.add('pl-done');},200); setTimeout(function(){if(pl.parentNode)pl.parentNode.removeChild(pl);},1000); }
+    var hard = setTimeout(done, 6000);
+    var assets = [];
+    Array.prototype.forEach.call(document.images, function(img){ var s=img.currentSrc||img.src; if(s&&s.indexOf('data:')!==0)assets.push(s); });
+    var seen = Object.create(null);
+    assets = assets.filter(function(s){ if(seen[s])return false; seen[s]=1; return true; });
+    if(!assets.length){ clearTimeout(hard); done(); return; }
+    var loaded = 0;
+    function bump(){ loaded++; setPct((loaded/assets.length)*100); if(loaded>=assets.length){clearTimeout(hard);setTimeout(done,250);} }
+    assets.forEach(function(src){ var im=new Image(); im.onload=bump; im.onerror=bump; im.src=src; });
+    window.addEventListener('load', function(){ setTimeout(done, 400); });
+})();
 </script>
 
-    <div id="impressumModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-2xl max-w-lg w-full mx-4 relative">
-            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            <h2 class="text-2xl font-bold mb-6" style="color:{c};">Impressum</h2>
-            <div class="text-gray-600 space-y-2 text-sm">
+    <div id="impressumModal" class="fixed inset-0 hidden flex items-center justify-center z-50" style="background:rgba(0,0,0,0.7);">
+        <div class="p-8 max-w-lg w-full mx-4 relative" style="background:#131c2e;border:1px solid rgba(255,255,255,0.1);border-radius:6px;">
+            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold mb-6 text-white">Impressum</h2>
+            <div class="text-gray-300 space-y-2 text-sm">
                 <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
                 <p>Gesch&auml;ftsf&uuml;hrer: Andre Hovanski</p>
                 <p>Hagener Str. 40, 57223 Kreuztal</p>
-                <p>Tel: <a href="tel:+49273227717" class="hover:underline" style="color:{c};">02732 277 17</a></p>
+                <p>Tel: <a href="tel:+49273227717" class="hover:underline accent">02732 277 17</a></p>
                 <p>E-Mail: info@kreuztaler-werkstatt.de</p>
-                <hr class="my-3">
+                <hr class="my-3" style="border-color:rgba(255,255,255,0.08);">
                 <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>
                 <p>USt-IdNr.: DE351358022</p>
             </div>
@@ -415,19 +491,19 @@
         function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
         requestAnimationFrame(raf);
         gsap.registerPlugin(ScrollTrigger);
-        
+
         const mb = document.getElementById('mobileMenuBtn');
         const mm = document.createElement('div');
         mm.id = 'mobileMenu';
-        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10"><button id="closeMobileMenu" class="text-gray-500 hover:text-primary text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/">Startseite</a><a href="/#about">&Uuml;ber uns</a><a href="/#services">Leistungen</a><a href="/#reviews">Bewertungen</a><a href="/#faq">FAQ</a><a href="/#contact">Kontakt</a><a href="/#appointment" class="block bg-primary text-white text-center py-3 rounded-xl font-semibold mt-4">Termin</a></nav>';
+        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10 logo-glow"><button id="closeMobileMenu" class="text-gray-500 hover:text-white text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/" class="text-gray-300 hover:text-white">Startseite</a><a href="/#about" class="text-gray-300 hover:text-white">&Uuml;ber uns</a><a href="/#services" class="text-gray-300 hover:text-white">Leistungen</a><a href="/#reviews" class="text-gray-300 hover:text-white">Bewertungen</a><a href="/#faq" class="text-gray-300 hover:text-white">FAQ</a><a href="/#contact" class="text-gray-300 hover:text-white">Kontakt</a><a href="/#appointment" class="block btn-primary text-white text-center py-3 font-semibold mt-4">Termin</a></nav>';
         document.body.appendChild(mm);
         if(mb) { mb.addEventListener('click', () => mm.classList.add('active')); }
         const cm = document.getElementById('closeMobileMenu');
         if(cm) cm.addEventListener('click', () => mm.classList.remove('active'));
         mm.querySelectorAll('a').forEach(l => l.addEventListener('click', () => mm.classList.remove('active')));
-    
+
         const observe = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12});
-        document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>observe.observe(el));
+        document.querySelectorAll('.reveal,.reveal-l').forEach(el=>observe.observe(el));
         gsap.fromTo('.hero-content>*',{opacity:0,y:30},{opacity:1,y:0,duration:0.8,stagger:0.1,ease:'power2.out',delay:0.15});
         gsap.fromTo('.reveal',{opacity:0,y:40},{opacity:1,y:0,duration:0.6,stagger:0.12,ease:'power2.out',scrollTrigger:{trigger:'.reveal',start:'top 80%',toggleActions:'play none none none'}});
     });
