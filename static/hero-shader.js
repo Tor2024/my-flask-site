@@ -118,10 +118,10 @@ if (container && !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
     canvas.style.width = '100%'; canvas.style.height = '100%'; canvas.style.display = 'block';
     container.appendChild(canvas);
 
-    // Brand blue palette adapted from Neuform orange/red
+    // Steel + blue + amber — workshop character
     const config = {
-        colors: ['#0055a5', '#2d7fd6', '#5fa3e8', '#0061bd'],
-        backgroundColor: '#050a14',
+        colors: ['#0055a5', '#b8c4d4', '#ff8a00'],
+        backgroundColor: '#0a0a0f',
         speed: 0.6, streakCount: 3, streakWidth: 1.0, streakLength: 1.5, glow: 0.8, density: 0.3,
         twinkle: 0.8, zoom: 2.2, backgroundGlow: 0.4, opacity: 0.7, mouseInteraction: true,
         mouseStrength: 1.0, mouseRadius: 0.8, mouseDampening: 0.15
