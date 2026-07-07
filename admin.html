@@ -251,6 +251,26 @@
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-primary mb-8">Terminverwaltung</h1>
 
+        <!-- Statistik-Dashboard -->
+        <div id="stats-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded shadow-sm">
+                <div class="text-sm text-gray-500 mb-1">Termine (30 Tage)</div>
+                <div id="stat-appointments" class="text-3xl font-bold text-primary">–</div>
+            </div>
+            <div class="bg-white p-5 rounded shadow-sm">
+                <div class="text-sm text-gray-500 mb-1">Besuche heute</div>
+                <div id="stat-today" class="text-3xl font-bold text-primary">–</div>
+            </div>
+            <div class="bg-white p-5 rounded shadow-sm">
+                <div class="text-sm text-gray-500 mb-1">Besuche (30 Tage)</div>
+                <div id="stat-visits" class="text-3xl font-bold text-primary">–</div>
+            </div>
+            <div class="bg-white p-5 rounded shadow-sm">
+                <div class="text-sm text-gray-500 mb-1">Besuche gesamt</div>
+                <div id="stat-total" class="text-3xl font-bold text-primary">–</div>
+            </div>
+        </div>
+
         <!-- Kalender- und Zeitverwaltung -->
         <div class="bg-white p-6 rounded shadow-sm mb-8">
             <h2 class="text-3xl font-bold text-primary mb-6">Datum und Uhrzeit blockieren</h2>
@@ -439,6 +459,18 @@
             "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
             "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
         ];
+
+        async function fetchStats() {
+            try {
+                const r = await fetch('/api/analytics?period=30');
+                if (!r.ok) return;
+                const d = await r.json();
+                document.getElementById('stat-appointments').textContent = d.appointments ?? 0;
+                document.getElementById('stat-today').textContent = d.visits_today ?? 0;
+                document.getElementById('stat-visits').textContent = d.visits ?? 0;
+                document.getElementById('stat-total').textContent = d.visits_total ?? 0;
+            } catch (e) { console.error('Stats:', e); }
+        }
 
         async function fetchAppointmentsData() {
             try {
@@ -1108,6 +1140,7 @@
             populateTimeSelects();
             wireSearchClear();
             fetchAppointmentsData();
+            fetchStats();
             // Handler für Datum-Sperren nur einmal registrieren
             document.getElementById('block-date-button').addEventListener('click', async function() {
                 if (!selectedDate) {

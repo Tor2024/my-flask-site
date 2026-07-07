@@ -593,16 +593,24 @@ def analytics():
         except:
             continue
     # Подсчет посещений
+    today_str = datetime.now().strftime('%Y-%m-%d')
     visits_raw = read_visits().get('visits', {})
     count_visits = 0
+    count_total = 0
     for date_str, cnt in visits_raw.items():
+        count_total += cnt
         try:
             d = datetime.strptime(date_str, '%Y-%m-%d').date()
             if d >= start_date:
                 count_visits += cnt
         except:
             continue
-    return jsonify({'appointments': count_appt, 'visits': count_visits})
+    return jsonify({
+        'appointments': count_appt,
+        'visits': count_visits,
+        'visits_total': count_total,
+        'visits_today': visits_raw.get(today_str, 0),
+    })
 
 # API для получения и обновления настроек Telegram
 @app.route('/api/telegram_config', methods=['GET'])
