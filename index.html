@@ -929,8 +929,9 @@
                 <p class="text-gray-600 max-w-3xl mx-auto">Lesen Sie, was unsere Kunden über unseren Service sagen.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                <div class="bg-white p-6 rounded shadow-sm">
+            <div class="relative mb-10">
+                <div id="reviewsTrack" class="reviews-track flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 -mx-4 px-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -952,7 +953,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded shadow-sm">
+                <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -974,7 +975,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded shadow-sm">
+                <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -996,7 +997,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded shadow-sm">
+                <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -1018,7 +1019,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded shadow-sm">
+                <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -1040,7 +1041,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded shadow-sm">
+                <div class="bg-white p-6 rounded shadow-sm snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                     <div class="flex items-center mb-4">
                         <div class="flex text-yellow-400">
                             <i class="ri-star-fill"></i>
@@ -1062,7 +1063,16 @@
                         </div>
                     </div>
                 </div>
+                </div>
+                <button id="reviewsPrev" aria-label="Vorherige Bewertung" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-5 w-11 h-11 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:bg-primary hover:text-white transition-colors z-10">
+                    <i class="ri-arrow-left-s-line ri-lg"></i>
+                </button>
+                <button id="reviewsNext" aria-label="Nächste Bewertung" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-5 w-11 h-11 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:bg-primary hover:text-white transition-colors z-10">
+                    <i class="ri-arrow-right-s-line ri-lg"></i>
+                </button>
             </div>
+            
+            <div id="reviewsDots" class="flex justify-center gap-2 mb-10"></div>
             
             <div class="text-center">
                 <div class="inline-flex items-center justify-center bg-primary/10 px-4 py-2 rounded-full mb-8">
@@ -1461,6 +1471,42 @@
             });
         }
         document.addEventListener('pointermove', syncPointer);
+
+        // Reviews carousel
+        (function() {
+            const track = document.getElementById('reviewsTrack');
+            if (!track) return;
+            const cards = track.children;
+            const prev = document.getElementById('reviewsPrev');
+            const next = document.getElementById('reviewsNext');
+            const dotsWrap = document.getElementById('reviewsDots');
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function step() {
+                return cards[0] ? cards[0].getBoundingClientRect().width + 24 : track.clientWidth * 0.8;
+            }
+            prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: reduced ? 'auto' : 'smooth' }));
+            next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: reduced ? 'auto' : 'smooth' }));
+
+            // Dots
+            const dots = [];
+            for (let i = 0; i < cards.length; i++) {
+                const d = document.createElement('button');
+                d.setAttribute('aria-label', 'Zur Bewertung ' + (i + 1));
+                d.className = 'reviews-dot w-2.5 h-2.5 rounded-full bg-gray-300 hover:bg-primary/60 transition-colors';
+                d.addEventListener('click', () => cards[i].scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', inline: 'start', block: 'nearest' }));
+                dotsWrap.appendChild(d);
+                dots.push(d);
+            }
+            function updateDots() {
+                const idx = Math.round(track.scrollLeft / step());
+                dots.forEach((d, i) => {
+                    d.className = 'reviews-dot w-2.5 h-2.5 rounded-full transition-colors ' + (i === idx ? 'bg-primary w-6' : 'bg-gray-300 hover:bg-primary/60');
+                });
+            }
+            track.addEventListener('scroll', updateDots, { passive: true });
+            updateDots();
+        })();
 
         // Функции для работы с модальным окном Impressum
         function openImpressumModal() {
