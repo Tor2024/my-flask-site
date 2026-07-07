@@ -314,6 +314,7 @@
         </div>
     </section>
     <footer id="footer" class="relative overflow-hidden text-white">
+        <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
 
         <div class="absolute inset-0 bg-gray-900/75"></div>
         <div class="relative z-10 pt-12 pb-8">
@@ -438,5 +439,42 @@
         window.addEventListener('load', function(){ setTimeout(done, 400); });
     })();
     </script>
+<script>
+(function(){var c=document.getElementById('footerShader');if(!c)return;var gl=c.getContext('webgl');if(!gl)return;
+var vsSrc='attribute vec4 aVertexPosition;void main(){gl_Position=aVertexPosition;}';
+var fsSrc='#version 100\nprecision highp float;\nuniform vec2 iResolution;\nuniform float iTime;\n'
++'const float overallSpeed=0.2;\nconst float gridSmoothWidth=0.015;\nconst float axisWidth=0.05;\n'
++'const float majorLineWidth=0.025;\nconst float minorLineWidth=0.0125;\nconst float majorLineFrequency=5.0;\n'
++'const float minorLineFrequency=1.0;\nconst vec4 gridColor=vec4(0.5);\nconst float scale=5.0;\n'
++'const vec4 lineColor=vec4(0.0,0.33,0.65,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
++'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
++'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
++'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
++'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
++'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
++'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
++'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
++'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
++'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
++'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
++'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
++'float getY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
++'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.07,0.2,1.0);vec4 bg2=vec4(0.0,0.15,0.35,1.0);for(int i=0;i<linesPerGroup;i++){float nli=float(i)/float(linesPerGroup);float ot=iTime*offsetSpeed;float op=float(i)+sp.x*offsetFrequency;float rd=rand(op+ot)*0.5+0.5;float hw=mix(minLineWidth,maxLineWidth,rd*hf)/2.0;float os=rand(op+ot*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hf);float lp=getY(sp.x,hf,os);float ln=drawSmoothLine(lp,hw,sp.y)/2.0+drawCrispLine(lp,hw*0.15,sp.y);float cx=mod(float(i)+iTime*lineSpeed,25.0)-12.0;vec2 cp=vec2(cx,getY(cx,hf,os));float ci=drawCircle(cp,0.01,sp)*4.0;ln=ln+ci;lns+=ln*lineColor*rd;}fc2=mix(bg1,bg2,uv.x);fc2*=vf;fc2.a=1.0;fc2+=lns;gl_FragColor=fc2;}';
+function check(s,l){if(l)return;console.error('Shader error: '+gl.getShaderInfoLog(s));}
+var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,vsSrc);gl.compileShader(vs);check(vs,gl.getShaderParameter(vs,gl.COMPILE_STATUS));
+var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,fsSrc);gl.compileShader(fs);check(fs,gl.getShaderParameter(fs,gl.COMPILE_STATUS));
+var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.error('Program error: '+gl.getProgramInfoLog(prog));return;}
+var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+var aPos=gl.getAttribLocation(prog,'aVertexPosition');
+var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
+function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
+window.addEventListener('resize',resize);resize();
+var t0=Date.now();var fsVisible=true;
+if('IntersectionObserver' in window){new IntersectionObserver(function(e){fsVisible=e[0].isIntersecting;},{rootMargin:'100px'}).observe(c);}
+function frame(){var t=(Date.now()-t0)/1000;if(!fsVisible){requestAnimationFrame(frame);return;}gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
+requestAnimationFrame(frame);})();
+</script>
 </body>
 </html>
