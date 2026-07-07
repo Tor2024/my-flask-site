@@ -412,9 +412,64 @@
 
     /* History timeline: stacking-cards effect handled by perspective-showcase.js */
     #timeline-stack .timeline-era { will-change: transform, opacity; }
+
+    /* ===== Preloader ===== */
+    #preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        background: radial-gradient(ellipse at center, #1a2333 0%, #0a0f1a 100%);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 32px;
+        transition: opacity .6s ease, visibility .6s ease;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; }
+    #preloader .pl-logo img {
+        height: 120px; width: auto;
+        filter: drop-shadow(0 8px 28px rgba(0, 85, 165, 0.55));
+        animation: pl-pulse 2.4s ease-in-out infinite;
+    }
+    #preloader .pl-name {
+        color: rgba(255,255,255,0.92);
+        font-size: 13px; font-weight: 500;
+        letter-spacing: 0.32em; text-transform: uppercase;
+        margin-top: -16px;
+    }
+    #preloader .pl-bar {
+        width: 240px; height: 2px;
+        background: rgba(255,255,255,0.10);
+        overflow: hidden; border-radius: 2px;
+    }
+    #preloader .pl-fill {
+        width: 0%; height: 100%;
+        background: linear-gradient(90deg, #0055a5, #5fa3e8);
+        box-shadow: 0 0 12px rgba(0, 85, 165, 0.65);
+        transition: width .3s ease;
+    }
+    #preloader .pl-pct {
+        color: rgba(255,255,255,0.45);
+        font-size: 11px; font-weight: 400;
+        letter-spacing: 0.28em;
+    }
+    @keyframes pl-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.06); opacity: 0.82; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        #preloader .pl-logo img { animation: none; }
+        #preloader, #preloader .pl-fill { transition: none; }
+    }
     </style>
 </head>
 <body class="bg-white">
+    <!-- Preloader -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pl-logo"><img src="static/images/kw.avif" alt=""></div>
+        <div class="pl-name">Kreuztaler Werkstatt</div>
+        <div class="pl-bar"><div class="pl-fill" id="plFill"></div></div>
+        <div class="pl-pct" id="plPct">0%</div>
+    </div>
+    <noscript><style>#preloader{display:none !important}</style></noscript>
     <!-- Header -->
     <a href="#hero" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] bg-primary text-white px-4 py-2 rounded">Zum Hauptinhalt</a>
     <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
@@ -1599,6 +1654,62 @@ var t0=Date.now();var fsVisible=true;
 if('IntersectionObserver' in window){new IntersectionObserver(function(e){fsVisible=e[0].isIntersecting;},{rootMargin:'100px'}).observe(c);}
 function frame(){var t=(Date.now()-t0)/1000;if(!fsVisible){requestAnimationFrame(frame);return;}gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
 requestAnimationFrame(frame);})();
+</script>
+<script>
+// ===== Preloader: preload all DOM images + brand logos, then fade out =====
+(function(){
+    var pl = document.getElementById('preloader');
+    if (!pl) return;
+    var fill = document.getElementById('plFill');
+    var pct  = document.getElementById('plPct');
+    var finished = false;
+
+    function setPct(p){
+        if (p > 100) p = 100;
+        if (fill) fill.style.width = p + '%';
+        if (pct)  pct.textContent  = Math.round(p) + '%';
+    }
+    function done(){
+        if (finished) return; finished = true;
+        setPct(100);
+        setTimeout(function(){ pl.classList.add('pl-done'); }, 200);
+        setTimeout(function(){ if (pl.parentNode) pl.parentNode.removeChild(pl); }, 1000);
+    }
+
+    // ponytail: hard timeout — never block longer than 6s, no matter what
+    var hard = setTimeout(done, 6000);
+
+    // Collect assets: every <img> in DOM + brand strip logos (already in DOM as cdn.simpleicons.org)
+    var assets = [];
+    Array.prototype.forEach.call(document.images, function(img){
+        var s = img.currentSrc || img.src;
+        if (s && s.indexOf('data:') !== 0) assets.push(s);
+    });
+    // Dedupe
+    var seen = Object.create(null);
+    assets = assets.filter(function(s){ if (seen[s]) return false; seen[s] = 1; return true; });
+
+    if (!assets.length) { clearTimeout(hard); done(); return; }
+
+    var loaded = 0;
+    function bump(){
+        loaded++;
+        setPct((loaded / assets.length) * 100);
+        if (loaded >= assets.length) { clearTimeout(hard); setTimeout(done, 250); }
+    }
+    assets.forEach(function(src){
+        var im = new Image();
+        im.onload  = bump;
+        im.onerror = bump;
+        im.src = src;
+    });
+
+    // Safety net: when full window finished loading, force completion
+    window.addEventListener('load', function(){
+        clearTimeout(hard);
+        setTimeout(done, 400);
+    });
+})();
 </script>
 </body>
 
