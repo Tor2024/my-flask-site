@@ -4,19 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ-панель - Управление расписанием</title>
+    <title>Admin-Panel · Kreuztaler Werkstatt — Terminverwaltung</title>
     <link rel="icon" type="image/avif" href="static/images/kw.avif">
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            zoom: 90%;
             background-color: #f8f9fa;
         }
         .calendar-day {
@@ -84,7 +82,7 @@
             cursor: pointer;
         }
         .time-slot.blocked-admin:hover {
-            background-color: #ffb3b3;
+            background-color: #dcd0ff;
         }
         .time-slot.booked::after, .time-slot.blocked-admin::after {
             content: '';
@@ -99,14 +97,161 @@
         .time-slot.booked, .time-slot.blocked-admin {
             position: relative;
         }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        #toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            min-width: 280px;
+            max-width: 400px;
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.625rem;
+            animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toast.fade-out { animation: toast-out 0.25s ease forwards; }
+        .toast.success { background: #16a34a; }
+        .toast.error   { background: #dc2626; }
+        .toast.info    { background: #0055a5; }
+        .toast i { font-size: 1.125rem; flex-shrink: 0; margin-top: 1px; }
+        @keyframes toast-in  { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(24px); } }
+        @media (prefers-reduced-motion: reduce) {
+            .toast, .toast.fade-out { animation: none; }
+        }
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .admin-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #0055a5;
+            font-size: 1.125rem;
+        }
+        .admin-header-brand img { height: 2.25rem; }
+        .admin-header-back {
+            color: #4a4a4a;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .admin-header-back:hover { background: #f3f4f6; color: #0055a5; }
+
+        /* Heute-Hervorhebung im Kalender */
+        .calendar-day.calendar-day-today {
+            outline: 2px solid #0055a5;
+            outline-offset: -2px;
+            font-weight: 700;
+        }
+
+        /* Select-Styling vereinheitlichen */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #fff;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4a4a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.625rem center;
+            padding-right: 2rem !important;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+        select:focus {
+            outline: none;
+            border-color: #0055a5;
+            box-shadow: 0 0 0 2px rgba(0,85,165,0.25);
+        }
+
+        /* Footer */
+        .admin-footer {
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
+            padding: 1.25rem 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.8125rem;
+        }
+        .admin-footer a { color: #0055a5; }
+        .admin-footer a:hover { text-decoration: underline; }
+
+        /* Mobile Kartenlayout fuer die Buchungstabelle */
+        @media (max-width: 767px) {
+            #appointments-table thead { display: none; }
+            #appointments-table, #appointments-table tbody, #appointments-table tr, #appointments-table td { display: block; width: 100%; }
+            #appointments-table tr {
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                margin-bottom: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                background: #fff;
+            }
+            #appointments-table td {
+                border: none;
+                padding: 0.35rem 0;
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+                text-align: right;
+            }
+            #appointments-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #6b7280;
+                text-align: left;
+            }
+            #appointments-table td[data-label="Aktionen"] { justify-content: flex-end; }
+        }
     </style>
 </head>
 
 <body>
+    <header class="admin-header">
+        <div class="admin-header-brand">
+            <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo">
+            <span>Admin-Panel</span>
+        </div>
+        <a href="/" class="admin-header-back" title="Zur Hauptseite">
+            <i class="ri-arrow-left-line"></i>
+            <span>Zur Website</span>
+        </a>
+    </header>
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-primary mb-8 text-center">Admin-Panel: Terminverwaltung</h1>
+        <h1 class="text-3xl font-bold text-primary mb-8">Terminverwaltung</h1>
 
-        <!-- Управление календарем и временем -->
+        <!-- Kalender- und Zeitverwaltung -->
         <div class="bg-white p-6 rounded shadow-sm mb-8">
             <h2 class="text-3xl font-bold text-primary mb-6">Datum und Uhrzeit blockieren</h2>
 
@@ -117,10 +262,10 @@
                 </div>
                 <div class="flex items-center">
                     <div class="w-4 h-4 rounded-full bg-red-100 border border-red-300 mr-2"></div>
-                    <span class="text-sm text-gray-600">Vom Nutzer blockiert</span>
+                    <span class="text-sm text-gray-600">Gebucht (Termin vergeben)</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="w-4 h-4 rounded-full bg-[#ffcccc] border border-[#cc0000] mr-2"></div>
+                    <div class="w-4 h-4 rounded-full bg-primary/10 border border-primary/30 mr-2"></div>
                     <span class="text-sm text-gray-600">Vom Admin blockiert</span>
                 </div>
                 <div class="flex items-center">
@@ -129,7 +274,7 @@
                 </div>
             </div>
 
-            <h3 class="text-xl font-semibold text-gray-500 mb-4">Datum auswählen</h3>
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Datum auswählen</h3>
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <button id="prev-month" type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Vorheriger Monat">
@@ -141,112 +286,107 @@
                     </button>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center mb-2">
-                    <div class="text-sm text-gray-500">Пн</div>
-                    <div class="text-sm text-gray-500">Вт</div>
-                    <div class="text-sm text-gray-500">Ср</div>
-                    <div class="text-sm text-gray-500">Чт</div>
-                    <div class="text-sm text-gray-500">Пт</div>
-                    <div class="text-sm text-gray-500">Сб</div>
-                    <div class="text-sm text-gray-500">Вс</div>
+                    <div class="text-sm text-gray-500">Mo</div>
+                    <div class="text-sm text-gray-500">Di</div>
+                    <div class="text-sm text-gray-500">Mi</div>
+                    <div class="text-sm text-gray-500">Do</div>
+                    <div class="text-sm text-gray-500">Fr</div>
+                    <div class="text-sm text-gray-400">Sa</div>
+                    <div class="text-sm text-gray-400">So</div>
                 </div>
                 <div id="calendar-grid" class="grid grid-cols-7 gap-1">
-                    <!-- Дни календаря будут генерироваться здесь -->
+                    <!-- Kalendertage werden hier generiert -->
                 </div>
             </div>
 
             <div>
-                <h4 class="text-lg font-medium text-gray-500 mb-4">Uhrzeit auswählen</h4>
-                <div id="time-slots-container" class="grid grid-cols-3 gap-2">
-                    <!-- Временные слоты будут генерироваться здесь -->
+                <h4 class="text-lg font-medium text-gray-700 mb-4">Uhrzeit auswählen</h4>
+                <div id="time-slots-container" class="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                    <!-- Zeit-Slots werden hier generiert -->
                 </div>
             </div>
 
-            <!-- Диапазон блокировки -->
-            <div class="mt-8 p-4 bg-gray-50 rounded-lg">
-                <h4 class="text-lg font-medium text-gray-700 mb-4">Zeitbereich blockieren/freigeben</h4>
-                <div class="flex flex-wrap gap-4 items-end">
-                    <div>
-                        <label for="range-start-time" class="block text-sm font-medium text-gray-600 mb-1">Von</label>
-                        <select id="range-start-time" class="border px-3 py-2 rounded">
-                            <option value="">Startzeit wählen</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:30">09:30</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="11:30">11:30</option>
-                            <option value="12:00">12:00</option>
-                            <option value="12:30">12:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                            <option value="16:00">16:00</option>
-                            <option value="16:30">16:30</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="range-end-time" class="block text-sm font-medium text-gray-600 mb-1">Bis</label>
-                        <select id="range-end-time" class="border px-3 py-2 rounded">
-                            <option value="">Endzeit wählen</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:30">09:30</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="11:30">11:30</option>
-                            <option value="12:00">12:00</option>
-                            <option value="12:30">12:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                            <option value="16:00">16:00</option>
-                            <option value="16:30">16:30</option>
-                        </select>
-                    </div>
-                    <button id="block-range-button" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 transition-colors" disabled>
-                        Bereich blockieren
-                    </button>
-                    <button id="unblock-range-button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors" disabled>
-                        Bereich freigeben
-                    </button>
-                </div>
-            </div>
+            <!-- Aktionen: drei logische Gruppen -->
+            <div class="mt-8 space-y-4">
 
-            <div class="mt-6 text-center">
-                <button id="block-unblock-button" class="bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors" disabled>
-                    Blockieren/Freigeben
-                </button>
-                <button type="button" id="block-date-button" class="bg-red-600 text-white py-3 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-colors ml-4">
-                    Gesamtes Datum blockieren
-                </button>
+                <!-- Gruppe 1: Einzelner Slot -->
+                <section class="p-4 bg-gray-50 rounded-lg">
+                    <h4 class="text-base font-semibold text-gray-800 mb-2">Einzelnen Slot</h4>
+                    <p class="text-sm text-gray-600 mb-3">Zuerst Datum und Slot wählen, dann sperren oder freigeben.</p>
+                    <button id="block-unblock-button" type="button" class="bg-primary text-white py-2 px-5 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Bitte Slot auswählen
+                    </button>
+                </section>
+
+                <!-- Gruppe 2: Zeitbereich -->
+                <section class="p-4 bg-gray-50 rounded-lg">
+                    <h4 class="text-base font-semibold text-gray-800 mb-2">Zeitbereich</h4>
+                    <p class="text-sm text-gray-600 mb-3">Mehrere Slots auf einmal sperren oder freigeben.</p>
+                    <div class="flex flex-wrap gap-3 items-end">
+                        <div>
+                            <label for="range-start-time" class="block text-sm font-medium text-gray-600 mb-1">Von</label>
+                            <select id="range-start-time" class="px-3 py-2" aria-label="Startzeit wählen">
+                                <option value="">Startzeit</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="range-end-time" class="block text-sm font-medium text-gray-600 mb-1">Bis</label>
+                            <select id="range-end-time" class="px-3 py-2" aria-label="Endzeit wählen">
+                                <option value="">Endzeit</option>
+                            </select>
+                        </div>
+                        <button type="button" id="block-range-button" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 transition-colors" disabled>
+                            Bereich sperren
+                        </button>
+                        <button type="button" id="unblock-range-button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors" disabled>
+                            Bereich freigeben
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Gruppe 3: Gesamtes Datum -->
+                <section class="p-4 bg-gray-50 rounded-lg">
+                    <h4 class="text-base font-semibold text-gray-800 mb-2">Gesamtes Datum</h4>
+                    <p class="text-sm text-gray-600 mb-3">Alle Slots des gewählten Datums auf einmal sperren oder freigeben.</p>
+                    <button type="button" id="block-date-button" class="bg-red-600 text-white py-2 px-5 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-colors">
+                        Datum sperren
+                    </button>
+                    <button type="button" id="unblock-date-button" class="ml-2 bg-gray-500 text-white py-2 px-5 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                        Datum freigeben
+                    </button>
+                </section>
             </div>
         </div>
 
-        <!-- Таблица записей клиентов -->
+        <!-- Kundenbuchungen-Tabelle -->
         <div class="bg-white p-6 rounded shadow-sm mb-8">
-            <h2 class="text-2xl font-bold text-primary mb-4">Kundenbuchungen</h2>
-            <div class="flex flex-wrap gap-4 mb-4">
-                <input id="search-input" type="text" placeholder="Suche nach Name, E-Mail, Leistung..." class="border px-3 py-2 rounded w-64">
-                <button id="export-csv" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90">Export nach Excel (CSV)</button>
+            <h2 class="text-3xl font-bold text-primary mb-6">Kundenbuchungen</h2>
+            <div class="flex flex-wrap gap-4 items-center mb-4">
+                <div class="relative">
+                    <input id="search-input" type="text" placeholder="Suche nach Name, E-Mail, Leistung…" class="border px-3 py-2 pr-9 rounded w-64" aria-label="Buchungen durchsuchen">
+                    <button type="button" id="search-clear" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 hidden" title="Suche zurücksetzen" aria-label="Suche zurücksetzen">
+                        <i class="ri-close-circle-fill"></i>
+                    </button>
+                </div>
+                <button id="export-csv" type="button" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90">Export nach Excel (CSV)</button>
+                <span id="result-count" class="text-sm text-gray-500 ml-auto"></span>
             </div>
             <div class="overflow-x-auto">
                 <table id="appointments-table" class="min-w-full bg-white border rounded">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="py-2 px-3 cursor-pointer" data-sort="date">Datum</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="time">Uhrzeit</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="name">Name</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="email">E-Mail</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="phone">Telefon</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="service">Leistung</th>
-                            <th class="py-2 px-3 cursor-pointer" data-sort="status">Status</th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="date" aria-sort="none">Datum <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="time" aria-sort="none">Uhrzeit <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="name" aria-sort="none">Name <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="email" aria-sort="none">E-Mail <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="phone" aria-sort="none">Telefon <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="service" aria-sort="none">Leistung <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
+                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="status" aria-sort="none">Status <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
                             <th class="py-2 px-3">Aktionen</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Записи будут добавляться через JS -->
+                        <!-- Einträge via JS -->
                     </tbody>
                 </table>
             </div>
@@ -254,7 +394,32 @@
     </div>
 
     <script>
-        // JS для admin.html будет здесь
+        // JS für admin.html
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) { alert(message); return; }
+        const icon = type === 'success' ? 'ri-check-line' : type === 'error' ? 'ri-error-warning-line' : 'ri-information-line';
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.setAttribute('role', 'status');
+        t.innerHTML = `<i class="${icon}"></i><span></span>`;
+        t.querySelector('span').textContent = message;
+        container.appendChild(t);
+        setTimeout(() => {
+            t.classList.add('fade-out');
+            t.addEventListener('animationend', () => t.remove(), { once: true });
+        }, 3500);
+        t.addEventListener('click', () => t.remove());
+    }
+
+    function debounce(fn, wait) {
+        let timer;
+        return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), wait);
+        };
+    }
+
     let currentMonth = new Date();
     let selectedDate = null;
     let selectedTime = null;
@@ -277,13 +442,13 @@
 
         async function fetchAppointmentsData() {
             try {
+                setLoadingState(true);
                 const response = await fetch('/api/admin/appointments');
-                if (!response.ok) throw new Error('Ошибка при загрузке данных о записях');
+                if (!response.ok) throw new Error('Fehler beim Laden der Termindaten');
                 const data = await response.json();
-                console.log('Ответ от /api/admin/appointments:', data);
                 if (!data.appointments || !Array.isArray(data.appointments)) {
-                    console.error('Структура данных некорректна:', data);
-                    alert('Некорректные данные о записях.');
+                    console.error('Datensatz ungueltig:', data);
+                    showToast('Datensatz ungueltig.', 'error');
                     return;
                 }
                 appointmentsData = data;
@@ -292,49 +457,98 @@
                 renderCalendar();
                 renderTimeSlots();
             } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
-                alert('Не удалось загрузить данные о записях.');
+                console.error('Ladefehler:', error);
+                showToast('Termindaten konnten nicht geladen werden.', 'error');
             }
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({
+                '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+            }[ch]));
         }
 
         function renderAppointmentsTable() {
             const tableBody = document.querySelector('#appointments-table tbody');
             tableBody.innerHTML = '';
+
+            if (filteredAppointments.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="8" class="py-12 px-3 text-center text-gray-500">
+                    <i class="ri-inbox-line ri-2x block mb-2 text-gray-400"></i>
+                    Keine Buchungen vorhanden.
+                </td>`;
+                tr.classList.add('border-b');
+                tableBody.appendChild(tr);
+                updateResultCount();
+                return;
+            }
+
             filteredAppointments.forEach(appt => {
                 const tr = document.createElement('tr');
+                tr.className = 'border-b hover:bg-gray-50';
+                const safeDate = escapeHtml(appt.date);
+                const safeTime = escapeHtml(appt.time);
+                const safeName = escapeHtml(appt.client.name);
+                const safeEmail = escapeHtml(appt.client.email);
+                const safePhone = escapeHtml(appt.client.phone);
+                const safeService = escapeHtml(appt.service_label || appt.service);
+                const safeId = escapeHtml(appt.id);
                 tr.innerHTML = `
-                    <td class="py-2 px-3">${appt.date}</td>
-                    <td class="py-2 px-3">${appt.time}</td>
-                    <td class="py-2 px-3">${appt.client.name}</td>
-                    <td class="py-2 px-3">${appt.client.email}</td>
-                    <td class="py-2 px-3">${appt.client.phone}</td>
-                    <td class="py-2 px-3">${appt.service_label || appt.service}</td>
-                    <td class="py-2 px-3">
-                        <select class="status-select border rounded px-2 py-1" data-id="${appt.id}">
+                    <td class="py-2 px-3" data-label="Datum">${safeDate}</td>
+                    <td class="py-2 px-3" data-label="Uhrzeit">${safeTime}</td>
+                    <td class="py-2 px-3" data-label="Name">${safeName}</td>
+                    <td class="py-2 px-3" data-label="E-Mail"><a href="mailto:${safeEmail}" class="text-primary hover:underline">${safeEmail}</a></td>
+                    <td class="py-2 px-3" data-label="Telefon"><a href="tel:${safePhone.replace(/\s/g,'')}" class="text-primary hover:underline">${safePhone}</a></td>
+                    <td class="py-2 px-3" data-label="Leistung">${safeService}</td>
+                    <td class="py-2 px-3" data-label="Status">
+                        <select class="status-select border rounded px-2 py-1" data-id="${safeId}" aria-label="Status für ${safeName}">
                             <option value="ожидает" ${appt.status === 'ожидает' ? 'selected' : ''}>Ausstehend</option>
                             <option value="выполнено" ${appt.status === 'выполнено' ? 'selected' : ''}>Erledigt</option>
                             <option value="отменено" ${appt.status === 'отменено' ? 'selected' : ''}>Storniert</option>
                         </select>
                     </td>
-                    <td class="py-2 px-3">
-                        <button class="bg-red-500 text-white px-2 py-1 rounded delete-btn" data-id="${appt.id}">Löschen</button>
+                    <td class="py-2 px-3" data-label="Aktionen">
+                        <button type="button" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors delete-btn" data-id="${safeId}" data-name="${safeName}" data-date="${safeDate}" data-time="${safeTime}" aria-label="Termin von ${safeName} am ${safeDate} löschen">Löschen</button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
             });
+            updateResultCount();
+        }
+
+        function updateResultCount() {
+            const el = document.getElementById('result-count');
+            if (!el) return;
+            const total = appointmentsData.appointments.length;
+            const shown = filteredAppointments.length;
+            if (total === 0) { el.textContent = ''; return; }
+            el.textContent = shown === total ? `${total} Buchungen` : `${shown} von ${total}`;
+        }
+
+        function setLoadingState(isLoading) {
+            const tableBody = document.querySelector('#appointments-table tbody');
+            if (isLoading) {
+                tableBody.innerHTML = `<tr><td colspan="8" class="py-12 px-3 text-center text-gray-500">
+                    <i class="ri-loader-4-line ri-2x block mb-2 text-gray-400 animate-spin"></i>
+                    Daten werden geladen…
+                </td></tr>`;
+            }
         }
 
         // Поиск по таблице
+        const handleSuche = debounce(function(val) {
+            filteredAppointments = appointmentsData.appointments.filter(appt =>
+                appt.client.name.toLowerCase().includes(val) ||
+                appt.client.email.toLowerCase().includes(val) ||
+                appt.client.phone.toLowerCase().includes(val) ||
+                (appt.service_label || appt.service).toLowerCase().includes(val)
+            );
+            renderAppointmentsTable();
+        }, 200);
         document.addEventListener('input', function(e) {
             if (e.target.id === 'search-input') {
-                const val = e.target.value.toLowerCase();
-                filteredAppointments = appointmentsData.appointments.filter(appt =>
-                    appt.client.name.toLowerCase().includes(val) ||
-                    appt.client.email.toLowerCase().includes(val) ||
-                    appt.client.phone.toLowerCase().includes(val) ||
-                    (appt.service_label || appt.service).toLowerCase().includes(val)
-                );
-                renderAppointmentsTable();
+                handleSuche(e.target.value.toLowerCase());
             }
         });
 
@@ -345,6 +559,13 @@
                 if (!field) return;
                 sortAsc = sortField === field ? !sortAsc : true;
                 sortField = field;
+                e.target.closest('table').querySelectorAll('th[data-sort]').forEach(th => {
+                    if (th.dataset.sort === field) {
+                        th.setAttribute('aria-sort', sortAsc ? 'ascending' : 'descending');
+                    } else {
+                        th.setAttribute('aria-sort', 'none');
+                    }
+                });
                 filteredAppointments.sort((a, b) => {
                     let va = field === 'name' ? a.client.name : field === 'email' ? a.client.email : field === 'phone' ? a.client.phone : field === 'service' ? (a.service_label || a.service) : a[field];
                     let vb = field === 'name' ? b.client.name : field === 'email' ? b.client.email : field === 'phone' ? b.client.phone : field === 'service' ? (b.service_label || b.service) : b[field];
@@ -390,7 +611,7 @@
                     });
                     if (!response.ok) throw new Error('Ошибка обновления статуса');
                 } catch (err) {
-                    alert('Не удалось обновить статус заявки');
+                    showToast('Status konnte nicht aktualisiert werden.', 'error');
                 }
             }
         });
@@ -399,7 +620,10 @@
         document.addEventListener('click', async function(e) {
             if (e.target.classList.contains('delete-btn')) {
                 const id = e.target.dataset.id;
-                if (!confirm('Удалить заявку?')) return;
+                const name = e.target.dataset.name || '';
+                const date = e.target.dataset.date || '';
+                const time = e.target.dataset.time || '';
+                if (!confirm(`Möchten Sie den Termin wirklich löschen?\n\nKunde: ${name}\nDatum: ${date} ${time}`)) return;
                 try {
                     const response = await fetch(`/api/appointments/${id}`, {
                         method: 'DELETE'
@@ -409,7 +633,7 @@
                     filteredAppointments = filteredAppointments.filter(a => a.id !== id);
                     renderAppointmentsTable();
                 } catch (err) {
-                    alert('Не удалось удалить заявку');
+                    showToast('Anfrage konnte nicht gelöscht werden.', 'error');
                 }
             }
         });
@@ -426,7 +650,7 @@
             const daysInMonth = lastDayOfMonth.getDate();
             const startDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // Понедельник = 0
 
-            // Добавляем пустые дни перед началом месяца
+            // Leere Tage vor Monatsbeginn
             for (let i = 0; i < startDayOfWeek; i++) {
                 const prevMonthDay = new Date(year, month, 0).getDate() - startDayOfWeek + i + 1;
                 const dayElement = document.createElement('div');
@@ -435,15 +659,26 @@
                 calendarGrid.appendChild(dayElement);
             }
 
-            // Добавляем дни текущего месяца
+            // Tage des aktuellen Monats
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('calendar-day');
                 dayElement.textContent = day;
                 dayElement.dataset.date = dateString;
+                dayElement.setAttribute('role', 'button');
+                dayElement.setAttribute('tabindex', '0');
+                dayElement.setAttribute('aria-label', `${day}.${month + 1}.${year}`);
+                const today = new Date();
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayElement.classList.add('calendar-day-today');
+                    dayElement.setAttribute('aria-current', 'date');
+                }
+                dayElement.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); dayElement.click(); }
+                });
 
-                // Проверяем, есть ли заблокированные слоты или записи на этот день
+                // Prüfen auf gesperrte Slots oder Buchungen an diesem Tag
                 const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
                 const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
                 const totalSlots = TIME_SLOTS.length;
@@ -468,7 +703,7 @@
 
                 dayElement.addEventListener('click', () => {
                     selectedDate = dateString;
-                    selectedTime = null; // Сбрасываем выбранное время при смене даты
+                    selectedTime = null; // Ausgewählte Zeit bei Datumswechsel zurücksetzen
                     renderCalendar();
                     renderTimeSlots();
                     updateBlockUnblockButton();
@@ -476,9 +711,9 @@
                 calendarGrid.appendChild(dayElement);
             }
 
-            // Добавляем пустые дни после окончания месяца
+            // Leere Tage nach Monatsende
             const totalCells = startDayOfWeek + daysInMonth;
-            const remainingCells = 42 - totalCells; // 6 недель * 7 дней
+            const remainingCells = (7 - (totalCells % 7)) % 7;
             for (let i = 1; i <= remainingCells; i++) {
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('calendar-day', 'text-gray-400');
@@ -493,7 +728,7 @@
 
             if (!selectedDate) return;
 
-            // Получаем все слоты для выбранной даты
+            // Alle Slots für das gewählte Datum abrufen
             const slotsForDate = TIME_SLOTS.map(slot => {
                 const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot);
                 const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
@@ -512,20 +747,23 @@
 
                 if (isBlockedByAdmin) {
                     timeSlotElement.classList.add('blocked-admin');
-                    timeSlotElement.title = 'Заблокировано администратором';
+                    timeSlotElement.title = 'Vom Admin gesperrt';
+                    timeSlotElement.setAttribute('aria-label', `${time} — vom Admin gesperrt`);
                 } else if (isBookedByUser) {
                     timeSlotElement.classList.add('booked', 'disabled');
-                    timeSlotElement.title = 'Занято пользователем';
+                    timeSlotElement.title = 'Bereits gebucht';
+                    timeSlotElement.setAttribute('aria-label', `${time} — bereits gebucht`);
                 } else {
                     timeSlotElement.classList.add('available');
-                    timeSlotElement.title = 'Доступно';
+                    timeSlotElement.title = 'Verfügbar';
+                    timeSlotElement.setAttribute('aria-label', `${time} — verfügbar`);
                 }
 
                 if (selectedTime === time) {
                     timeSlotElement.classList.add('selected');
                 }
 
-                // Только доступные и заблокированные админом слоты можно выбирать
+                // Nur verfügbare und admin-gesperrte Slots wählbar
                 timeSlotElement.addEventListener('click', () => {
                     if (isBookedByUser) return;
                     selectedTime = time;
@@ -547,7 +785,7 @@
             }
         }
 
-        // Глобальное определение функции для блокировки/разблокировки слота
+        // Globale Funktion für Slot-Sperren/Freigeben
         async function handleBlockUnblock() {
             if (!selectedDate || !selectedTime) return;
 
@@ -564,20 +802,20 @@
                 });
 
                 if (!response.ok) throw new Error('Ошибка при обновлении статуса блокировки');
-                await fetchAppointmentsData(); // Обновляем данные после операции
-                selectedTime = null; // Сбрасываем выбранное время после операции
+                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
+                const selectedTimeBeforeReset = selectedTime;
                 renderCalendar();
                 renderTimeSlots();
-                alert(`Slot ${selectedDate} ${selectedTime || ''} wurde ${action === 'block' ? 'blockiert' : 'freigegeben'}!`);
+                showToast(`Slot ${selectedDate} ${selectedTimeBeforeReset || ''} wurde ${action === 'block' ? 'gesperrt' : 'freigegeben'}.`, 'success');
             } catch (error) {
                 console.error('Ошибка при блокировке/разблокировке слота:', error);
-                alert('Status des Slots konnte nicht обновить.');
+                showToast('Slot-Status konnte nicht aktualisiert werden.', 'error');
             }
         }
 
         prevMonthButton.addEventListener('click', () => {
             currentMonth.setMonth(currentMonth.getMonth() - 1);
-            selectedDate = null; // Сбрасываем выбранную дату при смене месяца
+            selectedDate = null; // Ausgewähltes Datum bei Monatswechsel zurücksetzen
             selectedTime = null;
             renderCalendar();
             renderTimeSlots();
@@ -586,7 +824,7 @@
 
         nextMonthButton.addEventListener('click', () => {
             currentMonth.setMonth(currentMonth.getMonth() + 1);
-            selectedDate = null; // Сбрасываем выбранную дату при смене месяца
+            selectedDate = null; // Ausgewähltes Datum bei Monatswechsel zurücksetzen
             selectedTime = null;
             renderCalendar();
             renderTimeSlots();
@@ -595,12 +833,12 @@
 
         blockUnblockButton.addEventListener('click', handleBlockUnblock);
 
-        // Функция для получения индекса времени в массиве TIME_SLOTS
+        // Index eines Zeit-Slots in TIME_SLOTS abrufen
         function getTimeIndex(time) {
             return TIME_SLOTS.indexOf(time);
         }
 
-        // Функция для получения слотов в диапазоне
+        // Slots in einem Bereich abrufen
         function getSlotsInRange(startTime, endTime) {
             const startIndex = getTimeIndex(startTime);
             const endIndex = getTimeIndex(endTime);
@@ -610,7 +848,7 @@
             return TIME_SLOTS.slice(startIndex, endIndex + 1);
         }
 
-        // Функция для обновления кнопок блокировки/разблокировки диапазона
+        // Bereich-Sperren/Freigeben Buttons aktualisieren
         function updateRangeBlockButton() {
             const startTime = document.getElementById('range-start-time').value;
             const endTime = document.getElementById('range-end-time').value;
@@ -628,12 +866,12 @@
             }
         }
 
-        // Обработчик изменения времени начала диапазона
+        // Handler für Startzeit-Änderung
         document.getElementById('range-start-time').addEventListener('change', function() {
             const startTime = this.value;
             const endSelect = document.getElementById('range-end-time');
 
-            // Очищаем и перезаполняем варианты конца диапазона
+            // Endzeit-Optionen neu füllen
             const currentEndValue = endSelect.value;
             endSelect.innerHTML = '<option value="">Endzeit wählen</option>';
 
@@ -649,7 +887,7 @@
                     endSelect.appendChild(option);
                 });
             } else {
-                // Если не выбрано время начала, показываем все варианты
+                // Wenn keine Startzeit: alle Optionen zeigen
                 TIME_SLOTS.forEach(time => {
                     const option = document.createElement('option');
                     option.value = time;
@@ -661,14 +899,14 @@
             updateRangeBlockButton();
         });
 
-        // Обработчик изменения времени конца диапазона
+        // Handler für Endzeit-Änderung
         document.getElementById('range-end-time').addEventListener('change', updateRangeBlockButton);
 
-        // Обработчик клика по кнопке блокировки диапазона
+        // Handler für Bereich-Sperren Klick
         document.getElementById('block-range-button').addEventListener('click', async function() {
             // Проверка выбора даты
             if (!selectedDate) {
-                alert('Bitte wählen Sie zuerst ein Datum im Kalender aus.');
+                showToast('Bitte zuerst ein Datum wählen.', 'info');
                 return;
             }
 
@@ -677,13 +915,13 @@
 
             // Проверка выбора времени начала
             if (!startTime) {
-                alert('Bitte wählen Sie eine Startzeit aus.');
+                showToast('Bitte Startzeit wählen.', 'info');
                 return;
             }
 
             // Проверка выбора времени окончания
             if (!endTime) {
-                alert('Bitte wählen Sie eine Endzeit aus.');
+                showToast('Bitte Endzeit wählen.', 'info');
                 return;
             }
 
@@ -692,27 +930,27 @@
             const endIndex = getTimeIndex(endTime);
 
             if (startIndex >= endIndex) {
-                alert('Die Startzeit muss vor der Endzeit liegen.');
+                showToast('Startzeit muss vor Endzeit liegen.', 'error');
                 return;
             }
 
             const slotsToBlock = getSlotsInRange(startTime, endTime);
             if (slotsToBlock.length === 0) {
-                alert('Ungültiger Zeitbereich.');
+                showToast('Ungültiger Zeitbereich.', 'error');
                 return;
             }
 
-            // Проверяем, есть ли уже забронированные слоты в диапазоне
+            // Prüfen auf gebuchte Slots im Bereich
             const bookedSlots = appointmentsData.appointments
                 .filter(appt => appt.date === selectedDate && slotsToBlock.includes(appt.time))
                 .map(appt => appt.time);
 
             if (bookedSlots.length > 0) {
-                alert(`Folgende Zeiten sind bereits gebucht: ${bookedSlots.join(', ')}. Diese können nicht blockiert werden.`);
+                showToast(`Bereits gebucht: ${bookedSlots.join(", ")}`, "error");
                 return;
             }
 
-            if (!confirm(`Möchten Sie den Zeitbereich ${startTime} - ${endTime} für ${selectedDate} blockieren?`)) {
+                if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} sperren?`)) {
                 return;
             }
 
@@ -731,31 +969,31 @@
                 const result = await response.json();
 
                 if (!response.ok) {
-                    // Показываем конкретную ошибку от сервера
+                    // Spezifischen Server-Fehler zeigen
                     console.error('Server error:', result);
-                    alert(result.error || 'Zeitbereich konnte nicht blockiert werden.');
+                    showToast(result.error || "Zeitbereich konnte nicht gesperrt werden.", "error");
                     return;
                 }
 
-                await fetchAppointmentsData(); // Обновляем данные после операции
-                alert(`Zeitbereich ${startTime} - ${endTime} wurde blockiert!`);
+                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
+                showToast(`Zeitbereich ${startTime} - ${endTime} gesperrt.`, "success");
 
-                // Очищаем поля выбора
+                // Auswahlfelder leeren
                 document.getElementById('range-start-time').value = '';
                 document.getElementById('range-end-time').value = '';
                 updateRangeBlockButton();
 
             } catch (error) {
                 console.error('Ошибка при блокировке диапазона:', error);
-                alert('Zeitbereich konnte nicht blockiert werden.');
+                showToast('Zeitbereich konnte nicht gesperrt werden.', 'error');
             }
         });
 
-        // Обработчик клика по кнопке разблокировки диапазона
+        // Handler für Bereich-Freigeben Klick
         document.getElementById('unblock-range-button').addEventListener('click', async function() {
             // Проверка выбора даты
             if (!selectedDate) {
-                alert('Bitte wählen Sie zuerst ein Datum im Kalender aus.');
+                showToast('Bitte zuerst ein Datum wählen.', 'info');
                 return;
             }
 
@@ -764,13 +1002,13 @@
 
             // Проверка выбора времени начала
             if (!startTime) {
-                alert('Bitte wählen Sie eine Startzeit aus.');
+                showToast('Bitte Startzeit wählen.', 'info');
                 return;
             }
 
             // Проверка выбора времени окончания
             if (!endTime) {
-                alert('Bitte wählen Sie eine Endzeit aus.');
+                showToast('Bitte Endzeit wählen.', 'info');
                 return;
             }
 
@@ -779,27 +1017,27 @@
             const endIndex = getTimeIndex(endTime);
 
             if (startIndex >= endIndex) {
-                alert('Die Startzeit muss vor der Endzeit liegen.');
+                showToast('Startzeit muss vor Endzeit liegen.', 'error');
                 return;
             }
 
             const slotsToUnblock = getSlotsInRange(startTime, endTime);
             if (slotsToUnblock.length === 0) {
-                alert('Ungültiger Zeitbereich.');
+                showToast('Ungültiger Zeitbereich.', 'error');
                 return;
             }
 
-            // Проверяем, есть ли заблокированные слоты в диапазоне
+            // Prüfen auf gesperrte Slots im Bereich
             const blockedSlotsInRange = appointmentsData.blocked_slots[selectedDate]
                 ? appointmentsData.blocked_slots[selectedDate].filter(slot => slotsToUnblock.includes(slot))
                 : [];
 
             if (blockedSlotsInRange.length === 0) {
-                alert('In diesem Zeitbereich sind keine blockierten Zeiten vorhanden.');
+                showToast('Keine gesperrten Slots in diesem Bereich.', 'info');
                 return;
             }
 
-            if (!confirm(`Möchten Sie den Zeitbereich ${startTime} - ${endTime} für ${selectedDate} freigeben?`)) {
+                if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} freigeben?`)) {
                 return;
             }
 
@@ -818,48 +1056,107 @@
                 const result = await response.json();
 
                 if (!response.ok) {
-                    // Показываем конкретную ошибку от сервера
+                    // Spezifischen Server-Fehler zeigen
                     console.error('Server error:', result);
-                    alert(result.error || 'Zeitbereich konnte nicht freigegeben werden.');
+                    showToast(result.error || "Konnte nicht freigegeben werden.", "error");
                     return;
                 }
 
-                await fetchAppointmentsData(); // Обновляем данные после операции
-                alert(`Zeitbereich ${startTime} - ${endTime} wurde freigegeben!`);
+                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
+                showToast(`Zeitbereich ${startTime} - ${endTime} freigegeben.`, "success");
 
-                // Очищаем поля выбора
+                // Auswahlfelder leeren
                 document.getElementById('range-start-time').value = '';
                 document.getElementById('range-end-time').value = '';
                 updateRangeBlockButton();
 
             } catch (error) {
                 console.error('Ошибка при разблокировке диапазона:', error);
-                alert('Zeitbereich konnte nicht freigegeben werden.');
+                showToast('Zeitbereich konnte nicht freigegeben werden.', 'error');
             }
         });
 
-        // Инициализация
+        // Select-Optionen aus TIME_SLOTS befüllen (keine statischen Duplikate mehr)
+        function populateTimeSelects() {
+            const start = document.getElementById('range-start-time');
+            const end = document.getElementById('range-end-time');
+            TIME_SLOTS.forEach(t => {
+                start.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
+                end.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
+            });
+        }
+
+        // Clear-Button im Suchfeld anzeigen/verstecken
+        function wireSearchClear() {
+            const input = document.getElementById('search-input');
+            const clear = document.getElementById('search-clear');
+            if (!input || !clear) return;
+            const toggle = () => clear.classList.toggle('hidden', input.value.length === 0);
+            toggle();
+            input.addEventListener('input', toggle);
+            clear.addEventListener('click', () => {
+                input.value = '';
+                toggle();
+                filteredAppointments = appointmentsData.appointments.slice();
+                renderAppointmentsTable();
+                input.focus();
+            });
+        }
+
+        // Initialisierung
         document.addEventListener('DOMContentLoaded', () => {
+            populateTimeSelects();
+            wireSearchClear();
             fetchAppointmentsData();
-            // Добавляем обработчик для кнопки блокировки всей даты только один раз
+            // Handler für Datum-Sperren nur einmal registrieren
             document.getElementById('block-date-button').addEventListener('click', async function() {
-                if (!selectedDate) return;
-                if (!confirm('Заблокировать все слоты на выбранную дату?')) return;
+                if (!selectedDate) {
+                    showToast('Bitte zuerst ein Datum wählen.', 'info');
+                    return;
+                }
+                if (!confirm('Wirklich alle Slots des gewählten Datums sperren?')) return;
                 try {
                     const response = await fetch('/api/admin/blocked_slots', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ date: selectedDate, time: null, action: 'block_all' })
                     });
-                    if (!response.ok) throw new Error('Ошибка при блокировке даты');
-                    await fetchAppointmentsData(); // Обновляем данные после блокировки
-                    alert('Дата полностью заблокирована!');
+                    if (!response.ok) throw new Error('Sperren fehlgeschlagen');
+                    await fetchAppointmentsData();
+                    showToast('Datum vollständig gesperrt.', 'success');
                 } catch (error) {
-                    alert('Не удалось заблокировать дату');
+                    showToast('Datum konnte nicht gesperrt werden.', 'error');
+                }
+            });
+
+            // Gesamtes Datum freigeben (H9)
+            document.getElementById('unblock-date-button').addEventListener('click', async function() {
+                if (!selectedDate) {
+                    showToast('Bitte zuerst ein Datum wählen.', 'info');
+                    return;
+                }
+                if (!confirm('Wirklich alle Slots des gewählten Datums freigeben?')) return;
+                try {
+                    const response = await fetch('/api/admin/blocked_slots', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ date: selectedDate, time: null, action: 'unblock_all' })
+                    });
+                    if (!response.ok) throw new Error('Freigeben fehlgeschlagen');
+                    await fetchAppointmentsData();
+                    showToast('Datum vollständig freigegeben.', 'success');
+                } catch (error) {
+                    showToast('Datum konnte nicht freigegeben werden.', 'error');
                 }
             });
         });
     </script>
+    <footer class="admin-footer">
+        <div>© <span id="footer-year"></span> Kreuztaler Werkstatt GmbH · Hagener Str. 40, 57223 Kreuztal</div>
+        <div class="mt-1"><a href="/">Zur Hauptseite</a> · <a href="mailto:info@kreuztaler-werkstatt.de">info@kreuztaler-werkstatt.de</a></div>
+    </footer>
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
 </body>
 
 </html>

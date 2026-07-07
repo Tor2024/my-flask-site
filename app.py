@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, send_file, request, jsonify
+from flask import Flask, send_from_directory, send_file, request, jsonify, session, redirect, url_for
 import os
 import socket
 import json
@@ -12,6 +12,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'kw-admin-session-2025')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '1')
 
 # Настройка логирования
 logging.basicConfig(
@@ -203,10 +205,13 @@ def send_daily_reminders():
 @app.route('/')
 def index():
     # Регистрируем посещение главной страницы
-    visits_data = read_visits()
-    today_str = datetime.now().strftime('%Y-%m-%d')
-    visits_data['visits'][today_str] = visits_data['visits'].get(today_str, 0) + 1
-    save_visits(visits_data)
+    try:
+        visits_data = read_visits()
+        today_str = datetime.now().strftime('%Y-%m-%d')
+        visits_data['visits'][today_str] = visits_data['visits'].get(today_str, 0) + 1
+        save_visits(visits_data)
+        except OSError:
+            pass
     try:
         return send_from_directory('.', 'index.html')
     except Exception as e:
@@ -219,6 +224,14 @@ def serve_static(path):
     except Exception as e:
         return f"Ошибка при загрузке статического файла: {str(e)}", 500
 
+@app.route('/leistung-<filename>')
+def serve_leistung(filename):
+    full = f'leistung-{filename}'
+    try:
+        return send_from_directory('.', full)
+    except Exception:
+        return "Seite nicht gefunden", 404
+
 # API endpoints
 @app.route('/api/appointments', methods=['GET'])
 def get_appointments():
@@ -230,6 +243,9 @@ def get_appointments():
 
 @app.route('/api/admin/blocked_slots', methods=['POST'])
 def update_blocked_slots():
+    auth_fail = require_admin()
+    if auth_fail:
+        return auth_fail
     try:
         data = request.json
         date = data.get('date')
@@ -426,8 +442,55 @@ def create_appointment():
     except Exception as e:
         return jsonify({'error': 'Interner Serverfehler: ' + str(e)}), 500
 
+def require_admin():
+    """Check admin session. Return None if authorized, else redirect response to /access_denied."""
+    if not session.get('admin_authed'):
+        return redirect('/access_denied')
+    return None
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form.get('password', '')
+        if password == ADMIN_PASSWORD:
+            session['admin_authed'] = True
+            return redirect('/admin')
+        return redirect('/access_denied')
+    # GET: show login form
+    return '''<!DOCTYPE html>
+<html lang="de"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin-Login · Kreuztaler Werkstatt</title>
+<link rel="icon" type="image/avif" href="/static/images/kw.avif">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif;background:#f3f4f6;margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center}</style>
+</head><body>
+<div class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8">
+<div class="flex items-center justify-center mb-6">
+<img src="/static/images/kw.avif" alt="Logo" class="h-14 mr-2">
+<div><div class="text-xl font-bold text-[#0055a5]">Kreuztaler Werkstatt</div><div class="text-sm text-gray-500">Admin-Bereich</div></div>
+</div>
+<form method="POST" action="/admin/login" class="space-y-4">
+<div><label for="password" class="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
+<input type="password" id="password" name="password" required autofocus class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-[#0055a5] focus:outline-none" placeholder="••••"></div>
+<button type="submit" class="w-full bg-[#0055a5] text-white py-2.5 rounded-lg font-medium hover:bg-[#003d7a] transition-colors">Anmelden</button>
+</form>
+<div class="text-center mt-4"><a href="/" class="text-sm text-gray-500 hover:text-[#0055a5]">← Zurück zur Website</a></div>
+</div>
+</body></html>'''
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_authed', None)
+    return redirect('/')
+
 @app.route('/admin')
 def admin():
+    # Auth check
+    auth_fail = require_admin()
+    if auth_fail:
+        return auth_fail
     try:
         return send_from_directory('.', 'admin.html')
     except Exception as e:
@@ -440,6 +503,9 @@ def access_denied():
 
 @app.route('/api/admin/appointments', methods=['GET'])
 def admin_get_appointments():
+    auth_fail = require_admin()
+    if auth_fail:
+        return auth_fail
     try:
         data = read_appointments()
         print(f"Загружены записи: {data}")

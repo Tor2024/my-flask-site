@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Устанавливаем правильный часовой пояс
             const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = localDate.toLocaleDateString('ru-RU', options);
+            const formattedDate = localDate.toLocaleDateString('de-DE', options);
             
             // Создаем контейнер для отображения, если его нет
             let displayContainer = document.getElementById('selected-date-time-display');
@@ -452,17 +452,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const result = await response.json();
                 
+                // Автооткрытие WhatsApp с данными формы
+                const serviceSelect = document.getElementById('service');
+                const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
+                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte bestätigen Sie meine Anfrage.`);
+                window.open(`https://wa.me/491797399039?text=${waText}`, '_blank');
+
                 // Показ сообщения об успехе
                 const successMessage = document.createElement('div');
                 successMessage.className = 'mt-6 p-6 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl shadow-sm text-center transform transition-all success-message-container';
                 
-                // Получаем текстовое название выбранной услуги
-                const serviceSelect = document.getElementById('service');
-                const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
-                
-                // Формируем текст для WhatsApp
-                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte bestätigen Sie meine Anfrage.`);
-                // Номер телефона WhatsApp из примера
                 const waUrl = `https://wa.me/491797399039?text=${waText}`;
 
                 successMessage.innerHTML = `

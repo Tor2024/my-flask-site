@@ -1,0 +1,1 @@
+{"appointments": [{"id": "2026-07-15_09:30_1783413973.711315", "date": "2026-07-15", "time": "09:30", "client": {"name": "Oleg Kalchenko", "email": "kalchenko2022@gmail.com", "phone": "+4915237237407"}, "service": "karosserie", "message": "sfdf", "status": "ожидает", "created_at": "2026-07-07T10:46:13.711335"}], "blocked_slots": {"2026-07-15": ["09:30"]}}

@@ -33,12 +33,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
     <style>
         :where([class^="ri-"])::before { content: "\f3c2"; }
         body {
             font-family: 'Inter', sans-serif;
-            zoom: 90%;
+        }
+
+        /* spotlight card */
+        [data-glow] {
+            --spotlight-size: 320px;
+            --base: 210;
+            --spread: 180;
+            position: relative;
+            touch-action: none;
+            background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x,0)*1px) calc(var(--y,0)*1px), hsl(var(--hue,210) 100% 70% / 0.13), transparent) fixed !important;
+        }
+        [data-glow]:where(a) {
+            box-shadow: 0 0 18px 3px hsla(210, 100%, 60%, 0);
+            transition: box-shadow 0.15s ease;
         }
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
@@ -381,16 +396,22 @@
         }
 
         /* Hero background */
-        .hero-bg {
+        .hero-bg-image {
             background-image: url('static/images/hero2.webp');
             background-size: cover;
             background-position: center;
+            height: 118%;
+            top: -9%;
+            will-change: transform;
         }
 
         /* Iframe no border */
         .iframe-no-border {
             border: 0;
         }
+
+        /* History timeline: 3D perspective rotation handled by perspective-showcase.js */
+        #timeline-stack .timeline-era { will-change: transform, opacity; }
     </style>
 </head>
 <body class="bg-white">
@@ -407,6 +428,7 @@
                 <a href="#about" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Über uns</a>
                 <a href="#services" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Leistungen</a>
                 <a href="#reviews" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kundenbewertungen</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">FAQ</a>
                 <a href="#contact" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kontakt</a>
             </nav>
             <div class="md:hidden flex items-center">
@@ -421,8 +443,10 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="relative overflow-hidden hero-bg">
+    <section id="home" class="relative overflow-hidden">
+        <div class="hero-bg-image absolute inset-0 -z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
+        <canvas id="magic-dust" class="absolute inset-0 w-full h-full z-0 mix-blend-screen pointer-events-none"></canvas>
         <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
             <div class="max-w-2xl text-white">
                 <h1 class="text-4xl md:text-5xl font-bold mb-6">Ihre spezialisierte Autowerkstatt für alle Automarken</h1>
@@ -446,7 +470,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="text-block p-0 overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/inspektion.jpg" alt="Inspektion" width="400" height="256" class="w-full h-64 object-cover">
+                        <img src="static/images/wartung1.png" alt="Inspektion" width="400" height="256" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Inspektion</div>
                     </div>
@@ -462,7 +486,7 @@
 
                 <div class="text-block p-0 overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Achsvermessung.jpg" alt="Achsvermessung" width="400" height="256" class="w-full h-64 object-cover">
+                        <img src="static/images/Fahrwerk&Aufhängung1.png" alt="Achsvermessung" width="400" height="256" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Achsvermessung</div>
                     </div>
@@ -478,7 +502,7 @@
 
                 <div class="text-block p-0 overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Diagnose.jpg" alt="Diagnose & Elektronik" width="400" height="256" class="w-full h-64 object-cover">
+                        <img src="static/images/Autoelektrik&Elektronik1.png" alt="Diagnose & Elektronik" width="400" height="256" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Diagnose & Elektronik</div>
                     </div>
@@ -495,57 +519,62 @@
         </div>
     </section>
 
-    <!-- About Us -->
-    <section id="about" class="py-16">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-1/2">
-                    <img src="static/images/uuu1.webp" alt="Unser Team" class="rounded shadow-lg object-cover w-full h-auto object-top">
+    <!-- About / History Timeline -->
+    <section id="about" class="bg-white">
+        <div class="container mx-auto px-4 py-16 text-center">
+            <h2 class="text-3xl font-bold text-primary mb-4">Über Kreuztaler Werkstatt</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">Die Wurzeln unserer Werkstatt reichen bis 1946 zurück. Scrollen Sie durch über 78 Jahre Handwerkstradition in Kreuztal.</p>
+        </div>
+        <div id="timeline-stack" class="relative">
+            <!-- Era 1: 1946 -->
+            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
+                <img src="static/images/1946.jpg" alt="1946 — Gründung der Werkstatt" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-primary/40"></div>
+                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
+                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1946</div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Die Gründung</h3>
+                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">Jürgen Pfeifer gründete auf der Hagener Straße eine kleine Lkw-Werkstatt mit dem Schwerpunkt Autoelektrik. Mit viel Engagement und handwerklichem Geschick wurde der Betrieb Stück für Stück erweitert.</p>
                 </div>
-                <div class="md:w-1/2">
-                    <h2 class="text-3xl font-bold text-primary mb-6 text-center">Über Kreuztaler Werkstatt</h2>
-                    <p class="text-gray-600 mb-4">Die Wurzeln der heutigen Kreuztaler Werkstatt reichen bis ins Jahr 1946 zurück. Damals gründete Jürgen Pfeifer auf der Hagener Straße eine kleine Lkw-Werkstatt mit dem Schwerpunkt Autoelektrik. Mit viel Engagement und handwerklichem Geschick wurde der Betrieb Stück für Stück erweitert.</p>
-                    <p class="text-gray-600 mb-4">Zwischen 1962 und 1965 kam eine eigene Tankstelle hinzu. In den Jahren 1972 bis 1976 wurden weitere Werkstatthallen errichtet, um dem wachsenden Bedarf gerecht zu werden.</p>
-                    <p class="text-gray-600 mb-4">1995 wurde der Betrieb Teil des Bosch Car Service-Netzwerks und um ein Autohaus ergänzt. Es folgten kontinuierliche Ausbauten und technische Modernisierungen.</p>
-                    <p class="text-gray-600 mb-4">Im Jahr 2014 übernahm Andre Hovanski, Kfz-Technikermeister, die Werkstatt. Unter seiner Leitung wurde der Betrieb umfassend modernisiert und wird seither als Familienunternehmen weitergeführt.</p>
-                    <p class="text-gray-600 mb-6">2021 erfolgte die Gründung der Kreuztaler Werkstatt GmbH. Seither wird der Standort kontinuierlich weiterentwickelt – mit moderner Diagnosetechnik, erweitertem Serviceangebot und dem Anspruch, Kundinnen und Kunden stets höchste Qualität zu bieten.</p>
-                    <!-- Карусель истории развития -->
-                    <div id="history-carousel" class="relative w-full max-w-xl mx-auto mb-8 select-none">
-                      <button id="carousel-prev" type="button" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow p-2 rounded-full border border-gray-200 transition disabled:opacity-30" title="Vorheriges Bild"><i class="ri-arrow-left-s-line ri-xl text-primary"></i></button>
-                      <div class="overflow-hidden rounded-xl shadow-lg">
-                        <div id="carousel-track" class="flex transition-transform duration-500">
-                          <div class="min-w-full flex flex-col items-center relative">
-                            <img src="static/images/1946.jpg" alt="1946" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
-                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1946</div>
-                          </div>
-                          <div class="min-w-full flex flex-col items-center relative">
-                            <img src="static/images/1965.jpg" alt="1965" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
-                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1965</div>
-                          </div>
-                          <div class="min-w-full flex flex-col items-center relative">
-                            <img src="static/images/1989.jpg" alt="1989" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
-                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">1989</div>
-                          </div>
-                          <div class="min-w-full flex flex-col items-center relative">
-                            <img src="static/images/2014.jpg" alt="2014" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
-                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">2014</div>
-                          </div>
-                          <div class="min-w-full flex flex-col items-center relative">
-                            <img src="static/images/2025.jpg" alt="2025" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-300">
-                            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-lg font-semibold mt-2">2025</div>
-                          </div>
-                        </div>
-                      </div>
-                      <button id="carousel-next" type="button" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white shadow p-2 rounded-full border border-gray-200 transition disabled:opacity-30" title="Nächstes Bild"><i class="ri-arrow-right-s-line ri-xl text-primary"></i></button>
-                      <div class="flex justify-center mt-4 gap-2" id="carousel-dots">
-                        <button type="button" class="w-3 h-3 rounded-full bg-primary" title="Gehe zu Bild 1"></button>
-                        <button type="button" class="w-3 h-3 rounded-full bg-gray-300" title="Gehe zu Bild 2"></button>
-                        <button type="button" class="w-3 h-3 rounded-full bg-gray-300" title="Gehe zu Bild 3"></button>
-                        <button type="button" class="w-3 h-3 rounded-full bg-gray-300" title="Gehe zu Bild 4"></button>
-                        <button type="button" class="w-3 h-3 rounded-full bg-gray-300" title="Gehe zu Bild 5"></button>
-                      </div>
-                    </div>
-                    <a href="#contact" class="bg-primary text-white px-6 py-3 !rounded-button whitespace-nowrap inline-block font-medium hover:bg-primary/90 transition-colors">Kontakt aufnehmen</a>
+            </div>
+            <!-- Era 2: 1965 -->
+            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-center overflow-hidden">
+                <img src="static/images/1965.jpg" alt="1965 — Eigene Tankstelle" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-bl from-black/70 via-black/50 to-primary/40"></div>
+                <div class="relative z-10 max-w-3xl px-6 text-white text-right ml-auto">
+                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1965</div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Tankstelle und Wachstum</h3>
+                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl ml-auto">Zwischen 1962 und 1965 kam eine eigene Tankstelle hinzu. In den Jahren 1972 bis 1976 wurden weitere Werkstatthallen errichtet, um dem wachsenden Bedarf gerecht zu werden.</p>
+                </div>
+            </div>
+            <!-- Era 3: 1989 -->
+            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
+                <img src="static/images/1989.jpg" alt="1989 — Erweiterung und Modernisierung" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-primary/40"></div>
+                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
+                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1989</div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Erweiterung und Netzwerk</h3>
+                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">Der Betrieb wächst kontinuierlich weiter. 1995 wird die Werkstatt Teil des Bosch Car Service-Netzwerks und um ein Autohaus ergänzt — ein wichtiger Schritt in Richtung moderner Servicequalität.</p>
+                </div>
+            </div>
+            <!-- Era 4: 2014 -->
+            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-center overflow-hidden">
+                <img src="static/images/2014.jpg" alt="2014 — Übernahme durch Andre Hovanski" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-bl from-black/70 via-black/50 to-primary/40"></div>
+                <div class="relative z-10 max-w-3xl px-6 text-white text-right ml-auto">
+                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">2014</div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Neue Führung</h3>
+                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl ml-auto">Andre Hovanski, Kfz-Technikermeister, übernimmt die Werkstatt. Unter seiner Leitung wird der Betrieb umfassend modernisiert und seither als Familienunternehmen weitergeführt.</p>
+                </div>
+            </div>
+            <!-- Era 5: 2025 -->
+            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
+                <img src="static/images/2025.jpg" alt="2025 — Kreuztaler Werkstatt GmbH heute" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-primary/45"></div>
+                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
+                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">2025</div>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Heute und morgen</h3>
+                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">2021 erfolgte die Gründung der Kreuztaler Werkstatt GmbH. Seither wird der Standort kontinuierlich weiterentwickelt — mit moderner Diagnosetechnik, erweitertem Serviceangebot und dem Anspruch, Kundinnen und Kunden stets höchste Qualität zu bieten.</p>
+                    <a href="#contact" class="inline-block mt-8 bg-white text-primary px-8 py-3 !rounded-button font-semibold hover:bg-gray-100 transition-colors shadow-lg">Kontakt aufnehmen</a>
                 </div>
             </div>
         </div>
@@ -561,7 +590,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/wartung.png" alt="Wartung" class="w-full h-64 object-cover">
+                        <img src="static/images/wartung1.png" alt="Wartung" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Wartung</div>
                     </div>
@@ -572,7 +601,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Unfallreparatur.png" alt="Unfallreparatur" class="w-full h-64 object-cover">
+                        <img src="static/images/Unfallreparatur1.png" alt="Unfallreparatur" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Unfallreparatur</div>
                     </div>
@@ -583,7 +612,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Fahrzeugsdiagnose.png" alt="Fahrzeugsdiagnose" class="w-full h-64 object-cover">
+                        <img src="static/images/Fahrzeugsdiagnose1.png" alt="Fahrzeugsdiagnose" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Fahrzeugsdiagnose</div>
                     </div>
@@ -594,7 +623,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Motorreparatur.png" alt="Motorreparatur" class="w-full h-64 object-cover">
+                        <img src="static/images/Motorreparatur1.png" alt="Motorreparatur" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Motorreparatur</div>
                     </div>
@@ -605,7 +634,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Getriebereparatur.png" alt="Getriebereparatur" class="w-full h-64 object-cover">
+                        <img src="static/images/Getriebereparatur1.png" alt="Getriebereparatur" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Getriebereparatur</div>
                     </div>
@@ -616,7 +645,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Fahrwerk & Aufhängung.png" alt="Fahrwerk & Aufhängung" class="w-full h-64 object-cover">
+                        <img src="static/images/Fahrwerk&Aufhängung1.png" alt="Fahrwerk & Aufhängung" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Fahrwerk & Aufhängung</div>
                     </div>
@@ -627,7 +656,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Bremsenservice.png" alt="Bremsenservice" class="w-full h-64 object-cover">
+                        <img src="static/images/Bremsenservice1.png" alt="Bremsenservice" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Bremsenservice</div>
                     </div>
@@ -638,7 +667,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Diagnose.jpg" alt="Autoelektrik & Elektronik" class="w-full h-64 object-cover">
+                        <img src="static/images/Autoelektrik&Elektronik1.png" alt="Autoelektrik & Elektronik" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Autoelektrik & Elektronik</div>
                     </div>
@@ -649,7 +678,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Karosserie & Lackierung.png" alt="Karosserie & Lackierung" class="w-full h-64 object-cover">
+                        <img src="static/images/Karosserie&Lackierung1.png" alt="Karosserie & Lackierung" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Karosserie & Lackierung</div>
                     </div>
@@ -660,7 +689,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Klimaanlagenservice.png" alt="Klimaanlagenservice" class="w-full h-64 object-cover">
+                        <img src="static/images/Klimaanlagenservice1.png" alt="Klimaanlagenservice" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Klimaanlagenservice</div>
                     </div>
@@ -671,7 +700,7 @@
                 </div>
                 <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                     <div class="relative">
-                        <img src="static/images/Reifenservice & Auswuchten.png" alt="Reifenservice & Auswuchten" class="w-full h-64 object-cover">
+                        <img src="static/images/Reifenservice&Auswuchten1.png" alt="Reifenservice & Auswuchten" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
                         <div class="absolute top-4 left-4 text-white font-semibold text-lg">Reifenservice & Auswuchten</div>
                     </div>
@@ -680,7 +709,53 @@
                         <p class="text-gray-600 mb-4">Montage, Demontage, Auswuchten, saisonaler Wechsel und Einlagerung von Rädern, Beratung und Verkauf neuer Reifen.</p>
                     </div>
                 </div>
+                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                    <div class="relative">
+                        <img src="static/images/TUV1.png" alt="TÜV / HU / AU" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
+                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">TÜV / HU / AU</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-primary mb-3">TÜV / HU / AU</h3>
+                        <p class="text-gray-600 mb-4">Hauptuntersuchung mit Bremsen- und Abgastest: Vorbereitung, Prüfung und bei Bedarf sofortige Behebung von Mängeln — alles aus einer Hand.</p>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Brand Strip: betreute Marken -->
+    <section class="py-12 bg-gray-50 border-y border-gray-200">
+        <div class="container mx-auto px-4">
+            <p class="text-center text-sm text-gray-500 uppercase tracking-wider mb-8">Service für alle Marken — ausgewählte Hersteller im Überblick</p>
+            <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-70">
+                <img src="https://cdn.simpleicons.org/volkswagen/4a4a4a" alt="Volkswagen" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/audi/4a4a4a" alt="Audi" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/skoda/4a4a4a" alt="Škoda" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/seat/4a4a4a" alt="SEAT" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/bmw/4a4a4a" alt="BMW" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/mini/4a4a4a" alt="MINI" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Mercedes-Benz</span>
+                <img src="https://cdn.simpleicons.org/smart/4a4a4a" alt="smart" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/opel/4a4a4a" alt="Opel" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/ford/4a4a4a" alt="Ford" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/toyota/4a4a4a" alt="Toyota" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Lexus</span>
+                <img src="https://cdn.simpleicons.org/hyundai/4a4a4a" alt="Hyundai" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/kia/4a4a4a" alt="Kia" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/renault/4a4a4a" alt="Renault" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/dacia/4a4a4a" alt="Dacia" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/peugeot/4a4a4a" alt="Peugeot" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/citroen/4a4a4a" alt="Citroën" height="32" class="h-8">
+                <img src="https://cdn.simpleicons.org/fiat/4a4a4a" alt="Fiat" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold italic tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Alfa Romeo</span>
+                <img src="https://cdn.simpleicons.org/porsche/4a4a4a" alt="Porsche" height="32" class="h-8">
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-4 right-4 z-20 text-white/70 text-xs bg-black/40 backdrop-blur-sm px-3 py-2 rounded-md pointer-events-none select-none hidden md:flex items-center gap-2">
+            <i class="ri-arrow-left-right-line"></i>
+            <span>Pfeiltasten = drehen · Leertaste = zurücksetzen</span>
         </div>
     </section>
 
@@ -719,7 +794,7 @@
                                 <button type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Vorheriger Monat">
                                     <i class="ri-arrow-left-s-line ri-lg"></i>
                                 </button>
-                                <h4 class="text-lg font-medium">April 2025</h4>
+                                <h4 class="text-lg font-medium" data-calendar-month aria-hidden="true">—</h4>
                                 <button type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Nächster Monat">
                                     <i class="ri-arrow-right-s-line ri-lg"></i>
                                 </button>
@@ -808,7 +883,9 @@
                             <select id="service" name="service" required 
                                     class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
                                 <option value="">Bitte wählen Sie eine Dienstleistung</option>
+                                <option value="inspektion">Inspektion</option>
                                 <option value="wartung">Wartung</option>
+                                <option value="achsvermessung">Achsvermessung</option>
                                 <option value="diagnose">Fahrzeugsdiagnose</option>
                                 <option value="motor">Motorreparatur</option>
                                 <option value="getriebe">Getriebereparatur</option>
@@ -818,6 +895,7 @@
                                 <option value="karosserie">Karosseriereparatur und Lackierung</option>
                                 <option value="klima">Klimaanlagenservice</option>
                                 <option value="reifen">Reifenmontage und Auswuchten</option>
+                                <option value="tuev">TÜV / HU / AU</option>
                             </select>
                         </div>
                         <div>
@@ -1011,6 +1089,54 @@
         </div>
     </section>
 
+    <!-- FAQ -->
+    <section id="faq" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-primary mb-4">Häufige Fragen</h2>
+                <p class="text-gray-600">Die wichtigsten Antworten auf einen Blick.</p>
+            </div>
+            <div class="space-y-4">
+                <details class="bg-white rounded shadow-sm overflow-hidden group">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span class="font-semibold text-lg text-gray-800">Wie oft ist eine Inspektion fällig?</span>
+                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+                        In der Regel gilt: einmal pro Jahr oder alle 15.000 bis 30.000 Kilometer — je nach Hersteller und Fahrprofil. Wir prüfen anhand des Serviceplans Ihres Fahrzeugs, welche Intervalle und Arbeiten vorgesehen sind, und beraten Sie ehrlich, was wirklich ansteht.
+                    </div>
+                </details>
+                <details class="bg-white rounded shadow-sm overflow-hidden group">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span class="font-semibold text-lg text-gray-800">Was kostet eine Inspektion oder ein Bremsenservice?</span>
+                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+                        Die Kosten hängen vom Fahrzeug, Umfang und eventuell benötigten Ersatzteilen ab. Eine kleine Inspektion beginnt i. d. R. niedrig zweistellig, eine große mit zusätzlichem Filterwechsel und Bremsservice entsprechend höher. Wir erstellen vorab einen verbindlichen Kostenvoranschlag — ohne versteckte Positionen.
+                    </div>
+                </details>
+                <details class="bg-white rounded shadow-sm overflow-hidden group">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span class="font-semibold text-lg text-gray-800">Geben Sie Garantie auf Reparaturen?</span>
+                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+                        Ja. Wir gewähren auf unsere Arbeiten und verwendete Ersatzteile die gesetzliche Gewährleistung. Als zertifizierter Bosch Car Service Partner profitieren Sie zudem von der bundesweiten Bosch-Garantie — auch bei Reparaturen in ganz Deutschland.
+                    </div>
+                </details>
+                <details class="bg-white rounded shadow-sm overflow-hidden group">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span class="font-semibold text-lg text-gray-800">Muss ich vorab einen Termin vereinbaren?</span>
+                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+                        Ja, ein Termin ist empfehlenswert — so können wir Ihr Fahrzeug verlässlich einplanen und Wartezeiten vermeiden. Über das Formular auf dieser Seite, telefonisch unter 02732 277 17 oder per WhatsApp erreichen Sie uns werktags von 9:00 bis 17:00 Uhr.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact -->
     <section id="contact" class="py-16">
         <div class="container mx-auto px-4">
@@ -1041,7 +1167,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-medium text-gray-800">Telefon</h4>
-                                    <p class="text-gray-600">02732  277  17</p>
+                                    <p class="text-gray-600"><a href="tel:+49273227717" class="hover:text-primary transition-colors">02732 277 17</a></p>
                                 </div>
                             </div>
                             
@@ -1073,12 +1199,6 @@
                             <div class="flex space-x-4">
                                 <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" rel="noopener" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors" title="Folgen Sie uns auf Facebook">
                                     <i class="ri-facebook-fill ri-lg text-primary"></i>
-                                </a>
-                                <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors" title="Folgen Sie uns auf Instagram">
-                                    <i class="ri-instagram-line ri-lg text-primary"></i>
-                                </a>
-                                <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors" title="Folgen Sie uns auf YouTube">
-                                    <i class="ri-youtube-line ri-lg text-primary"></i>
                                 </a>
                             </div>
                         </div>
@@ -1114,7 +1234,10 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white pt-16 pb-8">
+    <footer id="footer" class="relative overflow-hidden text-white">
+        <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
+        <div class="absolute inset-0 bg-gray-800/80"></div>
+        <div class="relative z-10 pt-16 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <div>
@@ -1127,12 +1250,6 @@
                         <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" rel="noopener" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors" title="Folgen Sie uns auf Facebook">
                             <i class="ri-facebook-fill ri-lg"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors" title="Folgen Sie uns auf Instagram">
-                            <i class="ri-instagram-line ri-lg"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors" title="Folgen Sie uns auf YouTube">
-                            <i class="ri-youtube-line ri-lg"></i>
-                        </a>
                     </div>
                 </div>
                 
@@ -1143,6 +1260,7 @@
                         <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">Über uns</a></li>
                         <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
                         <li><a href="#reviews" class="text-gray-400 hover:text-white transition-colors">Kundenbewertungen</a></li>
+                        <li><a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
                         <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
                     </ul>
                 </div>
@@ -1167,7 +1285,7 @@
                         </li>
                         <li class="flex items-start">
                             <i class="ri-phone-line ri-lg mr-2 mt-1"></i>
-                            <span>02732  277  17</span>
+                            <span><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></span>
                         </li>
                         <li class="flex items-start">
                             <i class="ri-mail-line ri-lg mr-2 mt-1"></i>
@@ -1203,6 +1321,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </footer>
 
     <!-- Impressum Modal -->
@@ -1219,7 +1338,7 @@
                 <p>57223 Kreuztal</p>
                 <p>Deutschland</p>
                 <div class="my-4"></div>
-                <p>Telefon: 02732 27717</p>
+                <p>Telefon: <a href="tel:+49273227717" class="text-primary hover:underline">02732 277 17</a></p>
                 <p>E-Mail: info@kreuztaler-werkstatt.de</p>
                 <div class="my-4"></div>
                 <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>
@@ -1228,22 +1347,18 @@
         </div>
     </div>
 
-    <!-- Модальное окно для просмотра фото -->
-    <div id="carousel-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
-      <div class="relative max-w-3xl w-full flex items-center justify-center">
-        <button type="button" id="carousel-modal-close" class="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 shadow-lg focus:outline-none" title="Modal schließen">
-          <i class="ri-close-line ri-2x"></i>
-        </button>
-        <img id="carousel-modal-img" src="" alt="Foto" class="max-h-[80vh] max-w-full rounded-xl shadow-2xl object-contain bg-white">
-      </div>
-    </div>
-
-    <script src="static/e.js"></script>
     <script src="static/share.js"></script>
+    <script src="static/motion.js?v=2" defer></script>
+    <script src="static/perspective-showcase.js?v=4" defer></script>
+    <script src="static/magic-dust.js?v=14" defer></script>
     <script>
-        // Добавляем функционал для меню
         document.addEventListener('DOMContentLoaded', function() {
-            // Обработка активного состояния пунктов меню
+            const lenis = new Lenis({duration:1.1,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+            function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
+            requestAnimationFrame(raf);
+            gsap.registerPlugin(ScrollTrigger);
+            lenis.on('scroll', ScrollTrigger.update);
+            
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('section');
             
@@ -1252,7 +1367,7 @@
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
                     const sectionHeight = section.clientHeight;
-                    if (pageYOffset >= (sectionTop - sectionHeight/3)) {
+                    if (lenis.scroll >= (sectionTop - sectionHeight/3)) {
                         current = section.getAttribute('id');
                     }
                 });
@@ -1265,7 +1380,7 @@
             });
             }
             
-            window.addEventListener('scroll', setActiveLink);
+            lenis.on('scroll', setActiveLink);
             
             // Мобильное меню
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1288,6 +1403,7 @@
                     <a href="#about" class="mobile-nav-link">Über uns</a>
                     <a href="#services" class="mobile-nav-link">Leistungen</a>
                     <a href="#reviews" class="mobile-nav-link">Kundenbewertungen</a>
+                    <a href="#faq" class="mobile-nav-link">FAQ</a>
                     <a href="#contact" class="mobile-nav-link">Kontakt</a>
                     <a href="#appointment" class="mobile-nav-link bg-primary text-white text-center mt-4">Termin vereinbaren</a>
                 </nav>
@@ -1312,6 +1428,39 @@
             });
         });
 
+        // Spotlight effect on service cards
+        document.querySelectorAll('#services .grid > div').forEach(card => {
+            // Convert to link
+            const title = card.querySelector('h3')?.textContent?.trim().toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'service';
+            const link = document.createElement('a');
+            link.href = `leistung-${title}.html`;
+            link.className = card.className.replace(/\b(?:overflow-hidden|shadow-sm|hover:shadow-md|transition-shadow)\b/g, '').replace(/\s{2,}/g, ' ').trim();
+            link.classList.add('block', 'cursor-pointer');
+            while (card.firstChild) link.appendChild(card.firstChild);
+            card.replaceWith(link);
+
+            link.setAttribute('data-glow', '');
+
+            // Add overflow-hidden to image wrapper instead of card
+            const imgWrap = link.querySelector('.relative');
+            if (imgWrap) imgWrap.classList.add('overflow-hidden', 'rounded-xl');
+        });
+        function syncPointer(e) {
+            const cards = document.querySelectorAll('#services .grid > [data-glow]');
+            const x = e.clientX, y = e.clientY;
+            const xp = x / window.innerWidth, yp = y / window.innerHeight;
+            const hue = 210 + 180 * xp;
+            cards.forEach(card => {
+                card.style.setProperty('--x', x.toFixed(2));
+                card.style.setProperty('--xp', xp.toFixed(2));
+                card.style.setProperty('--y', y.toFixed(2));
+                card.style.setProperty('--yp', yp.toFixed(2));
+                card.style.setProperty('--hue', hue.toFixed(0));
+                card.style.boxShadow = `0 0 18px 3px hsla(${Math.round(hue)}, 100%, 60%, 0.15)`;
+            });
+        }
+        document.addEventListener('pointermove', syncPointer);
+
         // Функции для работы с модальным окном Impressum
         function openImpressumModal() {
             document.getElementById('impressumModal').classList.remove('hidden');
@@ -1330,78 +1479,6 @@
             }
         });
     </script>
-    <script>
-    // Карусель истории развития (About)
-    (function() {
-      const track = document.getElementById('carousel-track');
-      const prevBtn = document.getElementById('carousel-prev');
-      const nextBtn = document.getElementById('carousel-next');
-      const dots = document.querySelectorAll('#carousel-dots button');
-      const slidesCount = 5;
-      let current = 0;
-
-      function updateCarousel() {
-        track.style.transform = `translateX(-${current * 100}%)`;
-        dots.forEach((dot, idx) => {
-          dot.classList.toggle('bg-primary', idx === current);
-          dot.classList.toggle('bg-gray-300', idx !== current);
-        });
-        prevBtn.disabled = current === 0;
-        nextBtn.disabled = current === slidesCount - 1;
-      }
-
-      prevBtn.addEventListener('click', () => {
-        if (current > 0) {
-          current--;
-          updateCarousel();
-        }
-      });
-      nextBtn.addEventListener('click', () => {
-        if (current < slidesCount - 1) {
-          current++;
-          updateCarousel();
-        }
-      });
-      dots.forEach((dot, idx) => {
-        dot.addEventListener('click', () => {
-          current = idx;
-          updateCarousel();
-        });
-      });
-      updateCarousel();
-    })();
-    </script>
-    <script>
-    // Клик по фото в карусели — открыть в модальном окне
-    (function() {
-      const modal = document.getElementById('carousel-modal');
-      const modalImg = document.getElementById('carousel-modal-img');
-      const closeBtn = document.getElementById('carousel-modal-close');
-      const images = document.querySelectorAll('#carousel-track img');
-
-      images.forEach(img => {
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', function() {
-          modalImg.src = this.src;
-          modal.classList.remove('hidden');
-          document.body.style.overflow = 'hidden';
-        });
-      });
-
-      function closeModal() {
-        modal.classList.add('hidden');
-        modalImg.src = '';
-        document.body.style.overflow = '';
-      }
-      closeBtn.addEventListener('click', closeModal);
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeModal();
-      });
-      document.addEventListener('keydown', function(e) {
-        if (!modal.classList.contains('hidden') && (e.key === 'Escape' || e.key === 'Esc')) closeModal();
-      });
-    })();
-    </script>
 
     <!-- Cookie Consent Banner -->
     <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 z-50">
@@ -1415,23 +1492,6 @@
     </div>
 
     <script>
-    // Function to load PostHog conditionally
-    function loadPostHog() {
-        !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-        posthog.init('phc_t9tkQZJiyi2ps9zUYm8TDsL6qXo4YmZx0Ot5rBlAlEd', {
-            api_host: 'https://us.i.posthog.com',
-            autocapture: false,
-            capture_pageview: false,
-            capture_pageleave: false,
-            capture_performance: {
-                web_vitals: false,
-            },
-            rageclick: false,
-        })
-        window.shareKey = 'gpM2hyMas5u547UU7UxR_Q';
-        window.host = 'readdy.ai';
-    }
-
     // Cookie Consent Functionality
     document.addEventListener('DOMContentLoaded', function() {
         const banner = document.getElementById('cookie-banner');
@@ -1448,20 +1508,50 @@
         acceptBtn.addEventListener('click', function() {
             localStorage.setItem('cookie-consent', 'accepted');
             banner.classList.add('hidden');
-            // Load and enable tracking
-            loadPostHog();
         });
 
         rejectBtn.addEventListener('click', function() {
             localStorage.setItem('cookie-consent', 'rejected');
             banner.classList.add('hidden');
-            // Disable tracking
-            if (typeof posthog !== 'undefined') {
-                posthog.opt_out_capturing();
-            }
         });
     });
     </script>
+<script>
+(function(){var c=document.getElementById('footerShader');if(!c)return;var gl=c.getContext('webgl');if(!gl)return;
+var vsSrc='attribute vec4 aVertexPosition;void main(){gl_Position=aVertexPosition;}';
+var fsSrc='#version 100\nprecision highp float;\nuniform vec2 iResolution;\nuniform float iTime;\n'
++'const float overallSpeed=0.2;\nconst float gridSmoothWidth=0.015;\nconst float axisWidth=0.05;\n'
++'const float majorLineWidth=0.025;\nconst float minorLineWidth=0.0125;\nconst float majorLineFrequency=5.0;\n'
++'const float minorLineFrequency=1.0;\nconst vec4 gridColor=vec4(0.5);\nconst float scale=5.0;\n'
++'const vec4 lineColor=vec4(0.0,0.33,0.65,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
++'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
++'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
++'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
++'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
++'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
++'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
++'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
++'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
++'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
++'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
++'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
++'float getY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
++'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.07,0.2,1.0);vec4 bg2=vec4(0.0,0.15,0.35,1.0);for(int i=0;i<linesPerGroup;i++){float nli=float(i)/float(linesPerGroup);float ot=iTime*offsetSpeed;float op=float(i)+sp.x*offsetFrequency;float rd=rand(op+ot)*0.5+0.5;float hw=mix(minLineWidth,maxLineWidth,rd*hf)/2.0;float os=rand(op+ot*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hf);float lp=getY(sp.x,hf,os);float ln=drawSmoothLine(lp,hw,sp.y)/2.0+drawCrispLine(lp,hw*0.15,sp.y);float cx=mod(float(i)+iTime*lineSpeed,25.0)-12.0;vec2 cp=vec2(cx,getY(cx,hf,os));float ci=drawCircle(cp,0.01,sp)*4.0;ln=ln+ci;lns+=ln*lineColor*rd;}fc2=mix(bg1,bg2,uv.x);fc2*=vf;fc2.a=1.0;fc2+=lns;gl_FragColor=fc2;}';
+function check(s,l){if(l)return;console.error('Shader error: '+gl.getShaderInfoLog(s));}
+var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,vsSrc);gl.compileShader(vs);check(vs,gl.getShaderParameter(vs,gl.COMPILE_STATUS));
+var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,fsSrc);gl.compileShader(fs);check(fs,gl.getShaderParameter(fs,gl.COMPILE_STATUS));
+var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.error('Program error: '+gl.getProgramInfoLog(prog));return;}
+var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+var aPos=gl.getAttribLocation(prog,'aVertexPosition');
+var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
+function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
+window.addEventListener('resize',resize);resize();
+var t0=Date.now();
+function frame(){var t=(Date.now()-t0)/1000;gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
+requestAnimationFrame(frame);})();
+</script>
 </body>
 
 </html>
