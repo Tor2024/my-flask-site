@@ -1123,15 +1123,6 @@
                 </details>
                 <details class="bg-white rounded shadow-sm overflow-hidden group">
                     <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                        <span class="font-semibold text-lg text-gray-800">Was kostet eine Inspektion oder ein Bremsenservice?</span>
-                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
-                    </summary>
-                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-                        Die Kosten hängen vom Fahrzeug, Umfang und eventuell benötigten Ersatzteilen ab. Eine kleine Inspektion beginnt i. d. R. niedrig zweistellig, eine große mit zusätzlichem Filterwechsel und Bremsservice entsprechend höher. Wir erstellen vorab einen verbindlichen Kostenvoranschlag — ohne versteckte Positionen.
-                    </div>
-                </details>
-                <details class="bg-white rounded shadow-sm overflow-hidden group">
-                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
                         <span class="font-semibold text-lg text-gray-800">Geben Sie Garantie auf Reparaturen?</span>
                         <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
                     </summary>
@@ -1435,10 +1426,16 @@
                 mobileMenu.classList.remove('active');
             });
             
-            // Закрываем мобильное меню при клике на ссылку
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
+            // Smooth-scroll для всех in-page якорей через Lenis (desktop + mobile)
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    if (href.length <= 1) return;
+                    const target = document.querySelector(href);
+                    if (!target) return;
+                    e.preventDefault();
                     mobileMenu.classList.remove('active');
+                    window.__lenis.scrollTo(target, { offset: -64 });
                 });
             });
         });
