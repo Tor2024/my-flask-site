@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -81,6 +81,27 @@
         background: var(--accent); box-shadow: 0 0 16px rgba(0,85,165,0.7);
         border: 2px solid #0a0f1a;
     }
+    .glitch-wipe { animation: reveal-wipe 3.5s ease-out both; }
+    @keyframes reveal-wipe {
+        0% { clip-path: inset(0 100% 0 0); }
+        45% { clip-path: inset(0 0 0 0); }
+        100% { clip-path: inset(0 0 0 0); }
+    }
+    .glitch-wipe-wrap { position: relative; }
+    .glitch-wipe-wrap::after {
+        content: '';
+        position: absolute; top: -4px; bottom: -4px;
+        width: 3px;
+        background: var(--accent-light);
+        box-shadow: 0 0 20px var(--accent-light), 0 0 40px var(--accent-light);
+        animation: wipe-scan 3.5s ease-out both;
+        pointer-events: none;
+    }
+    @keyframes wipe-scan {
+        0% { left: 0; opacity: 1; }
+        45% { left: 100%; opacity: 0.8; }
+        46%, 100% { left: 100%; opacity: 0; }
+    }
     /* ===== Preloader ===== */
     #preloader {
         position: fixed; inset: 0; z-index: 9999;
@@ -122,18 +143,24 @@
         0%, 100% { transform: scale(1); opacity: 1; }
         50% { transform: scale(1.06); opacity: 0.82; }
     }
+    @keyframes scroll-bounce {
+        0%, 100% { transform: translateY(0); opacity: 0.6; }
+        50% { transform: translateY(6px); opacity: 1; }
+    }
     @media (prefers-reduced-motion: reduce) {
         .reveal, .reveal-l { opacity: 1 !important; transform: none !important; }
         .logo-glow { filter: none; }
         #preloader .pl-logo img { animation: none; }
         #preloader, #preloader .pl-fill { transition: none; }
+        [style*="scroll-bounce"] { animation: none !important; }
+        .glitch-wipe, .glitch-wipe-wrap::after { animation: none !important; clip-path: none !important; }
     }
     </style>
 </head>
 <body>
     <!-- Preloader -->
     <div id="preloader" aria-hidden="true">
-        <div class="pl-logo"><img src="static/images/kw.avif" alt=""></div>
+        <div class="pl-logo"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt"></div>
         <div class="pl-name">Kreuztaler Werkstatt</div>
         <div class="pl-bar"><div class="pl-fill" id="plFill"></div></div>
         <div class="pl-pct" id="plPct">0%</div>
@@ -165,13 +192,13 @@
 
     <section class="relative min-h-[72vh] flex items-end overflow-hidden">
         <div class="absolute inset-0">
-            <img src="static/images/wartung1.png" alt="Wartung" class="w-full h-full object-cover">
+            <img fetchpriority="high" decoding="async" src="static/images/wartung1.webp" alt="Wartung" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
         </div>
         <div class="container mx-auto px-4 relative z-10 pb-16 md:pb-24 pt-32">
             <div class="max-w-3xl hero-content">
                 <span class="inline-block text-xs uppercase tracking-[0.32em] mb-5 font-mono accent">Wartung</span>
-                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-[0.95] tracking-tight" style="letter-spacing:-0.035em;">Wartung</h1>
+                <div class="glitch-wipe-wrap"><h1 class="glitch-wipe text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-[0.95] tracking-tight" style="letter-spacing:-0.035em;">Wartung</h1></div>
                 <p class="text-lg md:text-xl text-gray-300 leading-relaxed mt-7 max-w-xl">Regelmässige Wartung ist die beste Investition in die Langlebigkeit Ihres Fahrzeugs. Wir führen Wartungsarbeiten nach Herstellervorgaben durch – von Ölwechsel und Filterwechsel bis zur vollständigen Inspektion mit Systemcheck aller sicherheitsrelevanten Komponenten.</p>
                 <div class="flex flex-col sm:flex-row gap-3 mt-9">
                     <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 font-semibold">Termin buchen</a>
@@ -179,7 +206,16 @@
                 </div>
             </div>
         </div>
+        <div class="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 flex flex-col items-center gap-2 pointer-events-none" aria-hidden="true">
+            <span class="text-[11px] uppercase tracking-[0.3em] font-mono text-white">Scrollen</span>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.8);box-shadow:0 0 20px rgba(255,255,255,0.4);animation:scroll-bounce 2s ease-in-out infinite;">
+                <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3 L10 15 M5 11 L10 16 L15 11" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
     </section>
+    <div class="h-px w-full" style="background:rgba(255,255,255,1);" aria-hidden="true"></div>
 
     <section class="py-20 md:py-28">
         <div class="container mx-auto px-4">
@@ -316,6 +352,7 @@
             </div>
         </div>
     </section>
+    <div class="h-px w-full" style="background:rgba(255,255,255,1);" aria-hidden="true"></div>
     <footer id="footer" class="relative overflow-hidden text-white">
         <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
 
