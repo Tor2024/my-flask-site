@@ -48,8 +48,10 @@
             --base: 210;
             --spread: 180;
             position: relative;
-            touch-action: none;
             background-image: radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x,0)*1px) calc(var(--y,0)*1px), hsl(var(--hue,210) 100% 70% / 0.13), transparent) fixed !important;
+        }
+        @media (pointer: fine) {
+            [data-glow] { touch-action: none; }
         }
         [data-glow]:where(a) {
             box-shadow: 0 0 18px 3px hsla(210, 100%, 60%, 0);
