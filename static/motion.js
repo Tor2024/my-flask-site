@@ -6,19 +6,6 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // 6.10 — pause the shared Lenis (#appointment form); instance is created by the inline script
-    // ponytail: removed duplicate `new Lenis()` — inline DOMContentLoaded already creates one
-    const appt = document.getElementById('appointment');
-    if (appt) {
-        new IntersectionObserver((entries) => {
-            entries.forEach((e) => {
-                const lenis = window.__lenis;
-                if (!lenis) return;
-                if (e.isIntersecting) lenis.stop(); else lenis.start();
-            });
-        }, { threshold: 0.5 }).observe(appt);
-    }
-
     // 6.1 — Hero parallax: background image moves slower than scroll
     const heroImg = document.querySelector('.hero-bg-image');
     if (heroImg) {
