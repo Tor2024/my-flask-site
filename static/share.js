@@ -55,7 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Проверяем, есть ли занятые слоты на эту дату
                     getBlockedSlots(dateString).then(blockedSlots => {
-                        if (blockedSlots.length > 0) {
+                        const totalSlots = getAvailableTimeSlots(date).length;
+                        if (blockedSlots.length >= totalSlots) {
+                            dayElement.classList.add('booked');
+                        } else if (blockedSlots.length > 0) {
                             dayElement.classList.add('partially');
                         } else {
                             dayElement.classList.add('available');
