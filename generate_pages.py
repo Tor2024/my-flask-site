@@ -250,7 +250,7 @@ json_raw = r'''
         "cta": "Bald ist Reifenwechselzeit! Vereinbaren Sie jetzt Ihren Termin \u2013 wir montieren, wuchten und lagern fachgerecht."
     },
     {
-        "slug": "tuev-hu-au", "title": "T\u00dcV / HU / AU",
+        "slug": "tuev-hu-au", "title": "HU / AU",
         "subtitle": "Hauptuntersuchung mit Vorbereitung \u2013 stressfrei und aus einer Hand",
         "meta": "T\u00dcV, HU und AU in Kreuztal: Hauptuntersuchung mit Vorbereitung, M\u00e4ngelbeseitigung, Abgasuntersuchung. Alles aus einer Hand.",
         "hero_img": "static/images/TUV1.png",
