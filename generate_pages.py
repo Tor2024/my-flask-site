@@ -316,7 +316,6 @@ HEADER = '''    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top
                 <a href="/#home" class="text-gray-600 hover:text-primary transition-colors">Startseite</a>
                 <a href="/#about" class="text-gray-600 hover:text-primary transition-colors">&Uuml;ber uns</a>
                 <a href="/#services" class="text-primary font-medium">Leistungen</a>
-                <a href="/#reviews" class="text-gray-600 hover:text-primary transition-colors">Bewertungen</a>
                 <a href="/#faq" class="text-gray-600 hover:text-primary transition-colors">FAQ</a>
                 <a href="/#contact" class="text-gray-600 hover:text-primary transition-colors">Kontakt</a>
             </nav>
@@ -347,7 +346,6 @@ FOOTER_COMMON = '''    <footer id="footer" class="relative overflow-hidden text-
                         <li><a href="/#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
                         <li><a href="/#about" class="text-gray-400 hover:text-white transition-colors">&Uuml;ber uns</a></li>
                         <li><a href="/#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
-                        <li><a href="/#reviews" class="text-gray-400 hover:text-white transition-colors">Bewertungen</a></li>
                         <li><a href="/#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
                         <li><a href="/#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
                     </ul>
@@ -489,7 +487,7 @@ def mobile_menu_script():
         const mb = document.getElementById('mobileMenuBtn');
         const mm = document.createElement('div');
         mm.id = 'mobileMenu';
-        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10"><button id="closeMobileMenu" class="text-gray-500 hover:text-primary text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/">Startseite</a><a href="/#about">&Uuml;ber uns</a><a href="/#services">Leistungen</a><a href="/#reviews">Bewertungen</a><a href="/#faq">FAQ</a><a href="/#contact">Kontakt</a><a href="/#appointment" class="block bg-primary text-white text-center py-3 rounded-xl font-semibold mt-4">Termin</a></nav>';
+        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10"><button id="closeMobileMenu" class="text-gray-500 hover:text-primary text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/">Startseite</a><a href="/#about">&Uuml;ber uns</a><a href="/#services">Leistungen</a><a href="/#faq">FAQ</a><a href="/#contact">Kontakt</a><a href="/#appointment" class="block bg-primary text-white text-center py-3 rounded-xl font-semibold mt-4">Termin</a></nav>';
         document.body.appendChild(mm);
         if(mb) { mb.addEventListener('click', () => mm.classList.add('active')); }
         const cm = document.getElementById('closeMobileMenu');
