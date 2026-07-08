@@ -40,10 +40,10 @@ json_raw = r'''
         "cta": "F\u00e4llt bald eine Inspektion an oder leuchtet die Serviceanzeige? Vereinbaren Sie jetzt einen Wartungstermin."
     },
     {
-        "slug": "fahrzeugsdiagnose", "title": "Fahrzeugsdiagnose",
+        "slug": "fahrzeugdiagnose", "title": "Fahrzeugdiagnose",
         "subtitle": "Computergest\u00fctzte Diagnose aller Fahrzeugsysteme. Schnelle Fehlererkennung und Behebung von St\u00f6rungen.",
         "meta": "Fahrzeugdiagnose in Kreuztal: Fehlerauslese, Steuerger\u00e4te-Diagnose, Systemanalyse f\u00fcr alle Marken. Modernste Diagnosetechnik.",
-        "hero_img": "static/images/Fahrzeugsdiagnose1.png",
+        "hero_img": "static/images/Fahrzeugdiagnose1.png",
         "hero_icon": "ri-radar-line",
         "intro": "Wenn die Motorkontrollleuchte leuchtet, das Fahrzeug ruckelt oder ungew\u00f6hnliche Ger\u00e4usche macht, hilft nur eine professionelle Diagnose. Mit modernster Diagnosetechnik lesen wir alle Steuerger\u00e4te aus, analysieren Fehlercodes und finden die Ursache zuverl\u00e4ssig.",
         "process": [
@@ -291,7 +291,7 @@ SERVICES_DATA = json.loads(json_raw.replace('None', 'null'))
 SERVICE_COLORS = [
     ("#6b7b8d", "#4a5560", "210 15% 45%"),   # 0 Wartung - Slate Blue
     ("#8a7f78", "#5c5550", "25 10% 50%"),    # 1 Unfallreparatur - Warm Stone
-    ("#7a8a7a", "#556055", "120 8% 40%"),    # 2 Fahrzeugsdiagnose - Sage
+    ("#7a8a7a", "#556055", "120 8% 40%"),    # 2 Fahrzeugdiagnose - Sage
     ("#9a7b6b", "#6b5550", "20 15% 50%"),    # 3 Motorreparatur - Clay
     ("#7a7a8a", "#555560", "240 8% 45%"),    # 4 Getriebereparatur - Pewter
     ("#9a8a7a", "#6b6055", "30 10% 55%"),    # 5 Fahrwerk - Sand

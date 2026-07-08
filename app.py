@@ -48,7 +48,7 @@ if not os.path.exists(VISITS_FILE):
 # Словарь соответствий value → название услуги
 SERVICE_LABELS = {
     'wartung': 'Wartung',
-    'diagnose': 'Fahrzeugsdiagnose',
+    'diagnose': 'Fahrzeugdiagnose',
     'fahrwerk': 'Reparatur von Fahrwerk und Aufhängung',
     'bremsen': 'Bremsenservice',
     'elektrik': 'Autoelektrik und Elektronik',
