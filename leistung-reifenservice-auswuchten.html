@@ -12,427 +12,375 @@
     <meta property="og:image" content="static/images/kw.avif">
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#5fa3e8'},borderRadius:{'none':'0px','sm':'2px','rounded':'4px','md':'6px','lg':'6px','xl':'6px','2xl':'6px','3xl':'8px','full':'9999px','button':'2px'}}}}</script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{surface:'#f9f9fc','surface-container-lowest':'#ffffff','surface-container-low':'#f3f3f6','surface-container':'#eeeef0','surface-container-high':'#e8e8ea','surface-container-highest':'#e2e2e5','on-surface':'#1a1c1e','on-surface-variant':'#414750',outline:'#717881','outline-variant':'#c1c7d2',primary:'#005086','primary-container':'#0d69ab','on-primary':'#ffffff',secondary:'#52606d','secondary-container':'#d5e4f4',tertiary:'#484f53','tertiary-container':'#60676b',error:'#ba1a1a','inverse-surface':'#2f3133','primary-fixed':'#d0e4ff','primary-fixed-dim':'#9dcaff','secondary-fixed':'#d5e4f4','secondary-fixed-dim':'#bac8d7','tertiary-fixed':'#dce3e8','tertiary-fixed-dim':'#c0c7cc'},borderRadius:{DEFAULT:'0.125rem',sm:'0.125rem',lg:'0.25rem',xl:'0.5rem','2xl':'0.75rem','3xl':'1rem',full:'0.75rem'},fontFamily:{headline:['Hanken Grotesk','sans-serif'],body:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']},fontSize:{'headline-xl':['48px',{lineHeight:'56px',letterSpacing:'-0.02em',fontWeight:'700'}],'headline-lg':['32px',{lineHeight:'40px',letterSpacing:'-0.01em',fontWeight:'600'}]},spacing:{gutter:'24px','margin-mobile':'16px','margin-desktop':'64px','container-max':'1280px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
-
-        <style>
-        :root { --accent: #0055a5; --accent-light: #5fa3e8; }
-        html, body { background: #0a0f1a; }
-        body {
-            font-family: 'Inter', sans-serif;
-            color: rgba(255,255,255,0.86);
-            background:
-                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,85,165,0.22) 0%, transparent 60%),
-                radial-gradient(ellipse at center, #131c2e 0%, #0a0f1a 100%);
-            background-attachment: fixed;
-        }
-        .accent { color: var(--accent-light); }
-        .hairline { border-color: rgba(255,255,255,0.08); }
-        .card-dark {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 6px;
-            transition: border-color .25s ease, background .25s ease;
-        }
-        .card-dark:hover { border-color: rgba(0,85,165,0.45); background: rgba(0,85,165,0.05); }
-        .btn-primary {
-            background: var(--accent); color: #fff;
-            border-radius: 2px; box-shadow: 0 0 24px rgba(0,85,165,0.4);
-            transition: background .2s, box-shadow .2s;
-        }
-        .btn-primary:hover { background: #0061bd; box-shadow: 0 0 32px rgba(0,85,165,0.65); }
-        .btn-ghost {
-            background: transparent; color: rgba(255,255,255,0.86);
-            border: 1px solid rgba(255,255,255,0.18); border-radius: 2px;
-            transition: border-color .2s, color .2s;
-        }
-        .btn-ghost:hover { border-color: var(--accent-light); color: #fff; }
+    <style>
+        :root { --accent: #0d69ab; --accent-dark: #005086; --accent-hsl: 210 100% 36%; }
+        html, body { background: #f9f9fc; color: #1a1c1e; }
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+        .glass-panel { background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(225,232,237,0.5); }
+        .tech-grid { background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px); }
+        .gradient-text { background: linear-gradient(135deg, #0d69ab, #005086); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: #0d69ab; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-primary:hover { background: #005086; }
+        .btn-ghost { background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); color: #414750; border: 1px solid #c1c7d2; border-radius: 0.125rem; transition: border-color .2s, color .2s; }
+        .btn-ghost:hover { border-color: #0d69ab; color: #005086; }
+        .btn-outline { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border: 1px solid #0d69ab; color: #0d69ab; border-radius: 0.125rem; font-size: 0.875rem; transition: background .2s, color .2s; }
+        .btn-outline:hover { background: rgba(13,105,171,0.1); color: #005086; }
+        .logo-glow { filter: drop-shadow(0 0 12px rgba(13,105,171,0.25)); }
         .reveal { opacity: 0; transform: translateY(30px); }
         .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .reveal-l { opacity: 0; transform: translateX(-24px); }
         .reveal-l.visible { opacity: 1; transform: translateX(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .reveal-r { opacity: 0; transform: translateX(24px); }
         .reveal-r.visible { opacity: 1; transform: translateX(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        details[open] summary { color: var(--accent-light); }
-        details summary::after { content: '+'; float: right; font-size: 1.5em; font-weight: 300; transition: transform 0.3s; color: rgba(255,255,255,0.4); }
+        details[open] summary { color: #0d69ab; }
+        details summary::after { content: '+'; float: right; font-size: 1.5em; font-weight: 300; transition: transform 0.3s; }
         details[open] summary::after { content: '\2013'; }
+        .service-icon { width: 3rem; height: 3rem; border-radius: 9999px; background: rgba(13,105,171,0.12); display: flex; align-items: center; justify-content: center; color: #0d69ab; flex-shrink: 0; }
+        .service-icon .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
         #mobileMenu {
-            position: fixed; top: 0; right: 0; bottom: 0; left: 0;
-            background: #0a0f1a; z-index: 1000; padding: 1.5rem;
-            transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto;
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: #f9f9fc;
+            z-index: 1000;
+            padding: 1.5rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
         }
         #mobileMenu.active { transform: translateX(0); }
-        .logo-glow { filter: drop-shadow(0 0 14px rgba(0,85,165,0.45)); }
-        .check-dot {
-            width: 18px; height: 18px; border-radius: 9999px;
-            background: var(--accent); box-shadow: 0 0 12px rgba(0,85,165,0.5);
-            display: inline-flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .svc-row { border-top: 1px solid rgba(255,255,255,0.07); }
-        .svc-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.07); }
-        .svc-num { font-feature-settings: 'tnum'; color: rgba(0,85,165,0.55); }
-        .step-node {
-            width: 14px; height: 14px; border-radius: 9999px;
-            background: var(--accent); box-shadow: 0 0 16px rgba(0,85,165,0.7);
-            border: 2px solid #0a0f1a;
-        }
-        .glitch-wipe { animation: reveal-wipe 3.5s ease-out both; }
-        @keyframes reveal-wipe {
-            0% { clip-path: inset(0 100% 0 0); }
-            45% { clip-path: inset(0 0 0 0); }
-            100% { clip-path: inset(0 0 0 0); }
-        }
-        .glitch-wipe-wrap { position: relative; }
-        .glitch-wipe-wrap::after {
-            content: '';
-            position: absolute; top: -4px; bottom: -4px;
-            width: 3px;
-            background: var(--accent-light);
-            box-shadow: 0 0 20px var(--accent-light), 0 0 40px var(--accent-light);
-            animation: wipe-scan 3.5s ease-out both;
-            pointer-events: none;
-        }
-        @keyframes wipe-scan {
-            0% { left: 0; opacity: 1; }
-            45% { left: 100%; opacity: 0.8; }
-            46%, 100% { left: 100%; opacity: 0; }
-        }
         @media (prefers-reduced-motion: reduce) {
             .reveal, .reveal-l, .reveal-r { opacity: 1 !important; transform: none !important; }
-            .logo-glow { filter: none; }
         }
-        /* Preloader */
-        #preloader {
-            position: fixed; inset: 0; z-index: 9999;
-            background: radial-gradient(ellipse at center, #1a2333 0%, #0a0f1a 100%);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 32px;
-            transition: opacity .6s ease, visibility .6s ease;
-        }
-        #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; }
-        #preloader .pl-logo img {
-            height: 120px; width: auto;
-            filter: drop-shadow(0 8px 28px rgba(0, 85, 165, 0.55));
-            animation: pl-pulse 2.4s ease-in-out infinite;
-        }
-        #preloader .pl-name {
-            color: rgba(255,255,255,0.92);
-            font-size: 13px; font-weight: 500;
-            letter-spacing: 0.32em; text-transform: uppercase;
-            margin-top: -16px;
-        }
-        #preloader .pl-bar {
-            width: 240px; height: 2px;
-            background: rgba(255,255,255,0.10);
-            overflow: hidden; border-radius: 2px;
-        }
-        #preloader .pl-fill {
-            width: 0%; height: 100%;
-            background: linear-gradient(90deg, #0055a5, #5fa3e8);
-            box-shadow: 0 0 12px rgba(0, 85, 165, 0.65);
-            transition: width .3s ease;
-        }
-        #preloader .pl-pct {
-            color: rgba(255,255,255,0.45);
-            font-size: 11px; font-weight: 400;
-            letter-spacing: 0.28em;
-        }
-        .brand-blue { color: #fff; }
-        @keyframes pl-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.06); opacity: 0.82; }
-        }
-        @keyframes scroll-bounce {
-            0%, 100% { transform: translateY(0); opacity: 0.6; }
-            50% { transform: translateY(6px); opacity: 1; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            #preloader .pl-logo img { animation: none; }
-            #preloader, #preloader .pl-fill { transition: none; }
-            [style*="scroll-bounce"] { animation: none !important; }
-            .glitch-wipe, .glitch-wipe-wrap::after { animation: none !important; clip-path: none !important; }
-        }
-        </style>
+    </style>
 </head>
-<body>
-    <div id="preloader" aria-hidden="true">
-        <div class="pl-logo"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt"></div>
-        <div class="pl-name">Kreuztaler Werkstatt</div>
-        <div class="pl-bar"><div class="pl-fill" id="plFill"></div></div>
-        <div class="pl-pct" id="plPct">0%</div>
-    </div>
-    <noscript><style>#preloader{display:none !important}</style></noscript>
+<body class="tech-grid bg-surface text-on-surface min-h-screen flex flex-col">
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
+    <div class="fixed bottom-0 right-0 w-96 h-96 bg-secondary-container/10 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
 
-    <header class="sticky top-0 z-50" style="background:rgba(10,15,26,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);">
+    <header class="glass-panel sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
                 <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2 logo-glow"></a>
-                <a href="/" class="brand-blue text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
-                <span class="text-gray-500 text-xs hidden sm:inline">GmbH</span>
+                <a href="/" class="text-primary font-headline text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
+                <span class="text-outline text-xs hidden sm:inline">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-6 text-sm">
-                <a href="/#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a>
-                <a href="/#about" class="text-gray-400 hover:text-white transition-colors">&Uuml;ber uns</a>
-                <a href="/#services" class="accent font-medium">Leistungen</a>
-                <a href="/#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
-                <a href="/#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a>
+                <a href="/#home" class="text-on-surface-variant hover:text-primary transition-colors">Startseite</a>
+                <a href="/#about" class="text-on-surface-variant hover:text-primary transition-colors">&Uuml;ber uns</a>
+                <a href="/#services" class="text-primary font-medium">Leistungen</a>
+                <a href="/#faq" class="text-on-surface-variant hover:text-primary transition-colors">FAQ</a>
+                <a href="/#contact" class="text-on-surface-variant hover:text-primary transition-colors">Kontakt</a>
             </nav>
             <div class="flex items-center space-x-3">
-                <a href="tel:+49273227717" class="hidden sm:flex items-center accent font-medium text-sm hover:text-white">02732 277 17</a>
-                <a href="/#appointment" class="btn-primary text-sm px-4 py-2 whitespace-nowrap font-semibold">Termin</a>
-                <button type="button" id="mobileMenuBtn" class="md:hidden text-gray-400 hover:text-white p-1 text-2xl leading-none">&equiv;</button>
+                <a href="tel:+49273227717" class="hidden sm:flex items-center text-primary font-medium text-sm hover:underline"><span class="material-symbols-outlined text-base mr-1">call</span>02732 277 17</a>
+                <a href="/#appointment" class="bg-primary-container text-white text-sm px-4 py-2 rounded whitespace-nowrap hover:bg-primary transition-colors">Termin</a>
+                <button type="button" id="mobileMenuBtn" class="md:hidden text-on-surface hover:text-primary p-1"><span class="material-symbols-outlined">menu</span></button>
             </div>
         </div>
     </header>
 
-    <section class="relative min-h-[78vh] flex items-end overflow-hidden">
-        <div class="absolute inset-0">
-            <img fetchpriority="high" decoding="async" src="static/newimages/Reifen-Räder.jpg" alt="Reifenservice & Auswuchten" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-        </div>
-        <div class="container mx-auto px-4 relative z-10 pb-16 md:pb-24 pt-32">
-            <div class="max-w-3xl hero-content">
-                <span class="inline-block text-xs uppercase tracking-[0.32em] mb-5 font-mono accent">Reifenservice &amp; Auswuchten</span>
-                <div class="glitch-wipe-wrap"><h1 class="glitch-wipe font-extrabold text-white leading-[0.95] tracking-tight" style="font-size:clamp(1.75rem,8vw,4.5rem);letter-spacing:-0.035em;">Die einzige<br>Verbindung<br>zur <span class="accent">Strasse.</span></h1></div>
-                <p class="text-lg md:text-xl text-gray-300 leading-relaxed mt-7 max-w-xl">Montage, Auswuchten, saisonaler Wechsel und Einlagerung &ndash; fachgerecht, felgenschonend, auf den Gramm genau.</p>
-                <div class="flex flex-col sm:flex-row gap-3 mt-9">
-                    <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 font-semibold">Termin buchen</a>
-                    <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-7 py-3.5 font-medium">02732 277 17</a>
+    <main class="flex-grow flex flex-col">
+        <!-- Hero Section - Stitch inspired full-bleed -->
+        <section class="relative w-full min-h-[50vh] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="static/newimages/stitch/svc-reifen.jpg" alt="Reifenservice" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-transparent"></div>
+            </div>
+            <div class="relative z-10 text-center px-4 md:px-16 max-w-5xl mx-auto w-full pt-20 pb-16">
+                <span class="inline-block font-mono text-xs text-primary uppercase tracking-[0.25em] mb-4">Leistungen</span>
+                <h1 class="text-[48px] md:text-[56px] font-headline font-bold leading-[1.08] tracking-tight text-on-surface mb-6 drop-shadow-sm">Reifenservice & Auswuchten</h1>
+                <p class="text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto glass-panel p-6 rounded-xl">Präzision auf den Millimeter. Unser Reifenservice sorgt für optimale Straßenlage, minimalen Verschleiß und höchste Sicherheit in jeder Kurve.</p>
+                <div class="flex gap-4 justify-center mt-8">
+                    <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                    <a href="tel:+49273227717" class="btn-ghost inline-flex items-center px-6 py-3 font-medium"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
                 </div>
             </div>
-        </div>
-        <div class="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 flex flex-col items-center gap-2 pointer-events-none" aria-hidden="true">
-            <span class="text-[11px] uppercase tracking-[0.3em] font-mono text-white">Scrollen</span>
-            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.8);box-shadow:0 0 20px rgba(255,255,255,0.4);animation:scroll-bounce 2s ease-in-out infinite;">
-                <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 3 L10 15 M5 11 L10 16 L15 11" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        </div>
-    </section>
-    <div class="h-px w-full" style="background:rgba(255,255,255,1);" aria-hidden="true"></div>
+        </section>
 
-    <section class="py-20 md:py-28">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto reveal">
-                <p class="text-xl md:text-2xl text-gray-200 leading-relaxed" style="font-weight:300;">Vier Quadratmeter Gummi halten zwei Tonnen Metall auf der Strasse. Wir sorgen daf&uuml;r, dass sie es zuverl&auml;ssig tun &ndash; mit modernster Montagetechnik, elektronischer Auswuchtmaschine und klimatisierter Einlagerung.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="pb-20 md:pb-28">
-        <div class="container mx-auto px-4">
-            <div class="max-w-5xl mx-auto">
-                <div class="flex items-baseline justify-between mb-10 reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Das Wichtigste</h2>
-                    <span class="text-xs uppercase tracking-[0.25em] text-gray-500 font-mono hidden sm:inline">Leistungen</span>
+        <!-- Bento Grid Services - Stitch inspired 12-col layout -->
+        <section class="py-16 md:py-24 px-4 md:px-16 max-w-7xl mx-auto w-full">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Main: Saisonwechsel & Montage -->
+                <div class="col-span-1 md:col-span-8 bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-8 shadow-sm flex flex-col justify-center reveal">
+                    <div class="service-icon mb-6"><span class="material-symbols-outlined">tire_repair</span></div>
+                    <h2 class="text-[32px] font-headline font-semibold tracking-tight text-on-surface mb-4">Saisonwechsel & Montage</h2>
+                    <p class="text-base text-on-surface-variant mb-6 max-w-prose leading-relaxed">Wir übernehmen den professionellen Radwechsel für Sie – schnell, sicher und zuverlässig. Bei Bedarf montieren wir auch Neureifen fachgerecht auf Ihre Felgen. Eine Überprüfung von Luftdruck und Profiltiefe ist dabei selbstverständlich inklusive.</p>
+                    <a href="/#appointment" class="self-start btn-outline">Beratung anfragen <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
                 </div>
-                <div>
-                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
-                        <div class="md:col-span-2 svc-num text-2xl font-mono">01</div>
-                        <div class="md:col-span-4">
-                            <h3 class="font-semibold text-white text-lg">Montage &amp; Demontage</h3>
-                            <p class="text-sm accent font-mono uppercase tracking-wider mt-1">felgenschonend</p>
-                        </div>
-                        <div class="md:col-span-6">
-                            <p class="text-gray-400 leading-relaxed">Reifen aller Gr&ouml;ssen (12&ndash;24 Zoll) mit modernsten Montiermaschinen. Auch Runflat, Notlaufreifen und RDKS-Sensoren &ndash; ohne Kratzer an der Felge.</p>
-                        </div>
+                <!-- Secondary: Fachgerechte Einlagerung -->
+                <div class="col-span-1 md:col-span-4 bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-8 shadow-sm flex flex-col justify-between reveal">
+                    <div>
+                        <div class="service-icon mb-6"><span class="material-symbols-outlined">warehouse</span></div>
+                        <h3 class="text-lg font-headline font-bold text-on-surface mb-3">Fachgerechte Einlagerung</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Sparen Sie Platz und Schlepperei. Wir lagern Ihre Sommer- oder Winterräder unter optimalen Bedingungen (kühl, trocken, dunkel) bis zur nächsten Saison ein.</p>
                     </div>
-                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
-                        <div class="md:col-span-2 svc-num text-2xl font-mono">02</div>
-                        <div class="md:col-span-4">
-                            <h3 class="font-semibold text-white text-lg">Auswuchten</h3>
-                            <p class="text-sm accent font-mono uppercase tracking-wider mt-1">auf den Gramm genau</p>
-                        </div>
-                        <div class="md:col-span-6">
-                            <p class="text-gray-400 leading-relaxed">Elektronische Auswuchtmaschine f&uuml;r statische und dynamische Unwucht. Vibrationsfreie Fahrt ab 90 km/h, gleichm&auml;ssiger Reifenverschleiss, weniger Spritverbrauch.</p>
-                        </div>
+                </div>
+                <!-- Full width: Computergestütztes Auswuchten -->
+                <div class="col-span-1 md:col-span-12 bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-8 shadow-sm flex flex-col md:flex-row gap-8 items-center mt-4 reveal">
+                    <div class="w-full md:w-1/2 rounded-lg overflow-hidden h-64 bg-surface-container">
+                        <img src="static/images/Reifenservice-Auswuchten1.png" alt="Auswuchten" class="w-full h-full object-cover">
                     </div>
-                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
-                        <div class="md:col-span-2 svc-num text-2xl font-mono">03</div>
-                        <div class="md:col-span-4">
-                            <h3 class="font-semibold text-white text-lg">Saisonwechsel &amp; Einlagerung</h3>
-                            <p class="text-sm accent font-mono uppercase tracking-wider mt-1">komplett aus einer Hand</p>
-                        </div>
-                        <div class="md:col-span-6">
-                            <p class="text-gray-400 leading-relaxed">Abholung, Montage, Auswuchten, Einlagern des zweiten Satzes in klimatisierter Umgebung &ndash; mit Zustandsprotokoll bei jeder Ein- und Auslagerung.</p>
-                        </div>
-                    </div>
-                    <div class="svc-row py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 reveal">
-                        <div class="md:col-span-2 svc-num text-2xl font-mono">04</div>
-                        <div class="md:col-span-4">
-                            <h3 class="font-semibold text-white text-lg">Reifenberatung</h3>
-                            <p class="text-sm accent font-mono uppercase tracking-wider mt-1">herstellerunabh&auml;ngig</p>
-                        </div>
-                        <div class="md:col-span-6">
-                            <p class="text-gray-400 leading-relaxed">Sommer-, Winter- oder Ganzjahresreifen &ndash; wir beraten neutral. Marken: Continental, Michelin, Bridgestone, Goodyear, Pirelli. Kein Verkaufsdruck, nur Empfehlung.</p>
-                        </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="service-icon mb-6"><span class="material-symbols-outlined">speed</span></div>
+                        <h3 class="text-[32px] font-headline font-semibold tracking-tight text-on-surface mb-4">Computergestütztes Auswuchten</h3>
+                        <p class="text-base text-on-surface-variant mb-4 leading-relaxed">Unwuchten an den Rädern führen zu Vibrationen, ungleichmäßigem Reifenverschleiß und einer Belastung des Fahrwerks. Mit unserer modernen Wuchtmaschine beseitigen wir diese Unwuchten mikrogrammgenau für ein ruhiges und sicheres Fahrgefühl.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-2 text-sm text-on-surface"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Weniger Verschleiß</li>
+                            <li class="flex items-center gap-2 text-sm text-on-surface"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Höherer Fahrkomfort</li>
+                            <li class="flex items-center gap-2 text-sm text-on-surface"><span class="material-symbols-outlined text-primary text-sm">check_circle</span> Mikrogrammgenaue Präzision</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="py-20 md:py-28" style="background:rgba(255,255,255,0.015);">
-        <div class="container mx-auto px-4">
-            <div class="max-w-5xl mx-auto">
-                <div class="mb-12 reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2">Ihre Vorteile</h2>
-                    <p class="text-gray-500 max-w-xl">Warum Sie uns vertrauen sollten.</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Felgenschonende Montage mit modernster Technik</span></div>
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Pr&auml;zises dynamisches Auswuchten</span></div>
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Klimatisierte Einlagerung mit Zustandsprotokoll</span></div>
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Neutrale Reifenberatung &ndash; herstellerunabh&auml;ngig</span></div>
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Druckkontrolle und Nachzugservice inklusive</span></div>
-                    <div class="flex items-start gap-4 reveal-l"><span class="check-dot mt-1"></span><span class="text-gray-200">Abhol- und Bringservice auf Wunsch</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-20 md:py-28">
-        <div class="container mx-auto px-4">
-            <div class="max-w-5xl mx-auto">
-                <div class="mb-14 reveal">
-                    <span class="text-xs uppercase tracking-[0.32em] font-mono accent">Ablauf</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mt-3">So l&auml;uft es ab</h2>
-                </div>
-                <div class="relative">
-                    <div class="hidden md:block absolute top-2 left-0 right-0" style="height:1px;background:linear-gradient(90deg, transparent 0%, rgba(0,85,165,0.5) 8%, rgba(0,85,165,0.5) 92%, transparent 100%);"></div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative">
-                        <div class="reveal">
-                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 01</span></div>
-                            <h3 class="font-bold text-white text-lg mb-2">Annahme &amp; Reifenpr&uuml;fung</h3>
-                            <p class="text-gray-400 leading-relaxed text-sm">Wir pr&uuml;fen Zustand &ndash; Profil, Alter, Besch&auml;digungen &ndash; und besprechen Ihre W&uuml;nsche. Ehrliche Einsch&auml;tzung, ob ein Wechsel n&ouml;tig ist.</p>
+        <!-- Ihre Vorteile -->
+        <section class="py-16 md:py-24 bg-surface-container-low">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">Ihre Vorteile</h2>
+                    <p class="text-on-surface-variant text-center mb-10 max-w-xl mx-auto">Warum Sie uns vertrauen sollten</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Felgenschonende Montage mit modernster Technik</span>
                         </div>
-                        <div class="reveal">
-                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 02</span></div>
-                            <h3 class="font-bold text-white text-lg mb-2">Montage &amp; Auswuchten</h3>
-                            <p class="text-gray-400 leading-relaxed text-sm">Alte Reifen demontieren, neue aufziehen. Jedes Rad einzeln elektronisch ausgewuchtet &ndash; f&uuml;r vibrationsfreie Fahrt bei jeder Geschwindigkeit.</p>
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Präzises dynamisches Auswuchten</span>
                         </div>
-                        <div class="reveal">
-                            <div class="flex items-center gap-3 mb-5"><span class="step-node"></span><span class="font-mono text-xs accent tracking-[0.25em]">SCHRITT 03</span></div>
-                            <h3 class="font-bold text-white text-lg mb-2">Druckkontrolle &amp; Abfahrt</h3>
-                            <p class="text-gray-400 leading-relaxed text-sm">Reifendruck pr&uuml;fen und an Beladung anpassen. Radmuttern nach 50 km kostenfrei nachziehen &ndash; Sicherheit geht vor.</p>
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Klimatisierte Einlagerung mit Zustandsprotokoll</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Neutrale Reifenberatung – herstellerunabhängig</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Druckkontrolle und Nachzugservice inklusive</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:#0d69ab;"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>
+                            <span class="text-on-surface text-sm">Abhol- und Bringservice auf Wunsch</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="faq-section" class="py-20 md:py-28" style="background:rgba(255,255,255,0.015);">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                <div class="mb-10 reveal">
-                    <span class="text-xs uppercase tracking-[0.32em] font-mono accent">FAQ</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mt-3">H&auml;ufige Fragen</h2>
+        <!-- So läuft es ab -->
+        <section class="py-16 md:py-24 bg-surface-container-lowest">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-14">
+                    <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3">So l&auml;uft es ab</h2>
+                    <p class="text-on-surface-variant max-w-xl mx-auto">In 3 Schritten zu Ihrem Serviceerlebnis</p>
                 </div>
-                <div class="space-y-3">
-                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Wann ist Reifenwechselzeit?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Oktober bis Ostern Winterreifen, Ostern bis Oktober Sommerreifen. Bei Schnee und Eis besteht situative Winterreifenpflicht &ndash; wir erinnern Sie gerne rechtzeitig.</div></details>
-                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Wie erkenne ich, ob Reifen noch gut sind?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Mindestprofiltiefe 1,6 mm. Empfohlen: Sommerreifen ab 3 mm, Winterreifen ab 4 mm wechseln. Reifen &auml;lter als 8 Jahre ersetzen &ndash; auch bei ausreichend Profil.</div></details>
-                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Was ist im Komplettservice enthalten?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Montage, Demontage, Auswuchten und Einlagerung des zweiten Radsatzes in klimatisierter Umgebung &ndash; alles aus einer Hand, mit Zustandsprotokoll.</div></details>
-                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Sind Ganzjahresreifen eine gute Alternative?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Bis 15.000 km/Jahr und milden Wintern &ndash; ja. Bei Schnee und Bergfahrten empfehlen wir klassische Saisonreifen f&uuml;r mehr Sicherheit.</div></details>
-                    <details class="card-dark overflow-hidden reveal"><summary class="px-6 py-5 font-medium text-gray-200 cursor-pointer list-none text-base">Was ist RDKS?</summary><div class="px-6 pb-5 text-gray-400 leading-relaxed text-sm border-t pt-4 mt-0 hairline">Reifendruckkontrollsystem &ndash; Sensoren in den R&auml;dern messen den Druck direkt. Beim Reifenwechsel m&uuml;ssen sie korrekt behandelt und neu angelernt werden.</div></details>
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-7 relative overflow-hidden reveal">
+                        <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#0d69ab08;">1</div>
+                        <div class="service-icon mb-4"><span class="material-symbols-outlined">build</span></div>
+                        <h3 class="font-bold font-headline text-on-surface mb-2">Annahme & Reifenprüfung</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed">Wir prüfen den Zustand der Reifen (Profil, Alter, Beschädigungen) und besprechen Ihre Wünsche.</p>
+                    </div>
+                    <div class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-7 relative overflow-hidden reveal">
+                        <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#0d69ab08;">2</div>
+                        <div class="service-icon mb-4"><span class="material-symbols-outlined">build</span></div>
+                        <h3 class="font-bold font-headline text-on-surface mb-2">Montage & Auswuchten</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed">Alte Reifen demontieren, neue Reifen aufziehen. Dynamisches Auswuchten jedes Rades für vibrationsfreie Fahrt.</p>
+                    </div>
+                    <div class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl p-7 relative overflow-hidden reveal">
+                        <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:#0d69ab08;">3</div>
+                        <div class="service-icon mb-4"><span class="material-symbols-outlined">task_alt</span></div>
+                        <h3 class="font-bold font-headline text-on-surface mb-2">Druckkontrolle & Abfahrt</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed">Reifendruck prüfen und an Beladung anpassen. Radmuttern nach 50 km nachziehen.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="py-24 md:py-32 relative overflow-hidden">
-        <div class="absolute inset-0" style="background:radial-gradient(ellipse 70% 100% at 50% 50%, rgba(0,85,165,0.28) 0%, transparent 70%);"></div>
-        <div class="container mx-auto px-4 relative z-10 text-center">
-            <p class="text-2xl md:text-3xl text-white max-w-3xl mx-auto mb-9 leading-snug font-medium reveal" style="font-weight:400;">Bald ist Reifenwechselzeit. Vereinbaren Sie jetzt Ihren Termin &ndash; wir montieren, wuchten und lagern fachgerecht.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
-                <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-8 py-4 font-bold text-lg">Termin online buchen</a>
-                <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-8 py-4 font-semibold text-lg">02732 277 17</a>
+        <!-- FAQ -->
+        <section id="faq-section" class="py-16 md:py-24 bg-surface-container-low">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">H&auml;ufige Fragen</h2>
+                    <p class="text-on-surface-variant text-center mb-10 max-w-xl mx-auto">Antworten zu "Reifenservice & Auswuchten"</p>
+                    <div class="space-y-2">
+                        <details class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl overflow-hidden reveal">
+                            <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">Wann ist Reifenwechselzeit?</summary>
+                            <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#0d69ab15;">Oktober bis Ostern Winterreifen, Ostern bis Oktober Sommerreifen. Situationsbedingte Winterreifenpflicht.</div>
+                        </details>
+                        <details class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl overflow-hidden reveal">
+                            <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">Wie erkenne ich, ob Reifen noch gut sind?</summary>
+                            <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#0d69ab15;">Mindestprofiltiefe 1,6 mm. Empfohlen: Sommerreifen ab 3 mm, Winterreifen ab 4 mm wechseln. Reifen älter als 8 Jahre ersetzen.</div>
+                        </details>
+                        <details class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl overflow-hidden reveal">
+                            <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">Was ist im Komplettservice enthalten?</summary>
+                            <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#0d69ab15;">Montage, Demontage, Auswuchten und Einlagerung des zweiten Radsatzes in klimatisierter Umgebung – alles aus einer Hand.</div>
+                        </details>
+                        <details class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl overflow-hidden reveal">
+                            <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">Sind Ganzjahresreifen eine gute Alternative?</summary>
+                            <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#0d69ab15;">Bis 15.000 km/Jahr und milde Winter – ja. Bei Schnee und Bergfahrten empfehlen wir klassische Saisonreifen.</div>
+                        </details>
+                        <details class="bg-surface-container-lowest border border-tertiary-fixed/40 rounded-xl overflow-hidden reveal">
+                            <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">Was ist RDKS?</summary>
+                            <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:#0d69ab15;">Reifendruckkontrollsystem – Sensoren in den Rädern messen den Druck. Beim Reifenwechsel korrekt behandeln und neu anlernen.</div>
+                        </details>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-    <div class="h-px w-full" style="background:rgba(255,255,255,1);" aria-hidden="true"></div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-24 relative overflow-hidden" style="background: radial-gradient(ellipse at center, rgba(13,105,171,0.08), transparent 70%);">
+            <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"15\" r=\"1.5\" fill=\"white\"/></svg>'); background-size: 30px 30px;"></div>
+            <div class="container mx-auto px-4 relative z-10 text-center">
+                <p class="text-xl md:text-2xl text-on-surface max-w-3xl mx-auto mb-8 leading-relaxed font-medium">Bald ist Reifenwechselzeit! Vereinbaren Sie jetzt Ihren Termin – wir montieren, wuchten und lagern fachgerecht.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-8 py-4 font-bold text-lg"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin online buchen</a>
+                    <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-8 py-4 font-semibold text-lg"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer id="footer" class="relative overflow-hidden text-white">
         <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
-
-        <div class="absolute inset-0" style="background:rgba(10,15,26,0.85);"></div>
+        <div class="absolute inset-0 bg-inverse-surface/92"></div>
         <div class="relative z-10 pt-12 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <div>
                     <div class="flex items-center mb-3">
-                        <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2 logo-glow">
-                        <div class="brand-blue text-lg font-bold">Kreuztaler Werkstatt</div>
+                        <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2">
+                        <div class="text-white font-headline text-lg font-bold">Kreuztaler Werkstatt</div>
                     </div>
-                    <p class="text-gray-400 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
+                    <p class="text-white/60 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Schnellzugriff</h4>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Schnellzugriff</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="/#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
-                        <li><a href="/#about" class="text-gray-400 hover:text-white transition-colors">&Uuml;ber uns</a></li>
-                        <li><a href="/#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
-                        <li><a href="/#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                        <li><a href="/#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+                        <li><a href="/#home" class="text-white/60 hover:text-white transition-colors">Startseite</a></li>
+                        <li><a href="/#about" class="text-white/60 hover:text-white transition-colors">&Uuml;ber uns</a></li>
+                        <li><a href="/#services" class="text-white/60 hover:text-white transition-colors">Leistungen</a></li>
+                        <li><a href="/#faq" class="text-white/60 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="/#contact" class="text-white/60 hover:text-white transition-colors">Kontakt</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Leistungen</h4>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Leistungen</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="leistung-wartung.html" class="text-gray-400 hover:text-white transition-colors">Wartung</a></li>
-                        <li><a href="leistung-fahrzeugdiagnose.html" class="text-gray-400 hover:text-white transition-colors">Fahrzeugdiagnose</a></li>
-                        <li><a href="leistung-fahrwerk-aufhaengung.html" class="text-gray-400 hover:text-white transition-colors">Fahrwerk & Aufhängung</a></li>
-                        <li><a href="leistung-bremsenservice.html" class="text-gray-400 hover:text-white transition-colors">Bremsenservice</a></li>
-                        <li><a href="leistung-autoelektrik-elektronik.html" class="text-gray-400 hover:text-white transition-colors">Autoelektrik & Elektronik</a></li>
-                        <li><a href="leistung-klimaanlagenservice.html" class="text-gray-400 hover:text-white transition-colors">Klimaanlagenservice</a></li>
-                        <li><a href="leistung-reifenservice-auswuchten.html" class="text-gray-400 hover:text-white transition-colors">Reifenservice & Auswuchten</a></li>
-                        <li><a href="leistung-hu-au.html" class="text-gray-400 hover:text-white transition-colors">HU / AU</a></li>
+                        <li><a href="leistung-wartung.html" class="text-white/60 hover:text-white transition-colors">Wartung</a></li>
+                        <li><a href="leistung-fahrzeugdiagnose.html" class="text-white/60 hover:text-white transition-colors">Fahrzeugdiagnose</a></li>
+                        <li><a href="leistung-fahrwerk-aufhaengung.html" class="text-white/60 hover:text-white transition-colors">Fahrwerk & Aufhängung</a></li>
+                        <li><a href="leistung-bremsenservice.html" class="text-white/60 hover:text-white transition-colors">Bremsenservice</a></li>
+                        <li><a href="leistung-autoelektrik-elektronik.html" class="text-white/60 hover:text-white transition-colors">Autoelektrik & Elektronik</a></li>
+                        <li><a href="leistung-klimaanlagenservice.html" class="text-white/60 hover:text-white transition-colors">Klimaanlagenservice</a></li>
+                        <li><a href="leistung-reifenservice-auswuchten.html" class="text-white hover:text-white transition-colors font-medium">Reifenservice & Auswuchten</a></li>
+                        <li><a href="leistung-hu-au.html" class="text-white/60 hover:text-white transition-colors">HU / AU</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Kontakt</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>Hagener Str. 40, 57223 Kreuztal</span></li>
-                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><a href="tel:+49273227717" class="hover:text-white transition-colors">Tel: 02732 277 17</a></li>
-                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>E-Mail: info@kreuztaler-werkstatt.de</span></li>
-                        <li class="flex items-start"><span class="accent mr-2 mt-0.5">›</span><span>Mo&ndash;Fr: 9:00&ndash;17:00 Uhr</span></li>
-                        <li class="flex items-start text-gray-500"><span class="accent mr-2 mt-0.5">›</span><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Kontakt</h4>
+                    <ul class="space-y-2 text-sm text-white/60">
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">location_on</span><span>Hagener Str. 40, 57223 Kreuztal</span></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">call</span><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">mail</span><span>info@kreuztaler-werkstatt.de</span></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">schedule</span><span>Mo-Fr: 9:00&ndash;17:00 Uhr</span></li>
+                        <li class="flex items-start text-white/50 gap-2"><span class="material-symbols-outlined text-base">schedule</span><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t pt-6 flex flex-col md:flex-row justify-between items-center gap-4" style="border-color:rgba(255,255,255,0.08);">
-                <p class="text-gray-500 text-xs">&copy; 2025 Kreuztaler Werkstatt GmbH.</p>
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/50 text-xs">&copy; 2025 Kreuztaler Werkstatt GmbH.</p>
                 <div class="flex space-x-4 text-xs">
-                    <a href="#" onclick="openImpressumModal()" class="text-gray-500 hover:text-white">Impressum</a>
-                    <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-500 hover:text-white">Datenschutz</a>
+                    <a href="#" onclick="openImpressumModal()" class="text-white/50 hover:text-white">Impressum</a>
+                    <a href="static/Datenschutz.pdf" target="_blank" class="text-white/50 hover:text-white">Datenschutz</a>
                 </div>
             </div>
         </div>
     </div>
     </footer>
-<script>
 
-</script>
+    <script>
+    (function(){
+        var c = document.getElementById('footerShader');
+        if(!c)return;
+        var gl = c.getContext('webgl');
+        if(!gl)return;
+        var vsSrc='attribute vec4 aVertexPosition;void main(){gl_Position=aVertexPosition;}';
+        var fsSrc='#version 100\nprecision highp float;\nuniform vec2 iResolution;\nuniform float iTime;\n'
+        +'const float overallSpeed=0.2;\nconst float gridSmoothWidth=0.015;\nconst float axisWidth=0.05;\n'
+        +'const float majorLineWidth=0.025;\nconst float minorLineWidth=0.0125;\nconst float majorLineFrequency=5.0;\n'
+        +'const float minorLineFrequency=1.0;\nconst vec4 gridColor=vec4(0.5);\nconst float scale=5.0;\n'
+        +'const vec4 lineColor=vec4(0.0,0.33,0.65,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
+        +'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
+        +'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
+        +'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
+        +'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
+        +'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
+        +'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
+        +'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
+        +'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
+        +'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
+        +'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
+        +'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
+        +'float getPlasmaY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
+        +'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;\n'
+        +'vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;\n'
+        +'float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);\n'
+        +'sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);\n'
+        +'sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;\n'
+        +'vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.07,0.2,1.0);vec4 bg2=vec4(0.0,0.15,0.35,1.0);\n'
+        +'for(int i=0;i<linesPerGroup;i++){float nli=float(i)/float(linesPerGroup);float ot=iTime*offsetSpeed;\n'
+        +'float op=float(i)+sp.x*offsetFrequency;float rd=rand(op+ot)*0.5+0.5;\n'
+        +'float hw=mix(minLineWidth,maxLineWidth,rd*hf)/2.0;\n'
+        +'float os=rand(op+ot*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hf);\n'
+        +'float lp=getPlasmaY(sp.x,hf,os);\n'
+        +'float ln=drawSmoothLine(lp,hw,sp.y)/2.0+drawCrispLine(lp,hw*0.15,sp.y);\n'
+        +'float cx=mod(float(i)+iTime*lineSpeed,25.0)-12.0;\n'
+        +'vec2 cp=vec2(cx,getPlasmaY(cx,hf,os));\n'
+        +'float ci=drawCircle(cp,0.01,sp)*4.0;ln=ln+ci;lns+=ln*lineColor*rd;}\n'
+        +'fc2=mix(bg1,bg2,uv.x);fc2*=vf;fc2.a=1.0;fc2+=lns;gl_FragColor=fc2;}';
+        var check=function(s,l){if(!l)console.error('Shader error: '+gl.getShaderInfoLog(s));};
+        var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,vsSrc);gl.compileShader(vs);check(vs,gl.getShaderParameter(vs,gl.COMPILE_STATUS));
+        var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,fsSrc);gl.compileShader(fs);check(fs,gl.getShaderParameter(fs,gl.COMPILE_STATUS));
+        var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+        if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.error('Program error: '+gl.getProgramInfoLog(prog));return;}
+        var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+        var aPos=gl.getAttribLocation(prog,'aVertexPosition');
+        var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
+        function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
+        window.addEventListener('resize',resize);resize();
+        var t0=Date.now();
+        function frame(){var t=(Date.now()-t0)/1000;gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
+        requestAnimationFrame(frame);
+    })();
+    </script>
 
-    <div id="impressumModal" class="fixed inset-0 hidden flex items-center justify-center z-50" style="background:rgba(0,0,0,0.7);">
-        <div class="p-8 max-w-lg w-full mx-4 relative" style="background:#131c2e;border:1px solid rgba(255,255,255,0.1);border-radius:6px;">
-            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl">&times;</button>
-            <h2 class="text-2xl font-bold mb-6 text-white">Impressum</h2>
-            <div class="text-gray-300 space-y-2 text-sm">
+    <div id="impressumModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="glass-panel p-8 rounded-xl max-w-lg w-full mx-4 relative">
+            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface material-symbols-outlined" style="font-size:24px;">close</button>
+            <h2 class="text-2xl font-headline font-bold mb-6 text-primary">Impressum</h2>
+            <div class="text-on-surface-variant space-y-2 text-sm">
                 <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
                 <p>Gesch&auml;ftsf&uuml;hrer: Andre Hovanski</p>
                 <p>Hagener Str. 40, 57223 Kreuztal</p>
-                <p>Tel: <a href="tel:+49273227717" class="hover:underline accent">02732 277 17</a></p>
+                <p>Tel: <a href="tel:+49273227717" class="hover:underline text-primary-container">02732 277 17</a></p>
                 <p>E-Mail: info@kreuztaler-werkstatt.de</p>
-                <hr class="my-3" style="border-color:rgba(255,255,255,0.08);">
+                <hr class="my-3">
                 <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>
                 <p>USt-IdNr.: DE351358022</p>
             </div>
@@ -449,7 +397,7 @@
         const mb = document.getElementById('mobileMenuBtn');
         const mm = document.createElement('div');
         mm.id = 'mobileMenu';
-        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10 logo-glow"><button id="closeMobileMenu" class="text-gray-500 hover:text-white text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/" class="text-gray-300 hover:text-white">Startseite</a><a href="/#about" class="text-gray-300 hover:text-white">&Uuml;ber uns</a><a href="/#services" class="text-gray-300 hover:text-white">Leistungen</a><a href="/#faq" class="text-gray-300 hover:text-white">FAQ</a><a href="/#contact" class="text-gray-300 hover:text-white">Kontakt</a><a href="/#appointment" class="block btn-primary text-white text-center py-3 font-semibold mt-4">Termin</a></nav>';
+        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10 logo-glow"><button id="closeMobileMenu" class="text-on-surface-variant hover:text-on-surface material-symbols-outlined" style="font-size:28px;">close</button></div><nav class="flex flex-col space-y-3 text-lg font-headline"><a href="/" class="text-on-surface-variant hover:text-on-surface">Startseite</a><a href="/#about" class="text-on-surface-variant hover:text-on-surface">&Uuml;ber uns</a><a href="/#services" class="text-on-surface-variant hover:text-on-surface">Leistungen</a><a href="/#faq" class="text-on-surface-variant hover:text-on-surface">FAQ</a><a href="/#contact" class="text-on-surface-variant hover:text-on-surface">Kontakt</a><a href="/#appointment" class="block btn-primary text-white text-center py-3 font-semibold mt-4">Termin</a></nav>';
         document.body.appendChild(mm);
         if(mb) { mb.addEventListener('click', () => mm.classList.add('active')); }
         const cm = document.getElementById('closeMobileMenu');
@@ -459,68 +407,10 @@
         const observe = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12});
         document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>observe.observe(el));
         gsap.fromTo('.hero-content>*',{opacity:0,y:30},{opacity:1,y:0,duration:0.8,stagger:0.1,ease:'power2.out',delay:0.15});
-        gsap.fromTo('.reveal',{opacity:0,y:40},{opacity:1,y:0,duration:0.6,stagger:0.12,ease:'power2.out',scrollTrigger:{trigger:'.reveal',start:'top 80%',toggleActions:'play none none none'}});
     });
     function openImpressumModal(){document.getElementById('impressumModal').classList.remove('hidden');document.body.style.overflow='hidden';}
     function closeImpressumModal(){document.getElementById('impressumModal').classList.add('hidden');document.body.style.overflow='';}
     document.getElementById('impressumModal')?.addEventListener('click',function(e){if(e.target===this)closeImpressumModal();});
-    // Preloader
-    (function(){
-        var pl = document.getElementById('preloader');
-        if (!pl) return;
-        var fill = document.getElementById('plFill');
-        var pct  = document.getElementById('plPct');
-        var finished = false;
-        function setPct(p){ if(p>100)p=100; if(fill)fill.style.width=p+'%'; if(pct)pct.textContent=Math.round(p)+'%'; }
-        function done(){ if(finished)return; finished=true; setPct(100); setTimeout(function(){pl.classList.add('pl-done');},200); setTimeout(function(){if(pl.parentNode)pl.parentNode.removeChild(pl);},1000); }
-        var hard = setTimeout(done, 6000);
-        var assets = [];
-        Array.prototype.forEach.call(document.images, function(img){ var s=img.currentSrc||img.src; if(s&&s.indexOf('data:')!==0)assets.push(s); });
-        var seen = Object.create(null);
-        assets = assets.filter(function(s){ if(seen[s])return false; seen[s]=1; return true; });
-        if(!assets.length){ clearTimeout(hard); done(); return; }
-        var loaded = 0;
-        function bump(){ loaded++; setPct((loaded/assets.length)*100); if(loaded>=assets.length){clearTimeout(hard);setTimeout(done,250);} }
-        assets.forEach(function(src){ var im=new Image(); im.onload=bump; im.onerror=bump; im.src=src; });
-        window.addEventListener('load', function(){ setTimeout(done, 400); });
-    })();
     </script>
-<script>
-(function(){var c=document.getElementById('footerShader');if(!c)return;var gl=c.getContext('webgl');if(!gl)return;
-var vsSrc='attribute vec4 aVertexPosition;void main(){gl_Position=aVertexPosition;}';
-var fsSrc='#version 100\nprecision highp float;\nuniform vec2 iResolution;\nuniform float iTime;\n'
-+'const float overallSpeed=0.2;\nconst float gridSmoothWidth=0.015;\nconst float axisWidth=0.05;\n'
-+'const float majorLineWidth=0.025;\nconst float minorLineWidth=0.0125;\nconst float majorLineFrequency=5.0;\n'
-+'const float minorLineFrequency=1.0;\nconst vec4 gridColor=vec4(0.5);\nconst float scale=5.0;\n'
-+'const vec4 lineColor=vec4(0.0,0.55,0.95,1.0);\nconst float minLineWidth=0.01;\nconst float maxLineWidth=0.2;\n'
-+'const float lineSpeed=1.0*overallSpeed;\nconst float lineAmplitude=1.0;\nconst float lineFrequency=0.2;\n'
-+'const float warpSpeed=0.2*overallSpeed;\nconst float warpFrequency=0.5;\nconst float warpAmplitude=1.0;\n'
-+'const float offsetFrequency=0.5;\nconst float offsetSpeed=1.33*overallSpeed;\nconst float minOffsetSpread=0.6;\n'
-+'const float maxOffsetSpread=2.0;\nconst int linesPerGroup=16;\n'
-+'#define drawCircle(p,r,cd) smoothstep(r+gridSmoothWidth,r,length(cd-(p)))\n'
-+'#define drawSmoothLine(p,hw,t) smoothstep(hw,0.0,abs(p-(t)))\n'
-+'#define drawCrispLine(p,hw,t) smoothstep(hw+gridSmoothWidth,hw,abs(p-(t)))\n'
-+'#define drawPeriodicLine(f,w,t) drawCrispLine(f/2.0,w,abs(mod(t,f)-(f)/2.0))\n'
-+'float drawGridLines(float a){return drawCrispLine(0.0,axisWidth,a)+drawPeriodicLine(majorLineFrequency,majorLineWidth,a)+drawPeriodicLine(minorLineFrequency,minorLineWidth,a);}\n'
-+'float drawGrid(vec2 s){return min(1.0,drawGridLines(s.x)+drawGridLines(s.y));}\n'
-+'float rand(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}\n'
-+'float getY(float x,float hf,float o){return rand(x*lineFrequency+iTime*lineSpeed)*hf*lineAmplitude+o;}\n'
-+'void main(){vec2 fc=gl_FragCoord.xy;vec4 fc2;vec2 uv=fc.xy/iResolution.xy;vec2 sp=(fc-iResolution.xy/2.0)/iResolution.x*2.0*scale;float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);sp.y+=rand(sp.x*warpFrequency+iTime*warpSpeed)*warpAmplitude*(0.5+hf);sp.x+=rand(sp.y*warpFrequency+iTime*warpSpeed+2.0)*warpAmplitude*hf;vec4 lns=vec4(0.0);vec4 bg1=vec4(0.0,0.13,0.3,1.0);vec4 bg2=vec4(0.0,0.25,0.55,1.0);for(int i=0;i<linesPerGroup;i++){float nli=float(i)/float(linesPerGroup);float ot=iTime*offsetSpeed;float op=float(i)+sp.x*offsetFrequency;float rd=rand(op+ot)*0.5+0.5;float hw=mix(minLineWidth,maxLineWidth,rd*hf)/2.0;float os=rand(op+ot*(1.0+nli))*mix(minOffsetSpread,maxOffsetSpread,hf);float lp=getY(sp.x,hf,os);float ln=drawSmoothLine(lp,hw,sp.y)/2.0+drawCrispLine(lp,hw*0.15,sp.y);float cx=mod(float(i)+iTime*lineSpeed,25.0)-12.0;vec2 cp=vec2(cx,getY(cx,hf,os));float ci=drawCircle(cp,0.01,sp)*4.0;ln=ln+ci;lns+=ln*lineColor*rd*1.6;}fc2=mix(bg1,bg2,uv.x);fc2*=vf;fc2.a=1.0;fc2+=lns;gl_FragColor=fc2;}';
-function check(s,l){if(l)return;console.error('Shader error: '+gl.getShaderInfoLog(s));}
-var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,vsSrc);gl.compileShader(vs);check(vs,gl.getShaderParameter(vs,gl.COMPILE_STATUS));
-var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,fsSrc);gl.compileShader(fs);check(fs,gl.getShaderParameter(fs,gl.COMPILE_STATUS));
-var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
-if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.error('Program error: '+gl.getProgramInfoLog(prog));return;}
-var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-var aPos=gl.getAttribLocation(prog,'aVertexPosition');
-var uRes=gl.getUniformLocation(prog,'iResolution'),uTime=gl.getUniformLocation(prog,'iTime');
-function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;gl.viewport(0,0,c.width,c.height);}
-window.addEventListener('resize',resize);resize();
-var t0=Date.now();var fsVisible=true;
-if('IntersectionObserver' in window){new IntersectionObserver(function(e){fsVisible=e[0].isIntersecting;},{rootMargin:'100px'}).observe(c);}
-function frame(){var t=(Date.now()-t0)/1000;if(!fsVisible){requestAnimationFrame(frame);return;}gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);gl.useProgram(prog);gl.uniform2f(uRes,c.width,c.height);gl.uniform1f(uTime,t);gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(aPos);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);}
-requestAnimationFrame(frame);})();
-</script>
 </body>
 </html>

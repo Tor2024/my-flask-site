@@ -1,54 +1,110 @@
-/* Calendar styles */
+/* Calendar — Stitch "Luminous Precision" (Kontakt V2 Referenz) */
 .calendar-day {
-    @apply text-center py-2 rounded-md cursor-pointer transition-colors;
+    text-align: center;
+    padding: 0.5rem 0;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    line-height: 1.25rem;
+    letter-spacing: 0.05em;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+    border: 1px solid transparent;
+    cursor: pointer;
 }
 
+/* Verfügbar — primary-container (blau) — LEGende bg-primary-container */
 .calendar-day.available {
-    @apply bg-green-100 text-green-800 hover:bg-green-200;
+    background-color: rgba(13, 105, 171, 0.10);
+    color: #005086;
+    border-color: rgba(13, 105, 171, 0.20);
+}
+.calendar-day.available:hover {
+    background-color: rgba(13, 105, 171, 0.20);
 }
 
+/* Teilweise — orange #feba42 — LEGende bg-[#ffba20] */
 .calendar-day.partially {
-    @apply bg-yellow-100 text-yellow-800 hover:bg-yellow-200;
+    background-color: rgba(254, 186, 66, 0.10);
+    color: #7f5600;
+    border-color: rgba(254, 186, 66, 0.30);
+}
+.calendar-day.partially:hover {
+    background-color: rgba(254, 186, 66, 0.20);
 }
 
+/* Ausgebucht — error (rot) — LEGende bg-error */
+.calendar-day.booked {
+    background-color: rgba(186, 26, 26, 0.05);
+    color: rgba(186, 26, 26, 0.60);
+    border-color: rgba(186, 26, 26, 0.10);
+    cursor: not-allowed;
+}
+
+/* Vergangenheit / außerhalb des Monats */
+.calendar-day.text-outline,
+.calendar-day.opacity-40 {
+    color: rgba(193, 199, 210, 0.40);
+    cursor: default;
+}
+
+/* Ausgewählt — primary mit Glow */
 .calendar-day.selected {
-    @apply bg-blue-500 text-white;
+    background-color: #005086;
+    color: #ffffff;
+    border-color: #005086;
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(13, 105, 171, 0.40);
 }
 
-.calendar-day.text-gray-400 {
-    @apply cursor-not-allowed;
+/* Heute */
+.calendar-day.today:not(.selected) {
+    border-color: #0d69ab;
+    color: #0d69ab;
+    font-weight: 600;
 }
 
-/* Time slot styles */
-.time-slot {
-    @apply transition-colors duration-200;
+/* ─── Zeitfenster ──────────────────────────────────────────── */
+.time-slots-container button {
+    border: 1px solid rgba(193, 199, 210, 0.30);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    color: #1a1c1e;
+    background: #ffffff;
+}
+.time-slots-container button:hover:not(:disabled) {
+    border-color: #0d69ab;
+    color: #005086;
+}
+.time-slots-container button.bg-primary-container {
+    background-color: #0d69ab;
+    color: #ffffff;
+    border-color: #0d69ab;
+}
+.time-slots-container button:disabled {
+    background-color: rgba(186, 26, 26, 0.05);
+    color: rgba(186, 26, 26, 0.50);
+    border-color: rgba(186, 26, 26, 0.10);
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.time-slot.available {
-    @apply border-green-500 text-green-700 hover:bg-green-500 hover:text-white;
+/* ─── Formular-Validierung ────────────────────────────────── */
+input.border-error, select.border-error {
+    border-color: #ba1a1a !important;
 }
-
-.time-slot.partially {
-    @apply border-yellow-500 text-yellow-700 hover:bg-yellow-500 hover:text-white;
-}
-
-.time-slot.selected {
-    @apply bg-blue-500 text-white border-blue-500;
-}
-
-.time-slot.unavailable {
-    @apply border-gray-300 text-gray-400 cursor-not-allowed hover:bg-transparent;
-}
-
-/* Form validation styles */
-input:invalid, select:invalid {
-    @apply border-red-500;
-}
-
 .error-message {
-    @apply text-red-500 text-sm mt-1;
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+    color: #ba1a1a;
 }
-
 .success-message {
-    @apply bg-green-100 text-green-800 p-4 rounded-md mt-4;
-} 
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-top: 1rem;
+    background-color: rgba(13, 105, 171, 0.10);
+    color: #005086;
+}

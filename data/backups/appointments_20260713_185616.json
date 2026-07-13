@@ -1,0 +1,1 @@
+{"appointments": [{"id": "2026-07-13_16:00_1783950456.380844", "date": "2026-07-13", "time": "16:00", "client": {"name": "John Doe", "email": "rost2011x@gmail.com", "phone": "015237237407"}, "service": "achsvermessung", "message": "", "status": "ожидает", "created_at": "2026-07-13T15:47:36.380935"}], "blocked_slots": {"2026-07-13": ["16:00"]}}

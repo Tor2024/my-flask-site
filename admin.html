@@ -1,428 +1,349 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-Panel · Kreuztaler Werkstatt — Terminverwaltung</title>
+    <title>Admin-Panel · Kreuztaler Werkstatt GmbH</title>
     <link rel="icon" type="image/avif" href="static/images/kw.avif">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>tailwind.config={theme:{extend:{colors:{'on-primary-fixed':'#001d35','surface-container-lowest':'#ffffff','tertiary-container':'#60676b','secondary':'#52606d','surface-container-low':'#f3f3f6','on-surface':'#1a1c1e','surface':'#f9f9fc','outline-variant':'#c1c7d2','primary':'#005086','primary-container':'#0d69ab','secondary-container':'#d5e4f4','on-primary':'#ffffff','surface-container':'#eeeef0','surface-variant':'#e2e2e5','background':'#f9f9fc','inverse-surface':'#2f3133','outline':'#717881','tertiary':'#484f53','surface-container-highest':'#e2e2e5','on-surface-variant':'#414750','error':'#ba1a1a','on-background':'#1a1c1e','surface-container-high':'#e8e8ea','surface-container-highest':'#e2e2e5'},borderRadius:{'none':'0','sm':'0.125rem',DEFAULT:'0.125rem','md':'0.25rem','lg':'0.5rem','xl':'0.75rem','2xl':'1rem','3xl':'1.5rem','full':'9999px','button':'0.25rem'},fontFamily:{'headline':['Hanken Grotesk','sans-serif'],'body':['Inter','sans-serif'],'mono':['JetBrains Mono','monospace']},spacing:{'gutter':'24px','margin-mobile':'16px','margin-desktop':'64px','container-max':'1280px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles.css?v=2">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .calendar-day {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        .calendar-day:hover {
-            background-color: #f3f4f6;
-        }
-        .calendar-day.available {
-            background-color: rgba(0, 200, 83, 0.1);
-            color: #00c853;
-        }
-        .calendar-day.partially {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-        }
-        .calendar-day.booked {
-            background-color: rgba(244, 67, 54, 0.1);
-            color: #f44336;
-        }
-        .calendar-day.blocked-admin {
-            background-color: rgba(0, 85, 165, 0.1);
-            color: #0055a5;
-        }
-        .calendar-day.selected {
-            background-color: #0055a5;
-            color: white;
-        }
-        .time-slot {
-            padding: 8px 12px;
-            border-radius: 4px;
-            background-color: #e0e0e0;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            text-align: center;
-        }
-        .time-slot.available {
-            background-color: #e6ffe6; /* Light green for available */
-            color: #00c853;
-        }
-        .time-slot.available:hover {
-            background-color: #ccffcc;
-        }
-        .time-slot.selected {
-            background-color: #0055a5;
-            color: white;
-        }
-        .time-slot.booked {
-            background-color: #ffe6e6; /* Light red for booked by user */
-            color: #f44336;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        .time-slot.blocked-admin {
-            background-color: #ede7f6; /* pale violet for admin blocked */
-            color: #7c4dff;
-            cursor: pointer;
-        }
-        .time-slot.blocked-admin:hover {
-            background-color: #dcd0ff;
-        }
-        .time-slot.booked::after, .time-slot.blocked-admin::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.5); /* Semi-transparent overlay */
-            border-radius: 4px;
-        }
-        .time-slot.booked, .time-slot.blocked-admin {
-            position: relative;
-        }
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        #toast-container {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            pointer-events: none;
-        }
-        .toast {
-            pointer-events: auto;
-            min-width: 280px;
-            max-width: 400px;
-            padding: 0.875rem 1rem;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.875rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.625rem;
-            animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        :root { --accent: #0d69ab; --accent-dark: #005086; --accent-hsl: 210 100% 36%; --error: #ba1a1a; --amber: #feba42; --amber-dark: #7f5600; }
+        html, body { background: #f9f9fc; color: #1a1c1e; }
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+        .glass-panel { background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid #c1c7d2; }
+        .glass-panel-strong { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid #c1c7d2; }
+        .tech-grid { background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px); }
+        .btn-primary { background: #0d69ab; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-primary:hover { background: #005086; }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .btn-ghost { background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); color: #414750; border: 1px solid #c1c7d2; border-radius: 0.125rem; transition: border-color .2s, color .2s; }
+        .btn-ghost:hover { border-color: #0d69ab; color: #005086; }
+        .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .btn-danger { background: #ba1a1a; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-danger:hover { background: #8c1313; }
+        .btn-amber { background: #7f5600; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-amber:hover { background: #5c3e00; }
+        .btn-secondary { background: #52606d; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-secondary:hover { background: #3d4852; }
+        .logo-glow { filter: drop-shadow(0 0 12px rgba(13,105,171,0.25)); }
+        .logo-glow-admin { filter: drop-shadow(0 0 8px rgba(13,105,171,0.2)); }
+        .gradient-text { background: linear-gradient(135deg, #0d69ab, #005086); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .reveal { opacity: 0; transform: translateY(20px); }
+        .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        select { appearance: none; -webkit-appearance: none; background-color: #fff; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2352606d' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.625rem center; padding-right: 2rem !important; border: 1px solid #c1c7d2; border-radius: 0.125rem; line-height: 1.5; }
+        select:focus { outline: none; border-color: #0d69ab; box-shadow: 0 0 0 2px rgba(13,105,171,0.25); }
+        /* Calendar */
+        .calendar-day { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 0.25rem; transition: all 0.15s; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; border: 1px solid transparent; }
+        .calendar-day:hover { background-color: #eeeef0; }
+        .calendar-day.available { background-color: rgba(13, 105, 171, 0.10); color: #005086; border-color: rgba(13, 105, 171, 0.20); }
+        .calendar-day.available:hover { background-color: rgba(13, 105, 171, 0.20); }
+        .calendar-day.partially { background-color: rgba(254, 186, 66, 0.10); color: #7f5600; border-color: rgba(254, 186, 66, 0.30); }
+        .calendar-day.partially:hover { background-color: rgba(254, 186, 66, 0.20); }
+        .calendar-day.booked { background-color: rgba(186, 26, 26, 0.05); color: rgba(186, 26, 26, 0.60); border-color: rgba(186, 26, 26, 0.10); cursor: not-allowed; }
+        .calendar-day.blocked-admin { background-color: rgba(0, 80, 134, 0.08); color: #005086; border-color: rgba(0, 80, 134, 0.20); }
+        .calendar-day.blocked-admin:hover { background-color: rgba(0, 80, 134, 0.18); }
+        .calendar-day.selected { background-color: #005086; color: #ffffff; border-color: #005086; font-weight: 700; box-shadow: 0 0 8px rgba(13,105,171,0.4); }
+        .calendar-day.today { outline: 2px solid #0d69ab; outline-offset: -2px; font-weight: 700; }
+        .calendar-day.outside { color: rgba(193,199,210,0.4); cursor: default; }
+        .calendar-day.outside:hover { background: transparent; }
+        /* Time slots */
+        .time-slot { padding: 0.5rem 0.75rem; border-radius: 0.25rem; border: 1px solid rgba(193,199,210,0.3); background: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-align: center; cursor: pointer; transition: all 0.15s; color: #1a1c1e; }
+        .time-slot:hover:not(.booked):not(.disabled) { border-color: #0d69ab; color: #005086; }
+        .time-slot.available { background-color: rgba(13,105,171,0.04); color: #0d69ab; }
+        .time-slot.available:hover { background-color: rgba(13,105,171,0.12); }
+        .time-slot.selected { background-color: #005086; color: white; border-color: #005086; }
+        .time-slot.booked { background-color: rgba(186,26,26,0.04); color: #ba1a1a; border-color: rgba(186,26,26,0.15); cursor: not-allowed; opacity: 0.7; }
+        .time-slot.blocked-admin { background-color: rgba(0,80,134,0.04); color: #005086; border-color: rgba(0,80,134,0.15); cursor: pointer; }
+        .time-slot.blocked-admin:hover { background-color: rgba(0,80,134,0.12); }
+        /* Table */
+        #appointments-table th { font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.04em; color: #52606d; background: #eeeef0; border-bottom: 2px solid #c1c7d2; }
+        #appointments-table td { font-size: 0.875rem; border-bottom: 1px solid #e2e2e5; }
+        #appointments-table tr:hover td { background: rgba(13,105,171,0.02); }
+        /* Toast */
+        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+        .toast { pointer-events: auto; min-width: 280px; max-width: 400px; padding: 0.875rem 1rem; border-radius: 0.125rem; color: #fff; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(0,80,134,0.12); display: flex; align-items: flex-start; gap: 0.625rem; animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
         .toast.fade-out { animation: toast-out 0.25s ease forwards; }
-        .toast.success { background: #16a34a; }
-        .toast.error   { background: #dc2626; }
-        .toast.info    { background: #0055a5; }
-        .toast i { font-size: 1.125rem; flex-shrink: 0; margin-top: 1px; }
-        @keyframes toast-in  { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+        .toast.success { background: #0d69ab; }
+        .toast.error { background: #ba1a1a; }
+        .toast.info { background: #005086; }
+        .toast .material-symbols-outlined { font-size: 1.125rem; flex-shrink: 0; margin-top: 1px; }
+        @keyframes toast-in { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(24px); } }
-        @media (prefers-reduced-motion: reduce) {
-            .toast, .toast.fade-out { animation: none; }
-        }
-        .admin-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.5rem;
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .admin-header-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            color: #0055a5;
-            font-size: 1.125rem;
-        }
-        .admin-header-brand img { height: 2.25rem; }
-        .admin-header-back {
-            color: #4a4a4a;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.5rem 0.875rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .admin-header-back:hover { background: #f3f4f6; color: #0055a5; }
-
-        /* Heute-Hervorhebung im Kalender */
-        .calendar-day.calendar-day-today {
-            outline: 2px solid #0055a5;
-            outline-offset: -2px;
-            font-weight: 700;
-        }
-
-        /* Select-Styling vereinheitlichen */
-        select {
-            appearance: none;
-            -webkit-appearance: none;
-            background-color: #fff;
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a4a4a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.625rem center;
-            padding-right: 2rem !important;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            line-height: 1.5;
-        }
-        select:focus {
-            outline: none;
-            border-color: #0055a5;
-            box-shadow: 0 0 0 2px rgba(0,85,165,0.25);
-        }
-
-        /* Footer */
-        .admin-footer {
-            border-top: 1px solid #e5e7eb;
-            background: #f9fafb;
-            padding: 1.25rem 1.5rem;
-            margin-top: 2rem;
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.8125rem;
-        }
-        .admin-footer a { color: #0055a5; }
-        .admin-footer a:hover { text-decoration: underline; }
-
-        /* Mobile Kartenlayout fuer die Buchungstabelle */
+        /* Mobile table */
         @media (max-width: 767px) {
             #appointments-table thead { display: none; }
             #appointments-table, #appointments-table tbody, #appointments-table tr, #appointments-table td { display: block; width: 100%; }
-            #appointments-table tr {
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                margin-bottom: 0.75rem;
-                padding: 0.5rem 0.75rem;
-                background: #fff;
-            }
-            #appointments-table td {
-                border: none;
-                padding: 0.35rem 0;
-                display: flex;
-                justify-content: space-between;
-                gap: 1rem;
-                text-align: right;
-            }
-            #appointments-table td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #6b7280;
-                text-align: left;
-            }
+            #appointments-table tr { border: 1px solid #c1c7d2; border-radius: 0.125rem; margin-bottom: 0.75rem; padding: 0.5rem 0.75rem; background: #fff; }
+            #appointments-table td { border: none; padding: 0.35rem 0; display: flex; justify-content: space-between; gap: 1rem; text-align: right; }
+            #appointments-table td::before { content: attr(data-label); font-weight: 600; color: #52606d; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
             #appointments-table td[data-label="Aktionen"] { justify-content: flex-end; }
         }
+        button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .card-hover { transition: border-color .25s ease, box-shadow .25s ease; }
+        .card-hover:hover { border-color: #0d69ab; box-shadow: 0 0 20px rgba(13,105,171,0.08); }
+        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; } }
     </style>
 </head>
+<body class="tech-grid bg-surface text-on-surface min-h-screen">
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
+    <div class="fixed bottom-0 right-0 w-96 h-96 bg-secondary-container/10 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
 
-<body>
-    <header class="admin-header">
-        <div class="admin-header-brand">
-            <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo">
-            <span>Admin-Panel</span>
+    <!-- Header -->
+    <header class="glass-panel sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2 logo-glow-admin"></a>
+                <a href="/" class="text-primary font-headline text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
+                <span class="text-outline text-xs hidden sm:inline">GmbH</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-1.5 text-xs font-mono text-outline uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1rem">admin_panel_settings</span>
+                    Admin
+                </span>
+                <a href="/" class="btn-ghost text-xs px-3 py-1.5 flex items-center gap-1">
+                    <span class="material-symbols-outlined" style="font-size:1rem">arrow_back</span>
+                    <span class="hidden sm:inline">Zur Website</span>
+                </a>
+            </div>
         </div>
-        <a href="/" class="admin-header-back" title="Zur Hauptseite">
-            <i class="ri-arrow-left-line"></i>
-            <span>Zur Website</span>
-        </a>
     </header>
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-primary mb-8">Terminverwaltung</h1>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="flex items-center gap-3 mb-8 reveal visible">
+            <span class="material-symbols-outlined text-primary" style="font-size:2rem">calendar_month</span>
+            <h1 class="text-3xl md:text-4xl font-headline font-bold tracking-tight text-on-surface">Terminverwaltung</h1>
+        </div>
 
         <!-- Statistik-Dashboard -->
-        <div id="stats-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-5 rounded shadow-sm">
-                <div class="text-sm text-gray-500 mb-1">Termine (30 Tage)</div>
-                <div id="stat-appointments" class="text-3xl font-bold text-primary">–</div>
+        <div id="stats-dashboard" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 reveal visible">
+            <div class="glass-panel p-5 rounded card-hover">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant mb-2">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1.125rem">event</span>
+                    Termine (30 Tage)
+                </div>
+                <div id="stat-appointments" class="text-3xl font-headline font-bold text-primary">–</div>
             </div>
-            <div class="bg-white p-5 rounded shadow-sm">
-                <div class="text-sm text-gray-500 mb-1">Besuche heute</div>
-                <div id="stat-today" class="text-3xl font-bold text-primary">–</div>
+            <div class="glass-panel p-5 rounded card-hover">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant mb-2">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1.125rem">today</span>
+                    Besuche heute
+                </div>
+                <div id="stat-today" class="text-3xl font-headline font-bold text-primary">–</div>
             </div>
-            <div class="bg-white p-5 rounded shadow-sm">
-                <div class="text-sm text-gray-500 mb-1">Besuche (30 Tage)</div>
-                <div id="stat-visits" class="text-3xl font-bold text-primary">–</div>
+            <div class="glass-panel p-5 rounded card-hover">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant mb-2">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1.125rem">trending_up</span>
+                    Besuche (30 Tage)
+                </div>
+                <div id="stat-visits" class="text-3xl font-headline font-bold text-primary">–</div>
             </div>
-            <div class="bg-white p-5 rounded shadow-sm">
-                <div class="text-sm text-gray-500 mb-1">Besuche gesamt</div>
-                <div id="stat-total" class="text-3xl font-bold text-primary">–</div>
+            <div class="glass-panel p-5 rounded card-hover">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant mb-2">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1.125rem">analytics</span>
+                    Besuche gesamt
+                </div>
+                <div id="stat-total" class="text-3xl font-headline font-bold text-primary">–</div>
             </div>
         </div>
 
         <!-- Kalender- und Zeitverwaltung -->
-        <div class="bg-white p-6 rounded shadow-sm mb-8">
-            <h2 class="text-3xl font-bold text-primary mb-6">Datum und Uhrzeit blockieren</h2>
+        <div class="glass-panel p-6 md:p-8 rounded mb-8 reveal visible">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="material-symbols-outlined text-primary" style="font-size:1.5rem">calendar_month</span>
+                <h2 class="text-2xl font-headline font-bold text-on-surface">Datum und Uhrzeit blockieren</h2>
+            </div>
 
-            <div class="flex flex-wrap items-center gap-6 mb-8 w-full justify-between">
-                <div class="flex items-center">
-                    <div class="w-4 h-4 rounded-full bg-green-100 border border-green-300 mr-2"></div>
-                    <span class="text-sm text-gray-600">Verfügbar</span>
+            <!-- Legend -->
+            <div class="flex flex-wrap items-center gap-5 mb-8 p-4 bg-surface-container-low rounded border border-outline-variant/50">
+                <span class="text-xs font-headline font-semibold text-on-surface-variant uppercase tracking-wider mr-1">Legende</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(13,105,171,0.10)] border border-[rgba(13,105,171,0.20)]"></span>
+                    <span class="text-sm text-on-surface-variant">Verfügbar</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 rounded-full bg-red-100 border border-red-300 mr-2"></div>
-                    <span class="text-sm text-gray-600">Gebucht (Termin vergeben)</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(254,186,66,0.10)] border border-[rgba(254,186,66,0.30)]"></span>
+                    <span class="text-sm text-on-surface-variant">Teilweise belegt</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 rounded-full bg-primary/10 border border-primary/30 mr-2"></div>
-                    <span class="text-sm text-gray-600">Vom Admin blockiert</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(186,26,26,0.05)] border border-[rgba(186,26,26,0.10)]"></span>
+                    <span class="text-sm text-on-surface-variant">Gebucht</span>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 rounded-full bg-primary mr-2"></div>
-                    <span class="text-sm text-gray-600">Ausgewählt</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(0,80,134,0.08)] border border-[rgba(0,80,134,0.20)]"></span>
+                    <span class="text-sm text-on-surface-variant">Vom Admin blockiert</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-sm bg-[#005086] shadow-[0_0_4px_rgba(13,105,171,0.4)]"></span>
+                    <span class="text-sm text-on-surface-variant">Ausgewählt</span>
                 </div>
             </div>
 
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Datum auswählen</h3>
-            <div class="mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <button id="prev-month" type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Vorheriger Monat">
-                        <i class="ri-arrow-left-s-line ri-lg"></i>
-                    </button>
-                    <h4 id="current-month-year" class="text-lg font-medium"></h4>
-                    <button id="next-month" type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Nächster Monat">
-                        <i class="ri-arrow-right-s-line ri-lg"></i>
-                    </button>
+            <!-- Calendar -->
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                    <h3 class="text-lg font-headline font-semibold text-on-surface mb-4">Datum auswählen</h3>
+                    <div class="mb-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <button id="prev-month" type="button" class="p-2 hover:bg-surface-container rounded transition-colors" title="Vorheriger Monat">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <h4 id="current-month-year" class="text-base font-headline font-semibold text-on-surface"></h4>
+                            <button id="next-month" type="button" class="p-2 hover:bg-surface-container rounded transition-colors" title="Nächster Monat">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                            <div class="text-xs font-mono text-on-surface-variant">Mo</div>
+                            <div class="text-xs font-mono text-on-surface-variant">Di</div>
+                            <div class="text-xs font-mono text-on-surface-variant">Mi</div>
+                            <div class="text-xs font-mono text-on-surface-variant">Do</div>
+                            <div class="text-xs font-mono text-on-surface-variant">Fr</div>
+                            <div class="text-xs font-mono text-outline">Sa</div>
+                            <div class="text-xs font-mono text-outline">So</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-7 gap-1 text-center mb-2">
-                    <div class="text-sm text-gray-500">Mo</div>
-                    <div class="text-sm text-gray-500">Di</div>
-                    <div class="text-sm text-gray-500">Mi</div>
-                    <div class="text-sm text-gray-500">Do</div>
-                    <div class="text-sm text-gray-500">Fr</div>
-                    <div class="text-sm text-gray-400">Sa</div>
-                    <div class="text-sm text-gray-400">So</div>
-                </div>
-                <div id="calendar-grid" class="grid grid-cols-7 gap-1">
-                    <!-- Kalendertage werden hier generiert -->
+
+                <!-- Time Slots -->
+                <div class="mt-8 md:mt-0">
+                    <h3 class="text-lg font-headline font-semibold text-on-surface mb-4">Uhrzeit auswählen</h3>
+                    <div id="time-slots-container" class="grid grid-cols-4 sm:grid-cols-7 gap-2"></div>
+                    <p id="time-slot-hint" class="text-xs text-on-surface-variant mt-3 hidden">
+                        <span class="material-symbols-outlined text-xs align-text-bottom">info</span>
+                        Wähle ein Datum, um Verfügbarkeit zu sehen
+                    </p>
                 </div>
             </div>
 
-            <div>
-                <h4 class="text-lg font-medium text-gray-700 mb-4">Uhrzeit auswählen</h4>
-                <div id="time-slots-container" class="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                    <!-- Zeit-Slots werden hier generiert -->
-                </div>
-            </div>
-
-            <!-- Aktionen: drei logische Gruppen -->
-            <div class="mt-8 space-y-4">
-
-                <!-- Gruppe 1: Einzelner Slot -->
-                <section class="p-4 bg-gray-50 rounded-lg">
-                    <h4 class="text-base font-semibold text-gray-800 mb-2">Einzelnen Slot</h4>
-                    <p class="text-sm text-gray-600 mb-3">Zuerst Datum und Slot wählen, dann sperren oder freigeben.</p>
-                    <button id="block-unblock-button" type="button" class="bg-primary text-white py-2 px-5 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            <!-- Actions -->
+            <div class="mt-8 space-y-4 border-t border-outline-variant/50 pt-6">
+                <!-- Single slot -->
+                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">schedule</span>
+                        <h4 class="text-base font-headline font-semibold text-on-surface">Einzelner Slot</h4>
+                    </div>
+                    <p class="text-sm text-on-surface-variant mb-3">Zuerst Datum und Slot wählen, dann sperren oder freigeben.</p>
+                    <button id="block-unblock-button" type="button" class="btn-primary py-2 px-5" disabled>
                         Bitte Slot auswählen
                     </button>
-                </section>
+                </div>
 
-                <!-- Gruppe 2: Zeitbereich -->
-                <section class="p-4 bg-gray-50 rounded-lg">
-                    <h4 class="text-base font-semibold text-gray-800 mb-2">Zeitbereich</h4>
-                    <p class="text-sm text-gray-600 mb-3">Mehrere Slots auf einmal sperren oder freigeben.</p>
+                <!-- Range -->
+                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">swap_horiz</span>
+                        <h4 class="text-base font-headline font-semibold text-on-surface">Zeitbereich</h4>
+                    </div>
+                    <p class="text-sm text-on-surface-variant mb-3">Mehrere Slots auf einmal sperren oder freigeben.</p>
                     <div class="flex flex-wrap gap-3 items-end">
                         <div>
-                            <label for="range-start-time" class="block text-sm font-medium text-gray-600 mb-1">Von</label>
-                            <select id="range-start-time" class="px-3 py-2" aria-label="Startzeit wählen">
+                            <label for="range-start-time" class="block text-xs font-mono text-on-surface-variant mb-1 uppercase tracking-wider">Von</label>
+                            <select id="range-start-time" class="px-3 py-2 text-sm" aria-label="Startzeit wählen">
                                 <option value="">Startzeit</option>
                             </select>
                         </div>
                         <div>
-                            <label for="range-end-time" class="block text-sm font-medium text-gray-600 mb-1">Bis</label>
-                            <select id="range-end-time" class="px-3 py-2" aria-label="Endzeit wählen">
+                            <label for="range-end-time" class="block text-xs font-mono text-on-surface-variant mb-1 uppercase tracking-wider">Bis</label>
+                            <select id="range-end-time" class="px-3 py-2 text-sm" aria-label="Endzeit wählen">
                                 <option value="">Endzeit</option>
                             </select>
                         </div>
-                        <button type="button" id="block-range-button" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 transition-colors" disabled>
-                            Bereich sperren
-                        </button>
-                        <button type="button" id="unblock-range-button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors" disabled>
-                            Bereich freigeben
-                        </button>
+                        <button type="button" id="block-range-button" class="btn-amber px-4 py-2" disabled>Bereich sperren</button>
+                        <button type="button" id="unblock-range-button" class="btn-primary px-4 py-2" disabled>Bereich freigeben</button>
                     </div>
-                </section>
+                </div>
 
-                <!-- Gruppe 3: Gesamtes Datum -->
-                <section class="p-4 bg-gray-50 rounded-lg">
-                    <h4 class="text-base font-semibold text-gray-800 mb-2">Gesamtes Datum</h4>
-                    <p class="text-sm text-gray-600 mb-3">Alle Slots des gewählten Datums auf einmal sperren oder freigeben.</p>
-                    <button type="button" id="block-date-button" class="bg-red-600 text-white py-2 px-5 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-colors">
-                        Datum sperren
-                    </button>
-                    <button type="button" id="unblock-date-button" class="ml-2 bg-gray-500 text-white py-2 px-5 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
-                        Datum freigeben
-                    </button>
-                </section>
+                <!-- Entire date -->
+                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">event_busy</span>
+                        <h4 class="text-base font-headline font-semibold text-on-surface">Gesamtes Datum</h4>
+                    </div>
+                    <p class="text-sm text-on-surface-variant mb-3">Alle Slots des gewählten Datums auf einmal sperren oder freigeben.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" id="block-date-button" class="btn-danger py-2 px-5">Datum sperren</button>
+                        <button type="button" id="unblock-date-button" class="btn-secondary py-2 px-5">Datum freigeben</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Kundenbuchungen-Tabelle -->
-        <div class="bg-white p-6 rounded shadow-sm mb-8">
-            <h2 class="text-3xl font-bold text-primary mb-6">Kundenbuchungen</h2>
+        <!-- Customer bookings table -->
+        <div class="glass-panel p-6 md:p-8 rounded mb-8 reveal visible">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="material-symbols-outlined text-primary" style="font-size:1.5rem">list_alt</span>
+                <h2 class="text-2xl font-headline font-bold text-on-surface">Kundenbuchungen</h2>
+            </div>
+
             <div class="flex flex-wrap gap-4 items-center mb-4">
-                <div class="relative">
-                    <input id="search-input" type="text" placeholder="Suche nach Name, E-Mail, Leistung…" class="border px-3 py-2 pr-9 rounded w-64" aria-label="Buchungen durchsuchen">
-                    <button type="button" id="search-clear" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 hidden" title="Suche zurücksetzen" aria-label="Suche zurücksetzen">
-                        <i class="ri-close-circle-fill"></i>
+                <div class="relative flex-1 min-w-[200px] max-w-sm">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" style="font-size:1.125rem">search</span>
+                    <input id="search-input" type="text" placeholder="Suche nach Name, E-Mail, Leistung…" class="w-full border border-outline-variant rounded py-2 pl-9 pr-9 text-sm focus:border-primary focus:ring-1 focus:ring-primary/25 transition-colors" aria-label="Buchungen durchsuchen">
+                    <button type="button" id="search-clear" class="absolute right-2 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface hidden" title="Suche zurücksetzen" aria-label="Suche zurücksetzen">
+                        <span class="material-symbols-outlined" style="font-size:1.125rem">cancel</span>
                     </button>
                 </div>
-                <button id="export-csv" type="button" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90">Export nach Excel (CSV)</button>
-                <span id="result-count" class="text-sm text-gray-500 ml-auto"></span>
+                <button id="export-csv" type="button" class="btn-primary px-4 py-2 text-sm flex items-center gap-1.5">
+                    <span class="material-symbols-outlined" style="font-size:1.125rem">download</span>
+                    Export CSV
+                </button>
+                <span id="result-count" class="text-sm text-on-surface-variant ml-auto"></span>
             </div>
+
             <div class="overflow-x-auto">
-                <table id="appointments-table" class="min-w-full bg-white border rounded">
+                <table id="appointments-table" class="min-w-full">
                     <thead>
-                        <tr class="bg-gray-100">
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="date" aria-sort="none">Datum <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="time" aria-sort="none">Uhrzeit <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="name" aria-sort="none">Name <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="email" aria-sort="none">E-Mail <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="phone" aria-sort="none">Telefon <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="service" aria-sort="none">Leistung <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3 cursor-pointer select-none hover:bg-gray-200" data-sort="status" aria-sort="none">Status <i class="ri-arrow-up-down-line ri-sm text-gray-400"></i></th>
-                            <th class="py-2 px-3">Aktionen</th>
+                        <tr>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="date" aria-sort="none">Datum <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="time" aria-sort="none">Uhrzeit <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="name" aria-sort="none">Name <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="email" aria-sort="none">E-Mail <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="phone" aria-sort="none">Telefon <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="service" aria-sort="none">Leistung <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3 cursor-pointer select-none hover:bg-surface-container-high transition-colors" data-sort="status" aria-sort="none">Status <span class="material-symbols-outlined text-sm text-outline align-middle" style="font-size:1rem">swap_vert</span></th>
+                            <th class="py-3 px-3">Aktionen</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Einträge via JS -->
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-outline-variant bg-surface-container-low mt-8">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <img src="static/images/kw.avif" alt="Logo" class="h-6 logo-glow-admin">
+                <span class="font-headline font-bold text-sm text-primary">Kreuztaler Werkstatt GmbH</span>
+            </div>
+            <p class="text-xs text-on-surface-variant">Hagener Str. 40, 57223 Kreuztal · <a href="mailto:info@kreuztaler-werkstatt.de" class="text-primary hover:underline">info@kreuztaler-werkstatt.de</a></p>
+            <p class="text-xs text-on-surface-variant mt-1">&copy; <span id="footer-year"></span> Kreuztaler Werkstatt GmbH</p>
+        </div>
+    </footer>
+
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script>
-        // JS für admin.html
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
         if (!container) { alert(message); return; }
-        const icon = type === 'success' ? 'ri-check-line' : type === 'error' ? 'ri-error-warning-line' : 'ri-information-line';
+        const icon = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
         const t = document.createElement('div');
         t.className = `toast ${type}`;
         t.setAttribute('role', 'status');
-        t.innerHTML = `<i class="${icon}"></i><span></span>`;
+        t.innerHTML = `<span class="material-symbols-outlined">${icon}</span><span></span>`;
         t.querySelector('span').textContent = message;
         container.appendChild(t);
         setTimeout(() => {
@@ -448,748 +369,600 @@
     let sortField = '';
     let sortAsc = true;
 
-        const calendarGrid = document.getElementById('calendar-grid');
-        const currentMonthYear = document.getElementById('current-month-year');
-        const timeSlotsContainer = document.getElementById('time-slots-container');
-        const blockUnblockButton = document.getElementById('block-unblock-button');
-        const prevMonthButton = document.getElementById('prev-month');
-        const nextMonthButton = document.getElementById('next-month');
+    const calendarGrid = document.getElementById('calendar-grid');
+    const currentMonthYear = document.getElementById('current-month-year');
+    const timeSlotsContainer = document.getElementById('time-slots-container');
+    const blockUnblockButton = document.getElementById('block-unblock-button');
+    const prevMonthButton = document.getElementById('prev-month');
+    const nextMonthButton = document.getElementById('next-month');
 
-        const TIME_SLOTS = [
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
-            "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
-        ];
+    const TIME_SLOTS = [
+        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+        "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
+    ];
 
-        async function fetchStats() {
-            try {
-                const r = await fetch('/api/analytics?period=30');
-                if (!r.ok) return;
-                const d = await r.json();
-                document.getElementById('stat-appointments').textContent = d.appointments ?? 0;
-                document.getElementById('stat-today').textContent = d.visits_today ?? 0;
-                document.getElementById('stat-visits').textContent = d.visits ?? 0;
-                document.getElementById('stat-total').textContent = d.visits_total ?? 0;
-            } catch (e) { console.error('Stats:', e); }
-        }
+    async function fetchStats() {
+        try {
+            const r = await fetch('/api/analytics?period=30');
+            if (!r.ok) return;
+            const d = await r.json();
+            document.getElementById('stat-appointments').textContent = d.appointments ?? 0;
+            document.getElementById('stat-today').textContent = d.visits_today ?? 0;
+            document.getElementById('stat-visits').textContent = d.visits ?? 0;
+            document.getElementById('stat-total').textContent = d.visits_total ?? 0;
+        } catch (e) { console.error('Stats:', e); }
+    }
 
-        async function fetchAppointmentsData() {
-            try {
-                setLoadingState(true);
-                const response = await fetch('/api/admin/appointments');
-                if (!response.ok) throw new Error('Fehler beim Laden der Termindaten');
-                const data = await response.json();
-                if (!data.appointments || !Array.isArray(data.appointments)) {
-                    console.error('Datensatz ungueltig:', data);
-                    showToast('Datensatz ungueltig.', 'error');
-                    return;
-                }
-                appointmentsData = data;
-                filteredAppointments = appointmentsData.appointments.slice();
-                renderAppointmentsTable();
-                renderCalendar();
-                renderTimeSlots();
-            } catch (error) {
-                console.error('Ladefehler:', error);
-                showToast('Termindaten konnten nicht geladen werden.', 'error');
-            }
-        }
-
-        function escapeHtml(s) {
-            return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({
-                '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-            }[ch]));
-        }
-
-        function renderAppointmentsTable() {
-            const tableBody = document.querySelector('#appointments-table tbody');
-            tableBody.innerHTML = '';
-
-            if (filteredAppointments.length === 0) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td colspan="8" class="py-12 px-3 text-center text-gray-500">
-                    <i class="ri-inbox-line ri-2x block mb-2 text-gray-400"></i>
-                    Keine Buchungen vorhanden.
-                </td>`;
-                tr.classList.add('border-b');
-                tableBody.appendChild(tr);
-                updateResultCount();
+    async function fetchAppointmentsData() {
+        try {
+            setLoadingState(true);
+            const response = await fetch('/api/admin/appointments');
+            if (!response.ok) throw new Error('Fehler beim Laden der Termindaten');
+            const data = await response.json();
+            if (!data.appointments || !Array.isArray(data.appointments)) {
+                console.error('Datensatz ungueltig:', data);
+                showToast('Datensatz ungueltig.', 'error');
                 return;
             }
+            appointmentsData = data;
+            filteredAppointments = appointmentsData.appointments.slice();
+            renderAppointmentsTable();
+            renderCalendar();
+            renderTimeSlots();
+            updateTimeSlotHint();
+        } catch (error) {
+            console.error('Ladefehler:', error);
+            showToast('Termindaten konnten nicht geladen werden.', 'error');
+        }
+    }
 
-            filteredAppointments.forEach(appt => {
-                const tr = document.createElement('tr');
-                tr.className = 'border-b hover:bg-gray-50';
-                const safeDate = escapeHtml(appt.date);
-                const safeTime = escapeHtml(appt.time);
-                const safeName = escapeHtml(appt.client.name);
-                const safeEmail = escapeHtml(appt.client.email);
-                const safePhone = escapeHtml(appt.client.phone);
-                const safeService = escapeHtml(appt.service_label || appt.service);
-                const safeId = escapeHtml(appt.id);
-                tr.innerHTML = `
-                    <td class="py-2 px-3" data-label="Datum">${safeDate}</td>
-                    <td class="py-2 px-3" data-label="Uhrzeit">${safeTime}</td>
-                    <td class="py-2 px-3" data-label="Name">${safeName}</td>
-                    <td class="py-2 px-3" data-label="E-Mail"><a href="mailto:${safeEmail}" class="text-primary hover:underline">${safeEmail}</a></td>
-                    <td class="py-2 px-3" data-label="Telefon"><a href="tel:${safePhone.replace(/\s/g,'')}" class="text-primary hover:underline">${safePhone}</a></td>
-                    <td class="py-2 px-3" data-label="Leistung">${safeService}</td>
-                    <td class="py-2 px-3" data-label="Status">
-                        <select class="status-select border rounded px-2 py-1" data-id="${safeId}" aria-label="Status für ${safeName}">
+    function updateTimeSlotHint() {
+        const hint = document.getElementById('time-slot-hint');
+        if (hint) {
+            hint.classList.toggle('hidden', selectedDate !== null);
+        }
+    }
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({
+            '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        }[ch]));
+    }
+
+    function renderAppointmentsTable() {
+        const tableBody = document.querySelector('#appointments-table tbody');
+        tableBody.innerHTML = '';
+
+        if (filteredAppointments.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td colspan="8" class="py-16 px-3 text-center text-on-surface-variant">
+                <span class="material-symbols-outlined block mb-2 text-outline" style="font-size:2.5rem">inbox</span>
+                <span class="text-sm">Keine Buchungen vorhanden.</span>
+            </td>`;
+            tableBody.appendChild(tr);
+            updateResultCount();
+            return;
+        }
+
+        filteredAppointments.forEach(appt => {
+            const tr = document.createElement('tr');
+            tr.className = 'transition-colors';
+            const safeDate = escapeHtml(appt.date);
+            const safeTime = escapeHtml(appt.time);
+            const safeName = escapeHtml(appt.client.name);
+            const safeEmail = escapeHtml(appt.client.email);
+            const safePhone = escapeHtml(appt.client.phone);
+            const safeService = escapeHtml(appt.service_label || appt.service);
+            const safeId = escapeHtml(appt.id);
+            const statusMap = { 'ожидает': 'Ausstehend', 'выполнено': 'Erledigt', 'отменено': 'Storniert' };
+            const statusClasses = { 'ожидает': 'bg-amber/10 text-amber-dark', 'выполнено': 'bg-primary-container/10 text-primary', 'отменено': 'bg-error/10 text-error' };
+            const germanStatus = statusMap[appt.status] || appt.status;
+            const statusClass = statusClasses[appt.status] || 'bg-surface-container text-on-surface-variant';
+            tr.innerHTML = `
+                <td class="py-3 px-3 font-mono text-sm" data-label="Datum">${safeDate}</td>
+                <td class="py-3 px-3 font-mono text-sm" data-label="Uhrzeit">${safeTime}</td>
+                <td class="py-3 px-3 font-medium text-sm" data-label="Name">${safeName}</td>
+                <td class="py-3 px-3 text-sm" data-label="E-Mail"><a href="mailto:${safeEmail}" class="text-primary-container hover:underline">${safeEmail}</a></td>
+                <td class="py-3 px-3 font-mono text-sm" data-label="Telefon"><a href="tel:${safePhone.replace(/\s/g,'')}" class="text-primary-container hover:underline">${safePhone}</a></td>
+                <td class="py-3 px-3 text-sm" data-label="Leistung">${safeService}</td>
+                <td class="py-3 px-3" data-label="Status">
+                    <span class="badge ${statusClass}">${germanStatus}</span>
+                </td>
+                <td class="py-3 px-3" data-label="Aktionen">
+                    <div class="flex items-center gap-2">
+                        <select class="status-select text-xs border border-outline-variant rounded py-1 px-2 focus:border-primary focus:ring-1 focus:ring-primary/25" data-id="${safeId}" aria-label="Status für ${safeName}">
                             <option value="ожидает" ${appt.status === 'ожидает' ? 'selected' : ''}>Ausstehend</option>
                             <option value="выполнено" ${appt.status === 'выполнено' ? 'selected' : ''}>Erledigt</option>
                             <option value="отменено" ${appt.status === 'отменено' ? 'selected' : ''}>Storniert</option>
                         </select>
-                    </td>
-                    <td class="py-2 px-3" data-label="Aktionen">
-                        <button type="button" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors delete-btn" data-id="${safeId}" data-name="${safeName}" data-date="${safeDate}" data-time="${safeTime}" aria-label="Termin von ${safeName} am ${safeDate} löschen">Löschen</button>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
+                        <button type="button" class="text-white px-2 py-1 rounded text-xs btn-danger delete-btn" data-id="${safeId}" data-name="${safeName}" data-date="${safeDate}" data-time="${safeTime}" aria-label="Termin von ${safeName} am ${safeDate} löschen">
+                            <span class="material-symbols-outlined" style="font-size:0.875rem">delete</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+        updateResultCount();
+    }
+
+    function updateResultCount() {
+        const el = document.getElementById('result-count');
+        if (!el) return;
+        const total = appointmentsData.appointments.length;
+        const shown = filteredAppointments.length;
+        if (total === 0) { el.textContent = ''; return; }
+        el.textContent = shown === total ? `${total} Buchungen` : `${shown} von ${total}`;
+    }
+
+    function setLoadingState(isLoading) {
+        const tableBody = document.querySelector('#appointments-table tbody');
+        if (isLoading) {
+            tableBody.innerHTML = `<tr><td colspan="8" class="py-16 px-3 text-center text-on-surface-variant">
+                <span class="material-symbols-outlined block mb-2 text-outline animate-spin" style="font-size:2rem">progress_activity</span>
+                <span class="text-sm">Daten werden geladen…</span>
+            </td></tr>`;
+        }
+    }
+
+    const handleSuche = debounce(function(val) {
+        filteredAppointments = appointmentsData.appointments.filter(appt =>
+            appt.client.name.toLowerCase().includes(val) ||
+            appt.client.email.toLowerCase().includes(val) ||
+            appt.client.phone.toLowerCase().includes(val) ||
+            (appt.service_label || appt.service).toLowerCase().includes(val)
+        );
+        renderAppointmentsTable();
+    }, 200);
+
+    document.addEventListener('input', function(e) {
+        if (e.target.id === 'search-input') {
+            handleSuche(e.target.value.toLowerCase());
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('th') && e.target.closest('table').id === 'appointments-table') {
+            const field = e.target.closest('th').dataset.sort;
+            if (!field) return;
+            sortAsc = sortField === field ? !sortAsc : true;
+            sortField = field;
+            e.target.closest('table').querySelectorAll('th[data-sort]').forEach(th => {
+                if (th.dataset.sort === field) {
+                    th.setAttribute('aria-sort', sortAsc ? 'ascending' : 'descending');
+                } else {
+                    th.setAttribute('aria-sort', 'none');
+                }
             });
-            updateResultCount();
-        }
-
-        function updateResultCount() {
-            const el = document.getElementById('result-count');
-            if (!el) return;
-            const total = appointmentsData.appointments.length;
-            const shown = filteredAppointments.length;
-            if (total === 0) { el.textContent = ''; return; }
-            el.textContent = shown === total ? `${total} Buchungen` : `${shown} von ${total}`;
-        }
-
-        function setLoadingState(isLoading) {
-            const tableBody = document.querySelector('#appointments-table tbody');
-            if (isLoading) {
-                tableBody.innerHTML = `<tr><td colspan="8" class="py-12 px-3 text-center text-gray-500">
-                    <i class="ri-loader-4-line ri-2x block mb-2 text-gray-400 animate-spin"></i>
-                    Daten werden geladen…
-                </td></tr>`;
-            }
-        }
-
-        // Поиск по таблице
-        const handleSuche = debounce(function(val) {
-            filteredAppointments = appointmentsData.appointments.filter(appt =>
-                appt.client.name.toLowerCase().includes(val) ||
-                appt.client.email.toLowerCase().includes(val) ||
-                appt.client.phone.toLowerCase().includes(val) ||
-                (appt.service_label || appt.service).toLowerCase().includes(val)
-            );
+            filteredAppointments.sort((a, b) => {
+                let va = field === 'name' ? a.client.name : field === 'email' ? a.client.email : field === 'phone' ? a.client.phone : field === 'service' ? (a.service_label || a.service) : a[field];
+                let vb = field === 'name' ? b.client.name : field === 'email' ? b.client.email : field === 'phone' ? b.client.phone : field === 'service' ? (b.service_label || b.service) : b[field];
+                return sortAsc ? (va > vb ? 1 : va < vb ? -1 : 0) : (va < vb ? 1 : va > vb ? -1 : 0);
+            });
             renderAppointmentsTable();
-        }, 200);
-        document.addEventListener('input', function(e) {
-            if (e.target.id === 'search-input') {
-                handleSuche(e.target.value.toLowerCase());
-            }
-        });
-
-        // Сортировка
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('th') && e.target.closest('table').id === 'appointments-table') {
-                const field = e.target.closest('th').dataset.sort;
-                if (!field) return;
-                sortAsc = sortField === field ? !sortAsc : true;
-                sortField = field;
-                e.target.closest('table').querySelectorAll('th[data-sort]').forEach(th => {
-                    if (th.dataset.sort === field) {
-                        th.setAttribute('aria-sort', sortAsc ? 'ascending' : 'descending');
-                    } else {
-                        th.setAttribute('aria-sort', 'none');
-                    }
-                });
-                filteredAppointments.sort((a, b) => {
-                    let va = field === 'name' ? a.client.name : field === 'email' ? a.client.email : field === 'phone' ? a.client.phone : field === 'service' ? (a.service_label || a.service) : a[field];
-                    let vb = field === 'name' ? b.client.name : field === 'email' ? b.client.email : field === 'phone' ? b.client.phone : field === 'service' ? (b.service_label || b.service) : b[field];
-                    return sortAsc ? (va > vb ? 1 : va < vb ? -1 : 0) : (va < vb ? 1 : va > vb ? -1 : 0);
-                });
-                renderAppointmentsTable();
-            }
-        });
-
-        // Экспорт в CSV
-        document.addEventListener('click', function(e) {
-            if (e.target.id === 'export-csv') {
-                // Маппинг статусов на немецкий
-                const statusMap = {
-                    'ожидает': 'Ausstehend',
-                    'выполнено': 'Erledigt',
-                    'отменено': 'Storniert',
-                    'подтверждено': 'Bestätigt'
-                };
-                let csv = '\ufeffDatum;Uhrzeit;Name;E-Mail;Telefon;Leistung;Status\n'; // UTF-8 BOM для корректного отображения в Excel, semicolon для немецкой локали
-                filteredAppointments.forEach(appt => {
-                    const germanStatus = statusMap[appt.status] || appt.status;
-                    csv += `${appt.date};${appt.time};"${appt.client.name}";"${appt.client.email}";"'${appt.client.phone}";"${appt.service_label || appt.service}";"${germanStatus}"\n`;
-                });
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'appointments.csv';
-                link.click();
-            }
-        });
-
-        // Управление статусом заявки
-        document.addEventListener('change', async function(e) {
-            if (e.target.classList.contains('status-select')) {
-                const id = e.target.dataset.id;
-                const status = e.target.value;
-                try {
-                    const response = await fetch(`/api/appointments/${id}/status`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status })
-                    });
-                    if (!response.ok) throw new Error('Ошибка обновления статуса');
-                } catch (err) {
-                    showToast('Status konnte nicht aktualisiert werden.', 'error');
-                }
-            }
-        });
-
-        // Удаление заявки
-        document.addEventListener('click', async function(e) {
-            if (e.target.classList.contains('delete-btn')) {
-                const id = e.target.dataset.id;
-                const name = e.target.dataset.name || '';
-                const date = e.target.dataset.date || '';
-                const time = e.target.dataset.time || '';
-                if (!confirm(`Möchten Sie den Termin wirklich löschen?\n\nKunde: ${name}\nDatum: ${date} ${time}`)) return;
-                try {
-                    const response = await fetch(`/api/appointments/${id}`, {
-                        method: 'DELETE'
-                    });
-                    if (!response.ok) throw new Error('Ошибка удаления');
-                    appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
-                    filteredAppointments = filteredAppointments.filter(a => a.id !== id);
-                    renderAppointmentsTable();
-                } catch (err) {
-                    showToast('Anfrage konnte nicht gelöscht werden.', 'error');
-                }
-            }
-        });
-
-        function renderCalendar() {
-            calendarGrid.innerHTML = '';
-            const year = currentMonth.getFullYear();
-            const month = currentMonth.getMonth();
-
-            currentMonthYear.textContent = new Date(year, month).toLocaleString('de-DE', { month: 'long', year: 'numeric' });
-
-            const firstDayOfMonth = new Date(year, month, 1);
-            const lastDayOfMonth = new Date(year, month + 1, 0);
-            const daysInMonth = lastDayOfMonth.getDate();
-            const startDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // Понедельник = 0
-
-            // Leere Tage vor Monatsbeginn
-            for (let i = 0; i < startDayOfWeek; i++) {
-                const prevMonthDay = new Date(year, month, 0).getDate() - startDayOfWeek + i + 1;
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('calendar-day', 'text-gray-400');
-                dayElement.textContent = prevMonthDay;
-                calendarGrid.appendChild(dayElement);
-            }
-
-            // Tage des aktuellen Monats
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('calendar-day');
-                dayElement.textContent = day;
-                dayElement.dataset.date = dateString;
-                dayElement.setAttribute('role', 'button');
-                dayElement.setAttribute('tabindex', '0');
-                dayElement.setAttribute('aria-label', `${day}.${month + 1}.${year}`);
-                const today = new Date();
-                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
-                    dayElement.classList.add('calendar-day-today');
-                    dayElement.setAttribute('aria-current', 'date');
-                }
-                dayElement.addEventListener('keydown', (ev) => {
-                    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); dayElement.click(); }
-                });
-
-                // Prüfen auf gesperrte Slots oder Buchungen an diesem Tag
-                const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
-                const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
-                const totalSlots = TIME_SLOTS.length;
-                const blockedByAdminCount = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
-                const bookedByUserCount = bookedSlots.length;
-                const blockedByAdmin = blockedByAdminCount > 0;
-                const bookedByUser = bookedByUserCount > 0;
-
-                if (blockedByAdminCount === totalSlots) {
-                    dayElement.classList.add('blocked-admin');
-                } else if (bookedByUserCount === totalSlots) {
-                    dayElement.classList.add('booked');
-                } else if ((blockedByAdminCount + bookedByUserCount) > 0) {
-                    dayElement.classList.add('partially');
-                } else {
-                    dayElement.classList.add('available');
-                }
-
-                if (selectedDate === dateString) {
-                    dayElement.classList.add('selected');
-                }
-
-                dayElement.addEventListener('click', () => {
-                    selectedDate = dateString;
-                    selectedTime = null; // Ausgewählte Zeit bei Datumswechsel zurücksetzen
-                    renderCalendar();
-                    renderTimeSlots();
-                    updateBlockUnblockButton();
-                });
-                calendarGrid.appendChild(dayElement);
-            }
-
-            // Leere Tage nach Monatsende
-            const totalCells = startDayOfWeek + daysInMonth;
-            const remainingCells = (7 - (totalCells % 7)) % 7;
-            for (let i = 1; i <= remainingCells; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('calendar-day', 'text-gray-400');
-                dayElement.textContent = i;
-                calendarGrid.appendChild(dayElement);
-            }
         }
+    });
 
-        function renderTimeSlots() {
-            timeSlotsContainer.innerHTML = '';
-            blockUnblockButton.disabled = true;
-
-            if (!selectedDate) return;
-
-            // Alle Slots für das gewählte Datum abrufen
-            const slotsForDate = TIME_SLOTS.map(slot => {
-                const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot);
-                const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
-                return {
-                    time: slot,
-                    isBlockedByAdmin,
-                    isBookedByUser
-                };
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'export-csv') {
+            const statusMap = { 'ожидает': 'Ausstehend', 'выполнено': 'Erledigt', 'отменено': 'Storniert', 'подтверждено': 'Bestätigt' };
+            let csv = '\ufeffDatum;Uhrzeit;Name;E-Mail;Telefon;Leistung;Status\n';
+            filteredAppointments.forEach(appt => {
+                const germanStatus = statusMap[appt.status] || appt.status;
+                csv += `${appt.date};${appt.time};"${appt.client.name}";"${appt.client.email}";"'${appt.client.phone}";"${appt.service_label || appt.service}";"${germanStatus}"\n`;
             });
-
-            slotsForDate.forEach(({ time, isBlockedByAdmin, isBookedByUser }) => {
-                const timeSlotElement = document.createElement('div');
-                timeSlotElement.classList.add('time-slot');
-                timeSlotElement.textContent = time;
-                timeSlotElement.dataset.time = time;
-
-                if (isBlockedByAdmin) {
-                    timeSlotElement.classList.add('blocked-admin');
-                    timeSlotElement.title = 'Vom Admin gesperrt';
-                    timeSlotElement.setAttribute('aria-label', `${time} — vom Admin gesperrt`);
-                } else if (isBookedByUser) {
-                    timeSlotElement.classList.add('booked', 'disabled');
-                    timeSlotElement.title = 'Bereits gebucht';
-                    timeSlotElement.setAttribute('aria-label', `${time} — bereits gebucht`);
-                } else {
-                    timeSlotElement.classList.add('available');
-                    timeSlotElement.title = 'Verfügbar';
-                    timeSlotElement.setAttribute('aria-label', `${time} — verfügbar`);
-                }
-
-                if (selectedTime === time) {
-                    timeSlotElement.classList.add('selected');
-                }
-
-                // Nur verfügbare und admin-gesperrte Slots wählbar
-                timeSlotElement.addEventListener('click', () => {
-                    if (isBookedByUser) return;
-                    selectedTime = time;
-                    renderTimeSlots();
-                    updateBlockUnblockButton();
-                });
-                timeSlotsContainer.appendChild(timeSlotElement);
-            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'appointments.csv';
+            link.click();
         }
+    });
 
-        function updateBlockUnblockButton() {
-            if (selectedDate && selectedTime) {
-                const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
-                blockUnblockButton.textContent = isCurrentlyBlocked ? 'Freigeben' : 'Blockieren';
-                blockUnblockButton.disabled = false;
-            } else {
-                blockUnblockButton.textContent = 'Blockieren/Freigeben';
-                blockUnblockButton.disabled = true;
-            }
-        }
-
-        // Globale Funktion für Slot-Sperren/Freigeben
-        async function handleBlockUnblock() {
-            if (!selectedDate || !selectedTime) return;
-
-            const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
-            const action = isCurrentlyBlocked ? 'unblock' : 'block';
-
+    document.addEventListener('change', async function(e) {
+        if (e.target.classList.contains('status-select')) {
+            const id = e.target.dataset.id;
+            const status = e.target.value;
             try {
-                const response = await fetch('/api/admin/blocked_slots', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ date: selectedDate, time: selectedTime, action: action })
+                const response = await fetch(`/api/appointments/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
                 });
+                if (!response.ok) throw new Error('Fehler beim Aktualisieren');
+                showToast('Status aktualisiert.', 'success');
+            } catch (err) {
+                showToast('Status konnte nicht aktualisiert werden.', 'error');
+            }
+        }
+    });
 
-                if (!response.ok) throw new Error('Ошибка при обновлении статуса блокировки');
-                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
-                const selectedTimeBeforeReset = selectedTime;
+    document.addEventListener('click', async function(e) {
+        if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+            const btn = e.target.classList.contains('delete-btn') ? e.target : e.target.closest('.delete-btn');
+            const id = btn.dataset.id;
+            const name = btn.dataset.name || '';
+            const date = btn.dataset.date || '';
+            const time = btn.dataset.time || '';
+            if (!confirm(`Möchten Sie den Termin wirklich löschen?\n\nKunde: ${name}\nDatum: ${date} ${time}`)) return;
+            try {
+                const response = await fetch(`/api/appointments/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error('Fehler beim Löschen');
+                appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
+                filteredAppointments = filteredAppointments.filter(a => a.id !== id);
+                renderAppointmentsTable();
+                showToast('Termin gelöscht.', 'success');
+            } catch (err) {
+                showToast('Termin konnte nicht gelöscht werden.', 'error');
+            }
+        }
+    });
+
+    function renderCalendar() {
+        calendarGrid.innerHTML = '';
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+
+        currentMonthYear.textContent = new Date(year, month).toLocaleString('de-DE', { month: 'long', year: 'numeric' });
+
+        const firstDayOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month + 1, 0);
+        const daysInMonth = lastDayOfMonth.getDate();
+        const startDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
+
+        for (let i = 0; i < startDayOfWeek; i++) {
+            const prevMonthDay = new Date(year, month, 0).getDate() - startDayOfWeek + i + 1;
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('calendar-day', 'outside');
+            dayElement.textContent = prevMonthDay;
+            calendarGrid.appendChild(dayElement);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('calendar-day');
+            dayElement.textContent = day;
+            dayElement.dataset.date = dateString;
+            dayElement.setAttribute('role', 'button');
+            dayElement.setAttribute('tabindex', '0');
+            dayElement.setAttribute('aria-label', `${day}.${month + 1}.${year}`);
+            const today = new Date();
+            if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                dayElement.classList.add('today');
+                dayElement.setAttribute('aria-current', 'date');
+            }
+            dayElement.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); dayElement.click(); }
+            });
+
+            const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
+            const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
+            const totalSlots = TIME_SLOTS.length;
+            const blockedByAdminCount = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
+            const bookedByUserCount = bookedSlots.length;
+
+            if (blockedByAdminCount === totalSlots) {
+                dayElement.classList.add('blocked-admin');
+            } else if (bookedByUserCount === totalSlots) {
+                dayElement.classList.add('booked');
+            } else if ((blockedByAdminCount + bookedByUserCount) > 0) {
+                dayElement.classList.add('partially');
+            } else {
+                dayElement.classList.add('available');
+            }
+
+            if (selectedDate === dateString) {
+                dayElement.classList.add('selected');
+            }
+
+            dayElement.addEventListener('click', () => {
+                selectedDate = dateString;
+                selectedTime = null;
                 renderCalendar();
                 renderTimeSlots();
-                showToast(`Slot ${selectedDate} ${selectedTimeBeforeReset || ''} wurde ${action === 'block' ? 'gesperrt' : 'freigegeben'}.`, 'success');
-            } catch (error) {
-                console.error('Ошибка при блокировке/разблокировке слота:', error);
-                showToast('Slot-Status konnte nicht aktualisiert werden.', 'error');
+                updateTimeSlotHint();
+                updateBlockUnblockButton();
+            });
+            calendarGrid.appendChild(dayElement);
+        }
+
+        const totalCells = startDayOfWeek + daysInMonth;
+        const remainingCells = (7 - (totalCells % 7)) % 7;
+        for (let i = 1; i <= remainingCells; i++) {
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('calendar-day', 'outside');
+            dayElement.textContent = i;
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    function renderTimeSlots() {
+        timeSlotsContainer.innerHTML = '';
+        blockUnblockButton.disabled = true;
+
+        if (!selectedDate) {
+            timeSlotsContainer.innerHTML = '<div class="col-span-full text-center py-8 text-on-surface-variant text-sm">Wähle ein Datum, um die Verfügbarkeit zu sehen.</div>';
+            return;
+        }
+
+        const slotsForDate = TIME_SLOTS.map(slot => {
+            const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot);
+            const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
+            return { time: slot, isBlockedByAdmin, isBookedByUser };
+        });
+
+        slotsForDate.forEach(({ time, isBlockedByAdmin, isBookedByUser }) => {
+            const timeSlotElement = document.createElement('div');
+            timeSlotElement.classList.add('time-slot');
+            timeSlotElement.textContent = time;
+            timeSlotElement.dataset.time = time;
+
+            if (isBlockedByAdmin) {
+                timeSlotElement.classList.add('blocked-admin');
+                timeSlotElement.title = 'Vom Admin gesperrt';
+                timeSlotElement.setAttribute('aria-label', `${time} — vom Admin gesperrt`);
+            } else if (isBookedByUser) {
+                timeSlotElement.classList.add('booked', 'disabled');
+                timeSlotElement.title = 'Bereits gebucht';
+                timeSlotElement.setAttribute('aria-label', `${time} — bereits gebucht`);
+            } else {
+                timeSlotElement.classList.add('available');
+                timeSlotElement.title = 'Verfügbar';
+                timeSlotElement.setAttribute('aria-label', `${time} — verfügbar`);
             }
-        }
 
-        prevMonthButton.addEventListener('click', () => {
-            currentMonth.setMonth(currentMonth.getMonth() - 1);
-            selectedDate = null; // Ausgewähltes Datum bei Monatswechsel zurücksetzen
-            selectedTime = null;
+            if (selectedTime === time) {
+                timeSlotElement.classList.add('selected');
+            }
+
+            timeSlotElement.addEventListener('click', () => {
+                if (isBookedByUser) return;
+                selectedTime = time;
+                renderTimeSlots();
+                updateBlockUnblockButton();
+            });
+            timeSlotsContainer.appendChild(timeSlotElement);
+        });
+    }
+
+    function updateBlockUnblockButton() {
+        if (selectedDate && selectedTime) {
+            const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
+            blockUnblockButton.textContent = isCurrentlyBlocked ? 'Freigeben' : 'Blockieren';
+            blockUnblockButton.disabled = false;
+        } else {
+            blockUnblockButton.textContent = 'Blockieren/Freigeben';
+            blockUnblockButton.disabled = true;
+        }
+    }
+
+    async function handleBlockUnblock() {
+        if (!selectedDate || !selectedTime) return;
+        const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
+        const action = isCurrentlyBlocked ? 'unblock' : 'block';
+        try {
+            const response = await fetch('/api/admin/blocked_slots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: selectedDate, time: selectedTime, action })
+            });
+            if (!response.ok) throw new Error('Fehler beim Aktualisieren');
+            await fetchAppointmentsData();
+            const selectedTimeBeforeReset = selectedTime;
             renderCalendar();
             renderTimeSlots();
-            updateBlockUnblockButton();
-        });
-
-        nextMonthButton.addEventListener('click', () => {
-            currentMonth.setMonth(currentMonth.getMonth() + 1);
-            selectedDate = null; // Ausgewähltes Datum bei Monatswechsel zurücksetzen
-            selectedTime = null;
-            renderCalendar();
-            renderTimeSlots();
-            updateBlockUnblockButton();
-        });
-
-        blockUnblockButton.addEventListener('click', handleBlockUnblock);
-
-        // Index eines Zeit-Slots in TIME_SLOTS abrufen
-        function getTimeIndex(time) {
-            return TIME_SLOTS.indexOf(time);
+            showToast(`Slot ${selectedDate} ${selectedTimeBeforeReset || ''} wurde ${action === 'block' ? 'gesperrt' : 'freigegeben'}.`, 'success');
+        } catch (error) {
+            console.error('Fehler:', error);
+            showToast('Slot-Status konnte nicht aktualisiert werden.', 'error');
         }
+    }
 
-        // Slots in einem Bereich abrufen
-        function getSlotsInRange(startTime, endTime) {
+    prevMonthButton.addEventListener('click', () => {
+        currentMonth.setMonth(currentMonth.getMonth() - 1);
+        selectedDate = null;
+        selectedTime = null;
+        renderCalendar();
+        renderTimeSlots();
+        updateTimeSlotHint();
+        updateBlockUnblockButton();
+    });
+
+    nextMonthButton.addEventListener('click', () => {
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        selectedDate = null;
+        selectedTime = null;
+        renderCalendar();
+        renderTimeSlots();
+        updateTimeSlotHint();
+        updateBlockUnblockButton();
+    });
+
+    blockUnblockButton.addEventListener('click', handleBlockUnblock);
+
+    function getTimeIndex(time) {
+        return TIME_SLOTS.indexOf(time);
+    }
+
+    function getSlotsInRange(startTime, endTime) {
+        const startIndex = getTimeIndex(startTime);
+        const endIndex = getTimeIndex(endTime);
+        if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) return [];
+        return TIME_SLOTS.slice(startIndex, endIndex + 1);
+    }
+
+    function updateRangeBlockButton() {
+        const startTime = document.getElementById('range-start-time').value;
+        const endTime = document.getElementById('range-end-time').value;
+        const blockButton = document.getElementById('block-range-button');
+        const unblockButton = document.getElementById('unblock-range-button');
+        const isValidRange = selectedDate && startTime && endTime && getTimeIndex(startTime) <= getTimeIndex(endTime);
+        blockButton.disabled = !isValidRange;
+        unblockButton.disabled = !isValidRange;
+    }
+
+    document.getElementById('range-start-time').addEventListener('change', function() {
+        const startTime = this.value;
+        const endSelect = document.getElementById('range-end-time');
+        const currentEndValue = endSelect.value;
+        endSelect.innerHTML = '<option value="">Endzeit</option>';
+        if (startTime) {
             const startIndex = getTimeIndex(startTime);
-            const endIndex = getTimeIndex(endTime);
-            if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) {
-                return [];
-            }
-            return TIME_SLOTS.slice(startIndex, endIndex + 1);
+            TIME_SLOTS.slice(startIndex).forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                if (time === currentEndValue) option.selected = true;
+                endSelect.appendChild(option);
+            });
+        } else {
+            TIME_SLOTS.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                endSelect.appendChild(option);
+            });
         }
+        updateRangeBlockButton();
+    });
 
-        // Bereich-Sperren/Freigeben Buttons aktualisieren
-        function updateRangeBlockButton() {
-            const startTime = document.getElementById('range-start-time').value;
-            const endTime = document.getElementById('range-end-time').value;
-            const blockButton = document.getElementById('block-range-button');
-            const unblockButton = document.getElementById('unblock-range-button');
+    document.getElementById('range-end-time').addEventListener('change', updateRangeBlockButton);
 
-            const isValidRange = selectedDate && startTime && endTime && getTimeIndex(startTime) <= getTimeIndex(endTime);
-
-            if (isValidRange) {
-                blockButton.disabled = false;
-                unblockButton.disabled = false;
-            } else {
-                blockButton.disabled = true;
-                unblockButton.disabled = true;
-            }
-        }
-
-        // Handler für Startzeit-Änderung
-        document.getElementById('range-start-time').addEventListener('change', function() {
-            const startTime = this.value;
-            const endSelect = document.getElementById('range-end-time');
-
-            // Endzeit-Optionen neu füllen
-            const currentEndValue = endSelect.value;
-            endSelect.innerHTML = '<option value="">Endzeit wählen</option>';
-
-            if (startTime) {
-                const startIndex = getTimeIndex(startTime);
-                TIME_SLOTS.slice(startIndex).forEach(time => {
-                    const option = document.createElement('option');
-                    option.value = time;
-                    option.textContent = time;
-                    if (time === currentEndValue) {
-                        option.selected = true;
-                    }
-                    endSelect.appendChild(option);
-                });
-            } else {
-                // Wenn keine Startzeit: alle Optionen zeigen
-                TIME_SLOTS.forEach(time => {
-                    const option = document.createElement('option');
-                    option.value = time;
-                    option.textContent = time;
-                    endSelect.appendChild(option);
-                });
-            }
-
+    document.getElementById('block-range-button').addEventListener('click', async function() {
+        if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
+        const startTime = document.getElementById('range-start-time').value;
+        const endTime = document.getElementById('range-end-time').value;
+        if (!startTime) { showToast('Bitte Startzeit wählen.', 'info'); return; }
+        if (!endTime) { showToast('Bitte Endzeit wählen.', 'info'); return; }
+        const startIndex = getTimeIndex(startTime);
+        const endIndex = getTimeIndex(endTime);
+        if (startIndex >= endIndex) { showToast('Startzeit muss vor Endzeit liegen.', 'error'); return; }
+        const slotsToBlock = getSlotsInRange(startTime, endTime);
+        if (slotsToBlock.length === 0) { showToast('Ungültiger Zeitbereich.', 'error'); return; }
+        const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === selectedDate && slotsToBlock.includes(appt.time)).map(appt => appt.time);
+        if (bookedSlots.length > 0) { showToast(`Bereits gebucht: ${bookedSlots.join(", ")}`, "error"); return; }
+        if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} sperren?`)) return;
+        try {
+            const response = await fetch('/api/admin/blocked_slots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: selectedDate, start_time: startTime, end_time: endTime, action: 'block_range' })
+            });
+            const result = await response.json();
+            if (!response.ok) { showToast(result.error || "Zeitbereich konnte nicht gesperrt werden.", "error"); return; }
+            await fetchAppointmentsData();
+            showToast(`Zeitbereich ${startTime} - ${endTime} gesperrt.`, "success");
+            document.getElementById('range-start-time').value = '';
+            document.getElementById('range-end-time').value = '';
             updateRangeBlockButton();
-        });
-
-        // Handler für Endzeit-Änderung
-        document.getElementById('range-end-time').addEventListener('change', updateRangeBlockButton);
-
-        // Handler für Bereich-Sperren Klick
-        document.getElementById('block-range-button').addEventListener('click', async function() {
-            // Проверка выбора даты
-            if (!selectedDate) {
-                showToast('Bitte zuerst ein Datum wählen.', 'info');
-                return;
-            }
-
-            const startTime = document.getElementById('range-start-time').value;
-            const endTime = document.getElementById('range-end-time').value;
-
-            // Проверка выбора времени начала
-            if (!startTime) {
-                showToast('Bitte Startzeit wählen.', 'info');
-                return;
-            }
-
-            // Проверка выбора времени окончания
-            if (!endTime) {
-                showToast('Bitte Endzeit wählen.', 'info');
-                return;
-            }
-
-            // Проверка корректности диапазона
-            const startIndex = getTimeIndex(startTime);
-            const endIndex = getTimeIndex(endTime);
-
-            if (startIndex >= endIndex) {
-                showToast('Startzeit muss vor Endzeit liegen.', 'error');
-                return;
-            }
-
-            const slotsToBlock = getSlotsInRange(startTime, endTime);
-            if (slotsToBlock.length === 0) {
-                showToast('Ungültiger Zeitbereich.', 'error');
-                return;
-            }
-
-            // Prüfen auf gebuchte Slots im Bereich
-            const bookedSlots = appointmentsData.appointments
-                .filter(appt => appt.date === selectedDate && slotsToBlock.includes(appt.time))
-                .map(appt => appt.time);
-
-            if (bookedSlots.length > 0) {
-                showToast(`Bereits gebucht: ${bookedSlots.join(", ")}`, "error");
-                return;
-            }
-
-                if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} sperren?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/admin/blocked_slots', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        date: selectedDate,
-                        start_time: startTime,
-                        end_time: endTime,
-                        action: 'block_range'
-                    })
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    // Spezifischen Server-Fehler zeigen
-                    console.error('Server error:', result);
-                    showToast(result.error || "Zeitbereich konnte nicht gesperrt werden.", "error");
-                    return;
-                }
-
-                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
-                showToast(`Zeitbereich ${startTime} - ${endTime} gesperrt.`, "success");
-
-                // Auswahlfelder leeren
-                document.getElementById('range-start-time').value = '';
-                document.getElementById('range-end-time').value = '';
-                updateRangeBlockButton();
-
-            } catch (error) {
-                console.error('Ошибка при блокировке диапазона:', error);
-                showToast('Zeitbereich konnte nicht gesperrt werden.', 'error');
-            }
-        });
-
-        // Handler für Bereich-Freigeben Klick
-        document.getElementById('unblock-range-button').addEventListener('click', async function() {
-            // Проверка выбора даты
-            if (!selectedDate) {
-                showToast('Bitte zuerst ein Datum wählen.', 'info');
-                return;
-            }
-
-            const startTime = document.getElementById('range-start-time').value;
-            const endTime = document.getElementById('range-end-time').value;
-
-            // Проверка выбора времени начала
-            if (!startTime) {
-                showToast('Bitte Startzeit wählen.', 'info');
-                return;
-            }
-
-            // Проверка выбора времени окончания
-            if (!endTime) {
-                showToast('Bitte Endzeit wählen.', 'info');
-                return;
-            }
-
-            // Проверка корректности диапазона
-            const startIndex = getTimeIndex(startTime);
-            const endIndex = getTimeIndex(endTime);
-
-            if (startIndex >= endIndex) {
-                showToast('Startzeit muss vor Endzeit liegen.', 'error');
-                return;
-            }
-
-            const slotsToUnblock = getSlotsInRange(startTime, endTime);
-            if (slotsToUnblock.length === 0) {
-                showToast('Ungültiger Zeitbereich.', 'error');
-                return;
-            }
-
-            // Prüfen auf gesperrte Slots im Bereich
-            const blockedSlotsInRange = appointmentsData.blocked_slots[selectedDate]
-                ? appointmentsData.blocked_slots[selectedDate].filter(slot => slotsToUnblock.includes(slot))
-                : [];
-
-            if (blockedSlotsInRange.length === 0) {
-                showToast('Keine gesperrten Slots in diesem Bereich.', 'info');
-                return;
-            }
-
-                if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} freigeben?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/admin/blocked_slots', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        date: selectedDate,
-                        start_time: startTime,
-                        end_time: endTime,
-                        action: 'unblock_range'
-                    })
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    // Spezifischen Server-Fehler zeigen
-                    console.error('Server error:', result);
-                    showToast(result.error || "Konnte nicht freigegeben werden.", "error");
-                    return;
-                }
-
-                await fetchAppointmentsData(); // Daten nach Aktion aktualisieren
-                showToast(`Zeitbereich ${startTime} - ${endTime} freigegeben.`, "success");
-
-                // Auswahlfelder leeren
-                document.getElementById('range-start-time').value = '';
-                document.getElementById('range-end-time').value = '';
-                updateRangeBlockButton();
-
-            } catch (error) {
-                console.error('Ошибка при разблокировке диапазона:', error);
-                showToast('Zeitbereich konnte nicht freigegeben werden.', 'error');
-            }
-        });
-
-        // Select-Optionen aus TIME_SLOTS befüllen (keine statischen Duplikate mehr)
-        function populateTimeSelects() {
-            const start = document.getElementById('range-start-time');
-            const end = document.getElementById('range-end-time');
-            TIME_SLOTS.forEach(t => {
-                start.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
-                end.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
-            });
+        } catch (error) {
+            console.error('Fehler:', error);
+            showToast('Zeitbereich konnte nicht gesperrt werden.', 'error');
         }
+    });
 
-        // Clear-Button im Suchfeld anzeigen/verstecken
-        function wireSearchClear() {
-            const input = document.getElementById('search-input');
-            const clear = document.getElementById('search-clear');
-            if (!input || !clear) return;
-            const toggle = () => clear.classList.toggle('hidden', input.value.length === 0);
+    document.getElementById('unblock-range-button').addEventListener('click', async function() {
+        if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
+        const startTime = document.getElementById('range-start-time').value;
+        const endTime = document.getElementById('range-end-time').value;
+        if (!startTime) { showToast('Bitte Startzeit wählen.', 'info'); return; }
+        if (!endTime) { showToast('Bitte Endzeit wählen.', 'info'); return; }
+        const startIndex = getTimeIndex(startTime);
+        const endIndex = getTimeIndex(endTime);
+        if (startIndex >= endIndex) { showToast('Startzeit muss vor Endzeit liegen.', 'error'); return; }
+        const slotsToUnblock = getSlotsInRange(startTime, endTime);
+        if (slotsToUnblock.length === 0) { showToast('Ungültiger Zeitbereich.', 'error'); return; }
+        const blockedSlotsInRange = appointmentsData.blocked_slots[selectedDate] ? appointmentsData.blocked_slots[selectedDate].filter(slot => slotsToUnblock.includes(slot)) : [];
+        if (blockedSlotsInRange.length === 0) { showToast('Keine gesperrten Slots in diesem Bereich.', 'info'); return; }
+        if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} freigeben?`)) return;
+        try {
+            const response = await fetch('/api/admin/blocked_slots', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: selectedDate, start_time: startTime, end_time: endTime, action: 'unblock_range' })
+            });
+            const result = await response.json();
+            if (!response.ok) { showToast(result.error || "Konnte nicht freigegeben werden.", "error"); return; }
+            await fetchAppointmentsData();
+            showToast(`Zeitbereich ${startTime} - ${endTime} freigegeben.`, "success");
+            document.getElementById('range-start-time').value = '';
+            document.getElementById('range-end-time').value = '';
+            updateRangeBlockButton();
+        } catch (error) {
+            console.error('Fehler:', error);
+            showToast('Zeitbereich konnte nicht freigegeben werden.', 'error');
+        }
+    });
+
+    function populateTimeSelects() {
+        const start = document.getElementById('range-start-time');
+        const end = document.getElementById('range-end-time');
+        TIME_SLOTS.forEach(t => {
+            start.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
+            end.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
+        });
+    }
+
+    function wireSearchClear() {
+        const input = document.getElementById('search-input');
+        const clear = document.getElementById('search-clear');
+        if (!input || !clear) return;
+        const toggle = () => clear.classList.toggle('hidden', input.value.length === 0);
+        toggle();
+        input.addEventListener('input', toggle);
+        clear.addEventListener('click', () => {
+            input.value = '';
             toggle();
-            input.addEventListener('input', toggle);
-            clear.addEventListener('click', () => {
-                input.value = '';
-                toggle();
-                filteredAppointments = appointmentsData.appointments.slice();
-                renderAppointmentsTable();
-                input.focus();
-            });
-        }
-
-        // Initialisierung
-        document.addEventListener('DOMContentLoaded', () => {
-            populateTimeSelects();
-            wireSearchClear();
-            fetchAppointmentsData();
-            fetchStats();
-            // Handler für Datum-Sperren nur einmal registrieren
-            document.getElementById('block-date-button').addEventListener('click', async function() {
-                if (!selectedDate) {
-                    showToast('Bitte zuerst ein Datum wählen.', 'info');
-                    return;
-                }
-                if (!confirm('Wirklich alle Slots des gewählten Datums sperren?')) return;
-                try {
-                    const response = await fetch('/api/admin/blocked_slots', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date: selectedDate, time: null, action: 'block_all' })
-                    });
-                    if (!response.ok) throw new Error('Sperren fehlgeschlagen');
-                    await fetchAppointmentsData();
-                    showToast('Datum vollständig gesperrt.', 'success');
-                } catch (error) {
-                    showToast('Datum konnte nicht gesperrt werden.', 'error');
-                }
-            });
-
-            // Gesamtes Datum freigeben (H9)
-            document.getElementById('unblock-date-button').addEventListener('click', async function() {
-                if (!selectedDate) {
-                    showToast('Bitte zuerst ein Datum wählen.', 'info');
-                    return;
-                }
-                if (!confirm('Wirklich alle Slots des gewählten Datums freigeben?')) return;
-                try {
-                    const response = await fetch('/api/admin/blocked_slots', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date: selectedDate, time: null, action: 'unblock_all' })
-                    });
-                    if (!response.ok) throw new Error('Freigeben fehlgeschlagen');
-                    await fetchAppointmentsData();
-                    showToast('Datum vollständig freigegeben.', 'success');
-                } catch (error) {
-                    showToast('Datum konnte nicht freigegeben werden.', 'error');
-                }
-            });
+            filteredAppointments = appointmentsData.appointments.slice();
+            renderAppointmentsTable();
+            input.focus();
         });
-    </script>
-    <footer class="admin-footer">
-        <div>© <span id="footer-year"></span> Kreuztaler Werkstatt GmbH · Hagener Str. 40, 57223 Kreuztal</div>
-        <div class="mt-1"><a href="/">Zur Hauptseite</a> · <a href="mailto:info@kreuztaler-werkstatt.de">info@kreuztaler-werkstatt.de</a></div>
-    </footer>
-    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
-    <script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
-</body>
+    }
 
+    document.addEventListener('DOMContentLoaded', () => {
+        populateTimeSelects();
+        wireSearchClear();
+        fetchAppointmentsData();
+        fetchStats();
+        updateTimeSlotHint();
+        document.getElementById('block-date-button').addEventListener('click', async function() {
+            if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
+            if (!confirm('Wirklich alle Slots des gewählten Datums sperren?')) return;
+            try {
+                const response = await fetch('/api/admin/blocked_slots', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: selectedDate, time: null, action: 'block_all' })
+                });
+                if (!response.ok) throw new Error('Sperren fehlgeschlagen');
+                await fetchAppointmentsData();
+                showToast('Datum vollständig gesperrt.', 'success');
+            } catch (error) {
+                showToast('Datum konnte nicht gesperrt werden.', 'error');
+            }
+        });
+        document.getElementById('unblock-date-button').addEventListener('click', async function() {
+            if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
+            if (!confirm('Wirklich alle Slots des gewählten Datums freigeben?')) return;
+            try {
+                const response = await fetch('/api/admin/blocked_slots', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: selectedDate, time: null, action: 'unblock_all' })
+                });
+                if (!response.ok) throw new Error('Freigeben fehlgeschlagen');
+                await fetchAppointmentsData();
+                showToast('Datum vollständig freigegeben.', 'success');
+            } catch (error) {
+                showToast('Datum konnte nicht freigegeben werden.', 'error');
+            }
+        });
+    });
+
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    </script>
+</body>
 </html>

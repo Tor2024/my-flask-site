@@ -26,20 +26,173 @@
     <meta name="service:email" content="info@kreuztaler-werkstatt.de">
     <meta name="service:address" content="Hagener Str. 40, 57223 Kreuztal">
     <meta name="service:services" content="Inspektion, Wartung, Fahrzeugdiagnose, Fahrwerkservice, Bremsenservice, Autoelektrik, Klimaanlagenservice, Reifenservice">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#0055a5',secondary:'#4a4a4a'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>tailwind.config={theme:{extend:{colors:{'on-primary-fixed':'#001d35','surface-container-lowest':'#ffffff','tertiary-container':'#60676b','secondary':'#52606d','surface-container-low':'#f3f3f6','on-surface':'#1a1c1e','surface':'#f9f9fc','outline-variant':'#c1c7d2','primary':'#005086','primary-container':'#0d69ab','secondary-container':'#d5e4f4','on-primary':'#ffffff','surface-container':'#eeeef0','surface-variant':'#e2e2e5','background':'#f9f9fc','inverse-surface':'#2f3133','outline':'#717881','tertiary':'#484f53','surface-container-highest':'#e2e2e5','on-surface-variant':'#414750','error':'#ba1a1a','on-background':'#1a1c1e','surface-container-high':'#e8e8ea'},borderRadius:{'none':'0','sm':'0.125rem',DEFAULT:'0.125rem','md':'0.25rem','lg':'0.25rem','xl':'0.5rem','2xl':'0.75rem','3xl':'1rem','full':'9999px','button':'0.25rem'},fontFamily:{'headline':['Hanken Grotesk','sans-serif'],'body':['Inter','sans-serif'],'mono':['JetBrains Mono','monospace']},spacing:{'gutter':'24px','margin-mobile':'16px','margin-desktop':'64px','container-max':'1280px'}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles.css?v=2">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
     <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f9f9fc;
+            color: #1a1c1e;
+        }
+        .glass-panel {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid #c1c7d2;
+        }
+        .glow-active {
+            box-shadow: inset 0 0 10px rgba(13,105,171,0.2);
+        }
+        .grid-background {
+            background-image:
+                linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0d69ab, #005086);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pulse-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #0d69ab, transparent);
+            background-size: 100% 200%;
+            animation: pulse-flow 3s infinite linear;
+            z-index: 0;
+        }
+        @keyframes pulse-flow {
+            0% { background-position: 0 -100%; }
+            100% { background-position: 0 100%; }
+        }
+        .glow-dot {
+            box-shadow: 0 0 8px 2px rgba(13,105,171,0.4);
+        }
+        .service-card { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.05); }
+        .service-card:hover .tech-specs { opacity: 1; transform: translateY(0); }
+        .tech-specs { transition: all 0.3s ease-out; opacity: 0; transform: translateY(10px); }
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(252, 249, 248, 0.1) 0%, rgba(252, 249, 248, 0.9) 100%);
+        }
+        .accordion-content {
+            transition: max-height 0.35s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .accordion-icon { transition: transform 0.3s ease; }
+        .accordion-button[aria-expanded="true"] .accordion-icon { transform: rotate(180deg); }
+
+        .slide { opacity: 0; transition: opacity 1s ease-in-out; }
+        .slide.active { opacity: 1; }
+
+        /* Toast-Benachrichtigungen — Luminous Precision */
+        #toast-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 420px;
+            width: calc(100vw - 3rem);
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.875rem;
+            padding: 1rem 1.125rem;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid #c1c7d2;
+            border-left: 3px solid #0d69ab;
+            border-radius: 0.5rem;
+            box-shadow: 0 8px 32px -8px rgba(0,0,0,0.12);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.hide { transform: translateX(120%); opacity: 0; }
+        .toast.error   { border-left-color: #ba1a1a; }
+        .toast.warning { border-left-color: #feba42; }
+        .toast.info    { border-left-color: #005086; }
+        .toast.success { border-left-color: #0d69ab; }
+        .toast-icon {
+            flex-shrink: 0;
+            width: 2.25rem; height: 2.25rem;
+            border-radius: 0.375rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+        }
+        .toast.error   .toast-icon { background: rgba(186,26,26,0.10); color: #ba1a1a; }
+        .toast.warning .toast-icon { background: rgba(254,186,66,0.12); color: #7f5600; }
+        .toast.info    .toast-icon { background: rgba(0,80,134,0.10);  color: #005086; }
+        .toast.success .toast-icon { background: rgba(13,105,171,0.10); color: #0d69ab; }
+        .toast-body { flex: 1; min-width: 0; }
+        .toast-title {
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            line-height: 1.3;
+            color: #1a1c1e;
+            margin-bottom: 0.125rem;
+        }
+        .toast-msg {
+            font-size: 0.8125rem;
+            line-height: 1.45;
+            color: #414750;
+        }
+        .toast-close {
+            flex-shrink: 0;
+            background: none; border: none; cursor: pointer;
+            color: #717881; padding: 0.125rem;
+            border-radius: 0.25rem;
+            transition: color 0.15s, background 0.15s;
+            font-size: 1.125rem;
+            line-height: 1;
+        }
+        .toast-close:hover { color: #1a1c1e; background: rgba(0,0,0,0.04); }
+        .toast-bar {
+            position: absolute;
+            bottom: 0; left: 0; height: 2px;
+            background: #0d69ab;
+            animation: toast-shrink 5s linear forwards;
+        }
+        .toast.error   .toast-bar { background: #ba1a1a; }
+        .toast.warning .toast-bar { background: #feba42; }
+        @keyframes toast-shrink { from { width: 100%; } to { width: 0%; } }
+        @media (max-width: 640px) {
+            #toast-container { top: 0.75rem; right: 0.75rem; left: 0.75rem; max-width: none; width: auto; }
         }
 
         /* spotlight card */
@@ -90,8 +243,8 @@
             border-radius: 4px;
         }
         .custom-checkbox input:checked ~ .checkmark {
-            background-color: #0055a5;
-            border-color: #0055a5;
+            background-color: #005086;
+            border-color: #005086;
         }
         .checkmark:after {
             content: "";
@@ -144,7 +297,7 @@
             border-radius: 50%;
         }
         .custom-switch input:checked + .switch-slider {
-            background-color: #0055a5;
+            background-color: #005086;
         }
         .custom-switch input:checked + .switch-slider:before {
             transform: translateX(24px);
@@ -172,7 +325,7 @@
             border-radius: 50%;
         }
         .custom-radio input:checked ~ .radiomark {
-            border-color: #0055a5;
+            border-color: #005086;
         }
         .radiomark:after {
             content: "";
@@ -188,7 +341,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #0055a5;
+            background: #005086;
         }
         .custom-range {
             -webkit-appearance: none;
@@ -204,63 +357,17 @@
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #0055a5;
+            background: #005086;
             border-radius: 50%;
             cursor: pointer;
         }
         .custom-range::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #0055a5;
+            background: #005086;
             border-radius: 50%;
             cursor: pointer;
             border: none;
-        }
-        .calendar-day {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        .calendar-day:hover {
-            background-color: #f3f4f6;
-        }
-        .calendar-day.available {
-            background-color: rgba(0, 200, 83, 0.1);
-            color: #00c853;
-        }
-        .calendar-day.partially {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-        }
-        .calendar-day.booked {
-            background-color: rgba(244, 67, 54, 0.1);
-            color: #f44336;
-        }
-        .calendar-day.selected {
-            background-color: #0055a5;
-            color: white;
-        }
-        .time-slot {
-            position: relative;
-        }
-        .time-slot.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .time-slot.disabled::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 4px;
         }
         .text-block {
             background: linear-gradient(145deg, #ffffff, #f8f9fa);
@@ -289,11 +396,11 @@
             left: 0;
             width: 50px;
             height: 3px;
-            background: linear-gradient(90deg, #0055a5, #4a4a4a);
+            background: linear-gradient(90deg, #005086, #52606d);
             border-radius: 3px;
         }
         .text-block p {
-            color: #4a4a4a;
+            color: #52606d;
             line-height: 1.7;
             font-size: 1.1rem;
             margin-bottom: 1.5rem;
@@ -313,14 +420,14 @@
             border-bottom: none;
         }
         .text-block ul li i {
-            color: #0055a5;
+            color: #005086;
             margin-right: 1rem;
             font-size: 1.25rem;
         }
         .text-block .icon-wrapper {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #0055a5, #4a4a4a);
+            background: linear-gradient(135deg, #005086, #52606d);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -332,7 +439,7 @@
             font-size: 1.5rem;
         }
         .bg-white {
-            background: linear-gradient(145deg, #ffffff, #f8f9fa) !important;
+            background: #ffffff !important;
         }
         .shadow-sm {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
@@ -353,7 +460,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background-color: #0055a5;
+            background-color: #005086;
             transition: width 0.3s ease;
         }
         
@@ -363,7 +470,7 @@
         }
         
         .nav-link.active {
-            color: #0055a5;
+            color: #005086;
             font-weight: 600;
         }
         
@@ -387,14 +494,14 @@
         .mobile-nav-link {
             display: block;
             padding: 1rem;
-            color: #4a4a4a;
+            color: #52606d;
             border-bottom: 1px solid #e5e7eb;
             transition: all 0.3s ease;
         }
         
         .mobile-nav-link:hover {
             background-color: #f3f4f6;
-            color: #0055a5;
+            color: #005086;
         }
 
         /* Hero background */
@@ -412,45 +519,43 @@
             border: 0;
         }
 
-    /* History timeline: stacking-cards effect handled by perspective-showcase.js */
-    #timeline-stack .timeline-era { will-change: transform, opacity; }
-
     /* ===== Preloader ===== */
     #preloader {
         position: fixed; inset: 0; z-index: 9999;
-        background: radial-gradient(ellipse at center, #1a2333 0%, #0a0f1a 100%);
+        background: radial-gradient(ellipse at center, #f9f9fc 0%, #e2e2e5 100%);
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
         gap: 32px;
         transition: opacity .6s ease, visibility .6s ease;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
     }
     #preloader.pl-done { opacity: 0; visibility: hidden; pointer-events: none; }
     #preloader .pl-logo img {
         height: 120px; width: auto;
-        filter: drop-shadow(0 8px 28px rgba(0, 85, 165, 0.55));
+        filter: drop-shadow(0 8px 28px rgba(0, 80, 134, 0.3));
         animation: pl-pulse 2.4s ease-in-out infinite;
     }
     #preloader .pl-name {
-        color: rgba(255,255,255,0.92);
+        color: rgba(26,28,30,0.7);
         font-size: 13px; font-weight: 500;
         letter-spacing: 0.32em; text-transform: uppercase;
         margin-top: -16px;
     }
     #preloader .pl-bar {
         width: 240px; height: 2px;
-        background: rgba(255,255,255,0.10);
+        background: rgba(0,0,0,0.08);
         overflow: hidden; border-radius: 2px;
     }
     #preloader .pl-fill {
         width: 0%; height: 100%;
-        background: linear-gradient(90deg, #0055a5, #5fa3e8);
-        box-shadow: 0 0 12px rgba(0, 85, 165, 0.65);
+        background: linear-gradient(90deg, #005086, #0d69ab);
+        box-shadow: 0 0 12px rgba(13,105,171,0.5);
         transition: width .3s ease;
     }
     #preloader .pl-pct {
-        color: rgba(255,255,255,0.45);
+        color: rgba(26,28,30,0.45);
         font-size: 11px; font-weight: 400;
+        font-family: 'JetBrains Mono', monospace;
         letter-spacing: 0.28em;
     }
     @keyframes pl-pulse {
@@ -463,7 +568,8 @@
     }
     </style>
 </head>
-<body class="bg-white">
+<body class="antialiased min-h-screen grid-background relative">
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
     <!-- Preloader -->
     <div id="preloader" aria-hidden="true">
         <div class="pl-logo"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt"></div>
@@ -474,102 +580,151 @@
     <noscript><style>#preloader{display:none !important}</style></noscript>
     <!-- Header -->
     <a href="#hero" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] bg-primary text-white px-4 py-2 rounded">Zum Hauptinhalt</a>
-    <header class="sticky top-0 z-50" style="background:rgba(255,255,255,0.55);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(0,0,0,0.06);">
+    <header class="glass-panel sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center">
-                <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                <div class="text-primary font-['Arimo'] text-2xl mr-2 font-bold">Kreuztaler Werkstatt</div>
-                <span class="text-gray-500 text-sm">GmbH</span>
+                <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2">
+                <div class="text-primary font-headline text-xl mr-2 font-bold tracking-tight">Kreuztaler Werkstatt</div>
+                <span class="text-outline text-sm hidden sm:inline">GmbH</span>
             </div>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#hero" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Startseite</a>
-                <a href="#about" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Über uns</a>
-                <a href="#services" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Leistungen</a>
-                <a href="#faq" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">FAQ</a>
-                <a href="#contact" class="nav-link text-gray-600 hover:text-primary transition-colors relative group">Kontakt</a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#hero" class="nav-link text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">Startseite</a>
+                <a href="#about" class="nav-link text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">Über uns</a>
+                <a href="#services" class="nav-link text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">Leistungen</a>
+                <a href="#faq" class="nav-link text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">FAQ</a>
+                <a href="#contact" class="nav-link text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">Kontakt</a>
             </nav>
             <div class="md:hidden flex items-center">
-                <button type="button" id="mobileMenuBtn" class="text-gray-600 hover:text-primary focus:outline-none w-8 h-8 flex items-center justify-center" title="Menü öffnen">
-                    <i class="ri-menu-line ri-lg"></i>
+                <button type="button" id="mobileMenuBtn" class="text-on-surface hover:text-primary focus:outline-none w-8 h-8 flex items-center justify-center" title="Menü öffnen">
+                    <span class="material-symbols-outlined">menu</span>
                 </button>
             </div>
             <div class="hidden md:flex">
-                <a href="#appointment" class="bg-primary text-white px-6 py-2 !rounded-button whitespace-nowrap hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">Termin vereinbaren</a>
+                <a href="#appointment" class="bg-primary-container text-white px-6 py-2 rounded whitespace-nowrap hover:bg-primary transition-colors text-sm font-medium tracking-wide">Termin vereinbaren</a>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="relative overflow-hidden">
-        <div class="hero-bg-image absolute inset-0 -z-10"></div>
-        <div id="hero-shader" class="absolute inset-0 -z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-        <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
-            <div class="max-w-2xl text-white">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">Kfz-Meisterbetrieb in Kreuztal – Service und Reparatur für Fahrzeuge aller Marken</h1>
-                <p class="text-lg md:text-xl mb-8">Professioneller Service, moderne Technik und individuelle Betreuung für Ihr Fahrzeug in Kreuztal.</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#appointment" class="bg-white text-primary px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-gray-100 transition-colors">Termin vereinbaren</a>
-                    <a href="#services" class="bg-transparent border-2 border-white text-white px-6 py-3 !rounded-button whitespace-nowrap font-medium hover:bg-white/10 transition-colors">Unsere Leistungen</a>
+    <section id="hero" class="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden border-b border-outline-variant/20">
+        <!-- Background Slideshow -->
+        <div class="absolute inset-0 z-0" id="hero-slider">
+            <div class="slide active absolute inset-0">
+                <img src="static/images/hero1.webp" alt="Kfz-Service" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="slide absolute inset-0">
+                <img src="static/images/hero2.webp" alt="Auto-Reparatur" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="slide absolute inset-0">
+                <img src="static/images/hero3.webp" alt="Fahrzeugdiagnose" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="slide absolute inset-0">
+                <img src="static/images/hero4.webp" alt="Werkstatt" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="slide absolute inset-0">
+                <img src="static/images/hero5.webp" alt="Auto-Wartung" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="slide absolute inset-0">
+                <img src="static/images/hero6.webp" alt="Fahrzeugservice" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
+            </div>
+            <div class="absolute inset-0 hero-overlay mix-blend-screen"></div>
+        </div>
+        <!-- System Online Badge -->
+        <div class="absolute top-24 left-4 md:left-8 glass-panel px-4 py-2 rounded glow-active z-10 hidden md:flex items-center gap-3 animate-pulse">
+            <div class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#0d69ab]"></div>
+            <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium">System: Online</span>
+        </div>
+        <!-- Diagnostics Panel -->
+        <div class="absolute bottom-32 right-4 md:right-8 glass-panel p-4 rounded z-10 hidden lg:block w-64">
+            <div class="flex justify-between items-center border-b border-outline-variant/30 pb-2 mb-2">
+                <span class="font-mono text-xs text-on-surface-variant font-medium">DIAGNOSTICS</span>
+                <span class="material-symbols-outlined text-primary-container text-sm">memory</span>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="font-mono text-xs text-on-surface font-medium">Data Stream</span>
+                    <span class="font-mono text-xs text-secondary font-medium">Active</span>
                 </div>
+                <div class="flex justify-between">
+                    <span class="font-mono text-xs text-on-surface font-medium">Precision</span>
+                    <span class="font-mono text-xs text-primary-container font-medium">99.9%</span>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10 text-center flex flex-col items-center">
+            <h1 class="font-headline text-4xl md:text-[64px] font-bold mb-6 tracking-tight leading-none text-on-surface bg-clip-text text-transparent bg-gradient-to-r from-on-surface to-tertiary">Kfz-Meisterbetrieb in Kreuztal – Service und Reparatur für Fahrzeuge aller Marken</h1>
+            <p class="text-base md:text-lg mb-10 text-on-surface-variant max-w-2xl">Professioneller Service, moderne Technik und individuelle Betreuung für Ihr Fahrzeug in Kreuztal.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="#appointment" class="bg-primary-container text-white px-8 py-4 rounded whitespace-nowrap font-medium hover:bg-primary transition-colors flex items-center justify-center gap-2 group">
+                    Termin vereinbaren
+                    <span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+                <a href="#services" class="glass-panel text-on-surface px-8 py-4 rounded whitespace-nowrap font-medium hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+                    Unsere Leistungen
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Services Preview -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-24">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-primary mb-4">Unsere Hauptleistungen</h2>
-                <p class="text-gray-600 max-w-3xl mx-auto">Wir bieten ein umfassendes Leistungsspektrum für Ihr Fahrzeug – von Wartung und Diagnose bis HU/AU-Service.</p>
+            <div class="mb-16 md:mb-24 text-center max-w-3xl mx-auto">
+                <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium mb-3 block">Leistungsspektrum</span>
+                <h2 class="font-headline text-3xl md:text-4xl font-bold text-on-surface mb-4">Unsere Hauptleistungen</h2>
+                <p class="text-on-surface-variant">Wir bieten ein umfassendes Leistungsspektrum für Ihr Fahrzeug – von Wartung und Diagnose bis HU/AU-Service.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-block p-0 overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/wartung.jpg" alt="Inspektion" width="400" height="256" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Inspektion</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors duration-500 z-0"></div>
+                    <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-inspektion.jpg" alt="Inspektion" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(255,255,255,0.95)] via-white/40 to-transparent"></div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-primary mb-3">Inspektion</h3>
-                        <p>Regelmäßige Inspektion nach den Empfehlungen des Herstellers für alle Automarken. Wir halten Ihr Fahrzeug in einem ausgezeichneten Zustand.</p>
-                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
-                            Mehr erfahren
-                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                        </a>
+                    <div class="w-12 h-12 bg-surface flex items-center justify-center rounded-lg border border-outline-variant/30 mb-8 relative z-10 bg-white/60 backdrop-blur-sm shadow-sm">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">check_circle</span>
                     </div>
-                </div>
-
-                <div class="text-block p-0 overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Fahrwerk-Aufhängung.jpg" alt="Achsvermessung" width="400" height="256" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Achsvermessung</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-primary mb-3">Achsvermessung</h3>
-                        <p>Eine exakte Achsvermessung sorgt für optimale Fahrsicherheit, weniger Reifenverschleiß und besseren Fahrkomfort. In unserer Kreuztaler Werkstatt verwenden wir moderne 3D-Technik, um Spur und Sturz Ihres Fahrzeugs perfekt einzustellen.</p>
-                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
-                            Mehr erfahren
-                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                        </a>
+                    <h3 class="font-headline text-xl md:text-2xl font-bold text-on-surface mb-3 relative z-10">Inspektion</h3>
+                    <p class="text-sm md:text-base text-on-surface-variant flex-grow relative z-10 leading-relaxed">Regelmäßige Inspektion nach den Empfehlungen des Herstellers für alle Automarken. Wir halten Ihr Fahrzeug in einem ausgezeichneten Zustand.</p>
+                    <div class="mt-8 pt-4 border-t border-outline-variant/20 flex items-center justify-between relative z-10">
+                        <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
+                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
                     </div>
                 </div>
 
-                <div class="text-block p-0 overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Autoelektrik-Elektronik.jpg" alt="Diagnose & Elektronik" width="400" height="256" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Diagnose & Elektronik</div>
+                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden md:translate-y-8">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+                    <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-achsvermessung.jpg" alt="Achsvermessung" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(255,255,255,0.95)] via-white/40 to-transparent"></div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-primary mb-3">Diagnose & Elektronik</h3>
-                        <p>Moderne Diagnosesysteme für alle wichtigen Fahrzeugsysteme. Wir finden und beheben elektronische Defekte schnell und zuverlässig.</p>
-                        <a href="#services" class="text-primary font-medium flex items-center mt-4">
-                            Mehr erfahren
-                            <i class="ri-arrow-right-line ri-sm ml-1"></i>
-                        </a>
+                    <div class="w-12 h-12 bg-surface flex items-center justify-center rounded-lg border border-outline-variant/30 mb-8 relative z-10 glow-active bg-white/60 backdrop-blur-sm shadow-sm">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">3d_rotation</span>
+                    </div>
+                    <h3 class="font-headline text-xl md:text-2xl font-bold text-on-surface mb-3 relative z-10">Achsvermessung</h3>
+                    <p class="text-sm md:text-base text-on-surface-variant flex-grow relative z-10 leading-relaxed">Eine exakte Achsvermessung sorgt für optimale Fahrsicherheit, weniger Reifenverschleiß und besseren Fahrkomfort. In unserer Kreuztaler Werkstatt verwenden wir moderne 3D-Technik.</p>
+                    <div class="mt-8 pt-4 border-t border-outline-variant/20 flex items-center justify-between relative z-10">
+                        <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
+                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-colors duration-500 z-0"></div>
+                    <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-diagnose.jpg" alt="Diagnose & Elektronik" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[rgba(255,255,255,0.95)] via-white/40 to-transparent"></div>
+                    </div>
+                    <div class="w-12 h-12 bg-surface flex items-center justify-center rounded-lg border border-outline-variant/30 mb-8 relative z-10 bg-white/60 backdrop-blur-sm shadow-sm">
+                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">troubleshoot</span>
+                    </div>
+                    <h3 class="font-headline text-xl md:text-2xl font-bold text-on-surface mb-3 relative z-10">Diagnose & Elektronik</h3>
+                    <p class="text-sm md:text-base text-on-surface-variant flex-grow relative z-10 leading-relaxed">Moderne Diagnosesysteme für alle wichtigen Fahrzeugsysteme. Wir finden und beheben elektronische Defekte schnell und zuverlässig.</p>
+                    <div class="mt-8 pt-4 border-t border-outline-variant/20 flex items-center justify-between relative z-10">
+                        <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
+                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
                     </div>
                 </div>
             </div>
@@ -577,160 +732,302 @@
     </section>
 
     <!-- About / History Timeline -->
-    <section id="about" class="bg-white">
-        <div class="container mx-auto px-4 py-16 text-center">
-            <h2 class="text-3xl font-bold text-primary mb-4">Über uns</h2>
-            <p class="text-gray-600 max-w-3xl mx-auto">Seit 1946 steht der Standort für Kfz-Handwerk in Kreuztal.</p>
-        </div>
-        <div id="timeline-stack" class="relative">
-            <!-- Era 1: 1946 -->
-            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
-                <img loading="lazy" decoding="async" src="static/images/1946.jpg" alt="1946 — Gründung der Werkstatt" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-primary/40"></div>
-                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
-                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1946</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Die Gründung</h3>
-                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">Jürgen Pfeifer gründete in der Hagener Straße eine kleine Lkw-Werkstatt mit dem Schwerpunkt Autoelektrik. Mit viel Engagement und handwerklichem Geschick wurde der Betrieb Stück für Stück erweitert.</p>
-                </div>
-            </div>
-            <!-- Era 2: 1965 -->
-            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-center overflow-hidden">
-                <img loading="lazy" decoding="async" src="static/images/1965.jpg" alt="1965 — Eigene Tankstelle" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-bl from-black/70 via-black/50 to-primary/40"></div>
-                <div class="relative z-10 max-w-3xl px-6 text-white text-right ml-auto">
-                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1965</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Tankstelle und Wachstum</h3>
-                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl ml-auto">Zwischen 1962 und 1965 kam eine eigene Tankstelle hinzu. In den Jahren 1972 bis 1976 wurden weitere Werkstatthallen errichtet, um dem wachsenden Bedarf gerecht zu werden.</p>
-                </div>
-            </div>
-            <!-- Era 3: 1989 -->
-            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
-                <img loading="lazy" decoding="async" src="static/images/1989.jpg" alt="1989 — Erweiterung und Modernisierung" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-primary/40"></div>
-                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
-                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">1989</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Erweiterung und Netzwerk</h3>
-                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">Der Betrieb wuchs kontinuierlich weiter. 1995 wurde die Werkstatt Teil des Bosch Car Service-Netzwerks und um ein Autohaus ergänzt.</p>
-                </div>
-            </div>
-            <!-- Era 4: 2014 -->
-            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-center overflow-hidden">
-                <img loading="lazy" decoding="async" src="static/images/2014.jpg" alt="2014 — Übernahme durch Andre Hovanski" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-bl from-black/70 via-black/50 to-primary/40"></div>
-                <div class="relative z-10 max-w-3xl px-6 text-white text-right ml-auto">
-                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">2014</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Neue Führung</h3>
-                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl ml-auto">Andre Hovanski, Kfz-Technikermeister, übernimmt die Werkstatt. Unter seiner Leitung wird der Betrieb umfassend modernisiert und seither als Familienunternehmen weitergeführt.</p>
-                </div>
-            </div>
-            <!-- Era 5: 2025 -->
-            <div class="timeline-era sticky top-0 min-h-[100dvh] flex items-center justify-start overflow-hidden">
-                <img loading="lazy" decoding="async" src="static/images/2025.jpg" alt="2025 — Kreuztaler Werkstatt GmbH heute" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-primary/45"></div>
-                <div class="relative z-10 max-w-3xl px-6 md:px-16 text-white">
-                    <div class="text-6xl md:text-9xl font-bold mb-4 tracking-tighter drop-shadow-lg">2025</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-6 drop-shadow">Heute und morgen</h3>
-                    <p class="text-lg md:text-xl leading-relaxed drop-shadow max-w-2xl">2021 erfolgte die Gründung der Kreuztaler Werkstatt GmbH. Seither wird der Standort kontinuierlich weiterentwickelt — mit moderner Diagnosetechnik, erweitertem Serviceangebot und dem Anspruch, Kundinnen und Kunden zuverlässigen Service und hohe Qualität zu bieten.</p>
-                    <a href="#contact" class="inline-block mt-8 bg-white text-primary px-8 py-3 !rounded-button font-semibold hover:bg-gray-100 transition-colors shadow-lg">Kontakt aufnehmen</a>
+    <section id="about" class="bg-surface-container-lowest">
+        <div class="container mx-auto px-margin-mobile md:px-margin-desktop max-w-container-max-width py-24">
+            <!-- Header -->
+            <header class="mb-16 md:mb-24 text-center max-w-3xl mx-auto">
+                <div class="absolute -top-12 -left-12 w-64 h-64 bg-primary-container/10 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+                <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium mb-3 block">Historie</span>
+                <h2 class="font-headline text-3xl md:text-4xl font-bold text-on-surface mb-4">Über uns</h2>
+                <p class="text-on-surface-variant">Seit 1946 steht der Standort für Kfz-Handwerk in Kreuztal.</p>
+            </header>
+            <!-- Timeline -->
+            <div class="relative">
+                <!-- Central Line -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-outline-variant/30 transform md:-translate-x-1/2 z-0 pulse-line"></div>
+                <div class="space-y-24 relative z-10">
+                    <!-- Item 1: 1946 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full group">
+                        <div class="md:w-5/12 mb-8 md:mb-0 md:text-right pr-0 md:pr-12">
+                            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform duration-300">
+                                <span class="font-mono text-xs text-primary mb-2 block tracking-widest">1946</span>
+                                <h3 class="font-headline text-2xl text-on-surface mb-3">Die Gründung</h3>
+                                <p class="text-on-surface-variant">Jürgen Pfeifer gründete in der Hagener Straße eine kleine Lkw-Werkstatt mit dem Schwerpunkt Autoelektrik. Mit viel Engagement und handwerklichem Geschick wurde der Betrieb Stück für Stück erweitert.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-primary-container border-2 border-white glow-dot z-20"></div>
+                        <div class="md:w-5/12 pl-12 md:pl-12 w-full">
+                            <img loading="lazy" decoding="async" alt="Die Gründung 1946" class="w-full h-auto rounded-lg shadow-sm border border-outline-variant/20 grayscale group-hover:grayscale-0 transition-all duration-500 object-cover aspect-[1.41]" src="static/newimages/stitch/timeline-1946.jpg">
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-secondary-container inline-block"></span>
+                                <span class="font-mono text-xs text-tertiary uppercase">Archival_Data: EST.1946_BASE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2: 1965 -->
+                    <div class="flex flex-col md:flex-row-reverse items-center justify-between w-full group">
+                        <div class="md:w-5/12 mb-8 md:mb-0 md:text-left pl-0 md:pl-12">
+                            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform duration-300">
+                                <span class="font-mono text-xs text-primary mb-2 block tracking-widest">1965</span>
+                                <h3 class="font-headline text-2xl text-on-surface mb-3">Tankstelle und Wachstum</h3>
+                                <p class="text-on-surface-variant">Zwischen 1962 und 1965 kam eine eigene Tankstelle hinzu. In den Jahren 1972 bis 1976 wurden weitere Werkstatthallen errichtet, um dem wachsenden Bedarf gerecht zu werden.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-primary-container border-2 border-white glow-dot z-20"></div>
+                        <div class="md:w-5/12 pr-0 md:pr-12 pl-12 md:pl-0 w-full">
+                            <img loading="lazy" decoding="async" alt="Tankstelle und Wachstum 1965" class="w-full h-auto rounded-lg shadow-sm border border-outline-variant/20 grayscale group-hover:grayscale-0 transition-all duration-500 object-cover aspect-[1.43]" src="static/newimages/stitch/timeline-1965.jpg">
+                            <div class="mt-3 flex items-center gap-2 justify-end">
+                                <span class="font-mono text-xs text-tertiary uppercase">Sys_Log: AUTO_V1.0</span>
+                                <span class="w-2 h-2 rounded-full bg-primary-container inline-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 3: 1989 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full group">
+                        <div class="md:w-5/12 mb-8 md:mb-0 md:text-right pr-0 md:pr-12">
+                            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform duration-300">
+                                <span class="font-mono text-xs text-primary mb-2 block tracking-widest">1989</span>
+                                <h3 class="font-headline text-2xl text-on-surface mb-3">Erweiterung und Netzwerk</h3>
+                                <p class="text-on-surface-variant">Der Betrieb wuchs kontinuierlich weiter. 1995 wurde die Werkstatt Teil des Bosch Car Service-Netzwerks und um ein Autohaus ergänzt.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-primary-container border-2 border-white glow-dot z-20"></div>
+                        <div class="md:w-5/12 pl-12 md:pl-12 w-full">
+                            <img loading="lazy" decoding="async" alt="Erweiterung und Netzwerk 1989" class="w-full h-auto rounded-lg shadow-sm border border-outline-variant/20 grayscale group-hover:grayscale-0 transition-all duration-500 object-cover aspect-[1.34]" src="static/images/1989.jpg">
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-secondary-container inline-block"></span>
+                                <span class="font-mono text-xs text-tertiary uppercase">Net_Node: GLOBAL_EXP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 4: 2014 -->
+                    <div class="flex flex-col md:flex-row-reverse items-center justify-between w-full group">
+                        <div class="md:w-5/12 mb-8 md:mb-0 md:text-left pl-0 md:pl-12">
+                            <div class="glass-panel p-6 rounded-xl hover:-translate-y-1 transition-transform duration-300">
+                                <span class="font-mono text-xs text-primary mb-2 block tracking-widest">2014</span>
+                                <h3 class="font-headline text-2xl text-on-surface mb-3">Neue Führung</h3>
+                                <p class="text-on-surface-variant">Andre Hovanski, Kfz-Technikermeister, übernimmt die Werkstatt. Unter seiner Leitung wird der Betrieb umfassend modernisiert und seither als Familienunternehmen weitergeführt.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-primary-container border-2 border-white glow-dot z-20"></div>
+                        <div class="md:w-5/12 pr-0 md:pr-12 pl-12 md:pl-0 w-full">
+                            <img loading="lazy" decoding="async" alt="Neue Führung 2014" class="w-full h-auto rounded-lg shadow-sm border border-outline-variant/20 grayscale group-hover:grayscale-0 transition-all duration-500 object-cover aspect-[1.30]" src="static/newimages/stitch/timeline-2014.jpg">
+                            <div class="mt-3 flex items-center gap-2 justify-end">
+                                <span class="font-mono text-xs text-tertiary uppercase">Data_Stream: DIGI_TRANS</span>
+                                <span class="w-2 h-2 rounded-full bg-primary-container inline-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 5: 2025 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full group">
+                        <div class="md:w-5/12 mb-8 md:mb-0 md:text-right pr-0 md:pr-12">
+                            <div class="glass-panel p-6 rounded-xl border-primary/30 shadow-[0_0_15px_rgba(13,105,171,0.1)] hover:-translate-y-1 transition-transform duration-300">
+                                <span class="font-mono text-xs text-primary mb-2 block tracking-widest">2025</span>
+                                <h3 class="font-headline text-2xl text-on-surface mb-3">Heute und morgen</h3>
+                                <p class="text-on-surface-variant">2021 erfolgte die Gründung der Kreuztaler Werkstatt GmbH. Seither wird der Standort kontinuierlich weiterentwickelt — mit moderner Diagnosetechnik, erweitertem Serviceangebot und dem Anspruch, Kundinnen und Kunden zuverlässigen Service und hohe Qualität zu bieten.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-5 h-5 rounded-full bg-primary-container border-2 border-white glow-dot z-20 animate-pulse"></div>
+                        <div class="md:w-5/12 pl-12 md:pl-12 w-full">
+                            <img loading="lazy" decoding="async" alt="Heute und morgen 2025" class="w-full h-auto rounded-lg shadow-sm border border-primary/30 object-cover aspect-[2.49]" src="static/newimages/stitch/timeline-2025.jpg">
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-primary-container animate-ping inline-block"></span>
+                                <span class="font-mono text-xs text-primary font-bold uppercase">Status: ACTIVE_STATE</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services -->
-    <section id="services" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-primary mb-4">Unsere Leistungen</h2>
-                <p class="text-gray-600 max-w-3xl mx-auto">Wir kümmern uns um Wartung, Reparatur und Diagnose für Fahrzeuge aller Marken – vom Ölwechsel über Bremsen und Fahrwerk bis zur modernen Fahrzeugdiagnose.</p>
+    <section id="services" class="py-24 bg-surface-container-low">
+        <div class="max-w-container-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+            <div class="mb-16 md:mb-24 text-center max-w-3xl mx-auto">
+                <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium mb-3 block">Unsere Leistungen</span>
+                <h2 class="font-headline text-3xl md:text-4xl font-bold text-on-surface mb-4">Unsere Hauptleistungen</h2>
+                <p class="text-on-surface-variant">Wir bieten ein umfassendes Leistungsspektrum für Ihr Fahrzeug – von Wartung und Diagnose bis HU/AU-Service.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/wartung.jpg" alt="Wartung" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Wartung</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
+                <!-- 1. Wartung -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-wartung.jpg" alt="Wartung" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                            <span>SYS.ON</span>
+                        </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Wartung</h3>
-                        <p class="text-gray-600 mb-4">Regelmäßige Wartung nach Herstellervorgaben, Ölwechsel, Filterwechsel, Inspektion und Systemchecks für alle Automarken.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Fahrzeugdiagnose.jpg" alt="Fahrzeugdiagnose" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Fahrzeugdiagnose</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Fahrzeugdiagnose</h3>
-                        <p class="text-gray-600 mb-4">Computergestützte Diagnose aller Fahrzeugsysteme. Schnelle Fehlererkennung und Behebung von Störungen.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Fahrwerk-Aufhängung.jpg" alt="Fahrwerk & Aufhängung" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Fahrwerk & Aufhängung</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Fahrwerk & Aufhängung</h3>
-                        <p class="text-gray-600 mb-4">Reparatur und Austausch von Fahrwerksteilen, Stoßdämpfern, Lenkung und Stabilisatoren für sicheres Fahrverhalten.</p>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Wartung</h3>
+                            <span class="material-symbols-outlined text-primary">settings_applications</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Regelmäßige Wartung nach Herstellervorgaben, Ölwechsel, Filterwechsel, Inspektion und Systemchecks für alle Automarken.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">MAINTENANCE PROTOCOL //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Fluid Dynamics</span> <span class="text-on-surface">Checked</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Filter Systems</span> <span class="text-on-surface">Replaced</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Wear Tolerance</span> <span class="text-secondary">&lt; 0.5mm</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Bremsenservice.jpg" alt="Bremsenservice" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Bremsenservice</div>
+                <!-- 2. Fahrwerk & Aufhängung -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-fahrwerk.jpg" alt="Fahrwerk & Aufhängung" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Bremsenservice</h3>
-                        <p class="text-gray-600 mb-4">Wartung und Reparatur der Bremsanlage: Austausch von Belägen, Scheiben, Diagnose und Beseitigung von Geräuschen und Vibrationen.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Autoelektrik-Elektronik.jpg" alt="Autoelektrik & Elektronik" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Autoelektrik & Elektronik</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Autoelektrik & Elektronik</h3>
-                        <p class="text-gray-600 mb-4">Prüfung und Reparatur elektrischer und elektronischer Systeme: Starter, Generator, Batterie, Beleuchtung sowie Komfort- und Sicherheitssysteme.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Klimaanlagenservice.jpg" alt="Klimaanlagenservice" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Klimaanlagenservice</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Klimaanlagenservice</h3>
-                        <p class="text-gray-600 mb-4">Wartung und Reparatur von Klimaanlagen: Befüllung, Reinigung, Lecksuche und Beseitigung von Gerüchen.</p>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Fahrwerk & Aufhängung</h3>
+                            <span class="material-symbols-outlined text-primary">3d_rotation</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Reparatur und Austausch von Fahrwerksteilen, Stoßdämpfern, Lenkung und Stabilisatoren für sicheres Fahrverhalten.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">GEOMETRY ALIGNMENT //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Camber Angle</span> <span class="text-on-surface">Calibrated</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Toe Alignment</span> <span class="text-on-surface">Zeroed</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Damping Ratio</span> <span class="text-on-surface">Verified</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/Reifen-Räder.jpg" alt="Reifenservice & Auswuchten" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">Reifenservice & Auswuchten</div>
+                <!-- 3. Fahrzeugdiagnose -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-diagnose.jpg" alt="Fahrzeugdiagnose" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+                            <span>CRITICAL</span>
+                        </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">Reifenservice & Auswuchten</h3>
-                        <p class="text-gray-600 mb-4">Montage, Demontage, Auswuchten, saisonaler Wechsel und Einlagerung von Rädern, Beratung und Verkauf neuer Reifen.</p>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Fahrzeugdiagnose</h3>
+                            <span class="material-symbols-outlined text-primary">memory</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Computergestützte Diagnose aller Fahrzeugsysteme. Schnelle Fehlererkennung und Behebung von Störungen.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">DIAGNOSTIC DATA //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>OBD-II Scan</span> <span class="text-on-surface">Active</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Sensor Log</span> <span class="text-on-surface">Real-time</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>ECU Flash</span> <span class="text-on-surface">Available</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                    <div class="relative">
-                        <img loading="lazy" decoding="async" src="static/newimages/HU-AU.jpg" alt="HU / AU" class="w-full h-64 object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
-                        <div class="absolute top-4 left-4 text-white font-semibold text-lg">HU / AU</div>
+                <!-- 4. Bremsenservice -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-bremsen.jpg" alt="Bremsenservice" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-primary mb-3">HU / AU</h3>
-                        <p class="text-gray-600 mb-4">HU/AU-Service in Zusammenarbeit mit anerkannten Prüforganisationen: Vorbereitung, Abgasuntersuchung und bei Bedarf Behebung festgestellter Mängel.</p>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Bremsenservice</h3>
+                            <span class="material-symbols-outlined text-primary">disc_full</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Wartung und Reparatur der Bremsanlage: Austausch von Belägen, Scheiben, Diagnose und Beseitigung von Geräuschen und Vibrationen.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">DECELERATION METRICS //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Pad Thickness</span> <span class="text-on-surface">Laser Cal.</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Rotor Variance</span> <span class="text-on-surface">Tested</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Hydraulic Pressure</span> <span class="text-on-surface">Optimal</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 5. Autoelektrik & Elektronik -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-elektrik.jpg" alt="Autoelektrik & Elektronik" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Autoelektrik & Elektronik</h3>
+                            <span class="material-symbols-outlined text-primary">bolt</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Prüfung und Reparatur elektrischer und elektronischer Systeme: Starter, Generator, Batterie, Beleuchtung sowie Komfort- und Sicherheitssysteme.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">VOLTAGE METRICS //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Circuit Test</span> <span class="text-on-surface">Pass</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>CAN Bus Load</span> <span class="text-on-surface">Nominal</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Battery Health</span> <span class="text-on-surface">98%</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 6. Klimaanlagenservice -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-klima.jpg" alt="Klimaanlagenservice" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Klimaanlagenservice</h3>
+                            <span class="material-symbols-outlined text-primary">ac_unit</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Wartung und Reparatur von Klimaanlagen: Befüllung, Reinigung, Lecksuche und Beseitigung von Gerüchen.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">THERMAL CONTROL //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Refrigerant</span> <span class="text-on-surface">R-1234yf</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Pressure Test</span> <span class="text-on-surface">Sealed</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Output Temp</span> <span class="text-primary">4.2°C</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 7. Reifenservice & Auswuchten -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-reifen.jpg" alt="Reifenservice & Auswuchten" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">Reifenservice & Auswuchten</h3>
+                            <span class="material-symbols-outlined text-primary">tire_repair</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">Montage, Demontage, Auswuchten, saisonaler Wechsel und Einlagerung von Rädern, Beratung und Verkauf neuer Reifen.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">ROTATIONAL DYNAMICS //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Balance</span> <span class="text-on-surface">0g Delta</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Tread Depth</span> <span class="text-on-surface">Laser Scanned</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>TPMS Status</span> <span class="text-on-surface">Synced</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 8. HU / AU -->
+                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                    <div class="h-48 overflow-hidden relative">
+                        <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-hu-au.jpg" alt="HU / AU" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                            <span>CERTIFIED</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col relative bg-gradient-to-b from-transparent to-surface-container-low/30">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="font-headline text-xl text-on-surface">HU / AU</h3>
+                            <span class="material-symbols-outlined text-primary">task_alt</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant mb-6 flex-grow">HU/AU-Service in Zusammenarbeit mit anerkannten Prüforganisationen: Vorbereitung, Abgasuntersuchung und bei Bedarf Behebung festgestellter Mängel.</p>
+                        <div class="tech-specs absolute inset-0 bg-white/95 backdrop-blur-lg p-6 flex flex-col justify-center border-t border-primary/20">
+                            <div class="font-mono text-xs text-primary mb-2">COMPLIANCE PROTOCOL //</div>
+                            <ul class="space-y-2 font-mono text-xs text-on-surface-variant">
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Emissions</span> <span class="text-on-surface">Euro 6d</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Safety Sys</span> <span class="text-on-surface">Validated</span></li>
+                                <li class="flex justify-between border-b border-outline-variant/30 pb-1"><span>Certification</span> <span class="text-on-surface">Granted</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -738,324 +1035,324 @@
     </section>
 
     <!-- Brand Strip: betreute Marken -->
-    <section class="py-12 bg-gray-50 border-y border-gray-200">
+    <section class="py-12 bg-surface-container border-y border-outline-variant">
         <div class="container mx-auto px-4">
-            <p class="text-center text-sm text-gray-500 uppercase tracking-wider mb-8">Service für alle Marken — ausgewählte Hersteller im Überblick</p>
+            <p class="text-center text-xs font-mono text-outline uppercase tracking-widest mb-8">Service für alle Marken — ausgewählte Hersteller im Überblick</p>
             <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-70">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/volkswagen/4a4a4a" alt="Volkswagen" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/audi/4a4a4a" alt="Audi" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/skoda/4a4a4a" alt="Škoda" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/seat/4a4a4a" alt="SEAT" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/bmw/4a4a4a" alt="BMW" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/mini/4a4a4a" alt="MINI" height="32" class="h-8">
-                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Mercedes-Benz</span>
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/smart/4a4a4a" alt="smart" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/opel/4a4a4a" alt="Opel" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/ford/4a4a4a" alt="Ford" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/toyota/4a4a4a" alt="Toyota" height="32" class="h-8">
-                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Lexus</span>
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/hyundai/4a4a4a" alt="Hyundai" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/kia/4a4a4a" alt="Kia" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/renault/4a4a4a" alt="Renault" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/dacia/4a4a4a" alt="Dacia" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/peugeot/4a4a4a" alt="Peugeot" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/citroen/4a4a4a" alt="Citroën" height="32" class="h-8">
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/fiat/4a4a4a" alt="Fiat" height="32" class="h-8">
-                <span class="h-8 flex items-center text-2xl font-semibold italic tracking-tight" style="font-family: 'Arimo', sans-serif; color:#4a4a4a;">Alfa Romeo</span>
-                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/porsche/4a4a4a" alt="Porsche" height="32" class="h-8">
-                </div>
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/volkswagen/52606d" alt="Volkswagen" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/audi/52606d" alt="Audi" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/skoda/52606d" alt="Škoda" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/seat/52606d" alt="SEAT" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/bmw/52606d" alt="BMW" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/mini/52606d" alt="MINI" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight font-headline text-secondary">Mercedes-Benz</span>
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/smart/52606d" alt="smart" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/opel/52606d" alt="Opel" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/ford/52606d" alt="Ford" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/toyota/52606d" alt="Toyota" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold tracking-tight font-headline text-secondary">Lexus</span>
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/hyundai/52606d" alt="Hyundai" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/kia/52606d" alt="Kia" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/renault/52606d" alt="Renault" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/dacia/52606d" alt="Dacia" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/peugeot/52606d" alt="Peugeot" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/citroen/52606d" alt="Citroën" height="32" class="h-8">
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/fiat/52606d" alt="Fiat" height="32" class="h-8">
+                <span class="h-8 flex items-center text-2xl font-semibold italic tracking-tight font-headline text-secondary">Alfa Romeo</span>
+                <img loading="lazy" decoding="async" src="https://cdn.simpleicons.org/porsche/52606d" alt="Porsche" height="32" class="h-8">
             </div>
         </div>
     </section>
 
-    <!-- Appointment Section -->
-    <section id="appointment" class="py-16">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row gap-12">
-                <!-- Календарь и выбор времени теперь всегда первый -->
-                <div class="md:w-1/2">
-                    <div class="bg-white p-6 rounded shadow-sm mb-8">
-                        <!-- Перенесённый заголовок и легенда -->
-                        <h2 class="text-3xl font-bold text-primary mb-6">Termin vereinbaren</h2>
-                        <div class="flex flex-wrap items-center gap-6 mb-8 w-full justify-between">
-                            <div class="flex items-center">
-                                <div class="w-4 h-4 rounded-full bg-green-100 border border-green-300 mr-2"></div>
-                                <span class="text-sm text-gray-600">Verfügbar</span>
+    <!-- Kontakt & Termin Section -->
+    <section id="contact" class="py-16 md:py-24">
+        <span id="appointment"></span>
+        <div class="container mx-auto px-4 max-w-[1280px]">
+            <header class="mb-12 md:mb-16 text-center max-w-3xl mx-auto">
+                <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium mb-3 block">Termin & Anfrage</span>
+                <h2 class="font-headline text-3xl md:text-4xl font-bold text-on-surface mb-4">Kontakt</h2>
+                <p class="text-on-surface-variant max-w-2xl mx-auto">
+                    Haben Sie Fragen oder möchten Sie einen Termin vereinbaren? Kontaktieren Sie uns – wir helfen Ihnen gerne weiter!
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+                <!-- Contact Portal (Form + Calendar) -->
+                <div class="lg:col-span-7">
+                    <form id="appointment-form" novalidate class="glass-panel rounded-xl p-6 md:p-8 space-y-6 relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-2 border-b border-outline-variant/20 pb-4">
+                            <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">neurology</span>
+                            <h3 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest">Termin vereinbaren</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="font-label-caps text-label-caps text-on-surface-variant">Name *</label>
+                                <input type="text" id="name" name="name" required
+                                       class="w-full bg-white border border-outline-variant/30 text-on-surface px-4 py-3 rounded focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md transition-all"
+                                       placeholder="Ihr Name">
                             </div>
-                            <div class="flex items-center">
-                                <div class="w-4 h-4 rounded-full bg-yellow-100 border border-yellow-300 mr-2"></div>
-                                <span class="text-sm text-gray-600">Teilweise verfügbar</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-4 h-4 rounded-full bg-red-100 border border-red-300 mr-2"></div>
-                                <span class="text-sm text-gray-600">Ausgebucht</span>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-4 h-4 rounded-full bg-primary mr-2"></div>
-                                <span class="text-sm text-gray-600">Ausgewählt</span>
+                            <div class="space-y-2">
+                                <label class="font-label-caps text-label-caps text-on-surface-variant">E-Mail *</label>
+                                <input type="email" id="email" name="email" required
+                                       class="w-full bg-white border border-outline-variant/30 text-on-surface px-4 py-3 rounded focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md transition-all"
+                                       placeholder="Ihre E-Mail-Adresse">
                             </div>
                         </div>
-                        <!-- /Перенесённый блок -->
-                        <h3 class="text-xl font-semibold text-gray-500 mb-4">Verfügbare Termine</h3>
-                        <p class="text-gray-500 text-sm mb-4">Bitte warten Sie einen Moment, bis der Kalender geladen ist, bevor Sie ein Datum auswählen.</p>
-                        <div class="mb-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <button type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Vorheriger Monat">
-                                    <i class="ri-arrow-left-s-line ri-lg"></i>
-                                </button>
-                                <h4 class="text-lg font-medium" data-calendar-month aria-hidden="true">—</h4>
-                                <button type="button" class="p-2 hover:bg-gray-100 rounded-full" title="Nächster Monat">
-                                    <i class="ri-arrow-right-s-line ri-lg"></i>
-                                </button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="font-label-caps text-label-caps text-on-surface-variant">Telefon *</label>
+                                <input type="tel" id="phone" name="phone" required
+                                       class="w-full bg-white border border-outline-variant/30 text-on-surface px-4 py-3 rounded focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md transition-all"
+                                       placeholder="Ihre Telefonnummer">
                             </div>
-                            <div class="grid grid-cols-7 gap-1 text-center mb-2">
-                                <div class="text-sm text-gray-500">Mo</div>
-                                <div class="text-sm text-gray-500">Di</div>
-                                <div class="text-sm text-gray-500">Mi</div>
-                                <div class="text-sm text-gray-500">Do</div>
-                                <div class="text-sm text-gray-500">Fr</div>
-                                <div class="text-sm text-gray-400">Sa</div>
-                                <div class="text-sm text-gray-400">So</div>
-                            </div>
-                            <div class="grid grid-cols-7 gap-1">
-                                <div class="calendar-day text-gray-400">31</div>
-                                <div class="calendar-day available">1</div>
-                                <div class="calendar-day available">2</div>
-                                <div class="calendar-day available">3</div>
-                                <div class="calendar-day available">4</div>
-                                <div class="calendar-day text-gray-400">5</div>
-                                <div class="calendar-day text-gray-400">6</div>
-                                <div class="calendar-day available">7</div>
-                                <div class="calendar-day available">8</div>
-                                <div class="calendar-day available">9</div>
-                                <div class="calendar-day available">10</div>
-                                <div class="calendar-day available">11</div>
-                                <div class="calendar-day text-gray-400">12</div>
-                                <div class="calendar-day text-gray-400">13</div>
-                                <div class="calendar-day available">14</div>
-                                <div class="calendar-day available">15</div>
-                                <div class="calendar-day available">16</div>
-                                <div class="calendar-day available">17</div>
-                                <div class="calendar-day available">18</div>
-                                <div class="calendar-day text-gray-400">19</div>
-                                <div class="calendar-day text-gray-400">20</div>
-                                <div class="calendar-day available">21</div>
-                                <div class="calendar-day available">22</div>
-                                <div class="calendar-day available">23</div>
-                                <div class="calendar-day available">24</div>
-                                <div class="calendar-day available">25</div>
-                                <div class="calendar-day text-gray-400">26</div>
-                                <div class="calendar-day text-gray-400">27</div>
-                                <div class="calendar-day available">28</div>
-                                <div class="calendar-day available">29</div>
-                                <div class="calendar-day available">30</div>
-                                <div class="calendar-day text-gray-400">1</div>
-                                <div class="calendar-day text-gray-400">2</div>
-                                <div class="calendar-day text-gray-400">3</div>
-                                <div class="calendar-day text-gray-400">4</div>
+                            <div class="space-y-2">
+                                <label class="font-label-caps text-label-caps text-on-surface-variant">Leistung *</label>
+                                <select id="service" name="service" required
+                                        class="w-full bg-white border border-outline-variant/30 text-on-surface px-4 py-3 rounded focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md appearance-none">
+                                    <option value="" disabled selected>Bitte wählen</option>
+                                    <option value="inspektion">Inspektion</option>
+                                    <option value="wartung">Wartung</option>
+                                    <option value="achsvermessung">Achsvermessung</option>
+                                    <option value="diagnose">Fahrzeugdiagnose</option>
+                                    <option value="fahrwerk">Reparatur von Fahrwerk und Aufhängung</option>
+                                    <option value="bremsen">Bremsenservice</option>
+                                    <option value="elektrik">Autoelektrik und Elektronik</option>
+                                    <option value="klima">Klimaanlagenservice</option>
+                                    <option value="reifen">Reifenmontage und Auswuchten</option>
+                                    <option value="tuev">HU / AU</option>
+                                </select>
                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-lg font-medium text-gray-500 mb-4">Verfügbare Uhrzeiten</h4>
-                            <div class="time-slots-container grid grid-cols-3 gap-2">
-                                <!-- Временные слоты будут добавлены динамически -->
+                        <div class="space-y-2">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant">Nachricht</label>
+                            <textarea id="message" name="message" rows="4"
+                                      class="w-full bg-white border border-outline-variant/30 text-on-surface px-4 py-3 rounded focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md resize-none transition-all"
+                                      placeholder="Spezifizieren Sie Ihre Anforderungen..."></textarea>
+                        </div>
+
+                        <div class="space-y-6 pt-6 border-t border-outline-variant/20">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">calendar_today</span>
+                                <h4 class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest">Verfügbare Termine</h4>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Calendar -->
+                                <div class="bg-white/50 border border-outline-variant/20 rounded-lg p-4">
+                                    <div class="flex justify-between items-center mb-4 px-2">
+                                        <button type="button" id="cal-prev" class="p-1 hover:bg-surface-container rounded transition-colors" title="Vorheriger Monat">
+                                            <span class="material-symbols-outlined text-sm text-on-surface-variant">chevron_left</span>
+                                        </button>
+                                        <h5 class="font-headline text-sm font-semibold text-on-surface" data-calendar-month aria-hidden="true">—</h5>
+                                        <button type="button" id="cal-next" class="p-1 hover:bg-surface-container rounded transition-colors" title="Nächster Monat">
+                                            <span class="material-symbols-outlined text-sm text-on-surface-variant">chevron_right</span>
+                                        </button>
+                                    </div>
+                                    <div id="cal-weekdays" class="grid grid-cols-7 gap-1 text-center mb-2">
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase">Mo</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase">Di</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase">Mi</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase">Do</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant uppercase">Fr</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">Sa</div>
+                                        <div class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">So</div>
+                                    </div>
+                                    <div class="grid grid-cols-7 gap-1">
+                                        <div class="calendar-day text-outline opacity-40">31</div>
+                                        <div class="calendar-day available">1</div>
+                                        <div class="calendar-day available">2</div>
+                                        <div class="calendar-day available">3</div>
+                                        <div class="calendar-day available">4</div>
+                                        <div class="calendar-day text-outline opacity-40">5</div>
+                                        <div class="calendar-day text-outline opacity-40">6</div>
+                                        <div class="calendar-day available">7</div>
+                                        <div class="calendar-day available">8</div>
+                                        <div class="calendar-day available">9</div>
+                                        <div class="calendar-day available">10</div>
+                                        <div class="calendar-day available">11</div>
+                                        <div class="calendar-day text-outline opacity-40">12</div>
+                                        <div class="calendar-day text-outline opacity-40">13</div>
+                                        <div class="calendar-day available">14</div>
+                                        <div class="calendar-day available">15</div>
+                                        <div class="calendar-day available">16</div>
+                                        <div class="calendar-day available">17</div>
+                                        <div class="calendar-day available">18</div>
+                                        <div class="calendar-day text-outline opacity-40">19</div>
+                                        <div class="calendar-day text-outline opacity-40">20</div>
+                                        <div class="calendar-day available">21</div>
+                                        <div class="calendar-day available">22</div>
+                                        <div class="calendar-day available">23</div>
+                                        <div class="calendar-day available">24</div>
+                                        <div class="calendar-day available">25</div>
+                                        <div class="calendar-day text-outline opacity-40">26</div>
+                                        <div class="calendar-day text-outline opacity-40">27</div>
+                                        <div class="calendar-day available">28</div>
+                                        <div class="calendar-day available">29</div>
+                                        <div class="calendar-day available">30</div>
+                                        <div class="calendar-day text-outline opacity-40">1</div>
+                                        <div class="calendar-day text-outline opacity-40">2</div>
+                                        <div class="calendar-day text-outline opacity-40">3</div>
+                                        <div class="calendar-day text-outline opacity-40">4</div>
+                                        <div class="calendar-day text-outline opacity-40">5</div>
+                                        <div class="calendar-day text-outline opacity-40">6</div>
+                                        <div class="calendar-day text-outline opacity-40">7</div>
+                                        <div class="calendar-day text-outline opacity-40">8</div>
+                                        <div class="calendar-day text-outline opacity-40">9</div>
+                                        <div class="calendar-day text-outline opacity-40">10</div>
+                                        <div class="calendar-day text-outline opacity-40">11</div>
+                                    </div>
+                                    <div class="mt-4 pt-4 border-t border-outline-variant/20 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-label-caps text-on-surface-variant">
+                                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full" style="background:#0d69ab;"></span><span>Verfügbar</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full" style="background:#feba42;"></span><span>Teilweise verfügbar</span></div>
+                                        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full" style="background:#ba1a1a;"></span><span>Ausgebucht</span></div>
+                                    </div>
+                                </div>
+                                <!-- Time Slots -->
+                                <div class="space-y-4">
+                                    <span class="font-label-caps text-label-caps text-on-surface-variant block">Uhrzeiten (09:00–13:00 / 14:00–17:00)</span>
+                                    <div class="time-slots-container grid grid-cols-2 gap-2"></div>
+                                </div>
                             </div>
                         </div>
+
                         <input type="hidden" id="selected-date" name="date">
                         <input type="hidden" id="selected-time" name="time">
-                    </div>
-                </div>
-                <!-- Форма теперь всегда вторая -->
-                <div class="md:w-1/2">
-                    <!-- Удаляю заголовок и легенду из формы -->
-                    <form id="appointment-form" class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                            <input type="text" id="name" name="name" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
-                                   placeholder="Maxim Müller">
+
+                        <div class="pt-4 flex flex-col gap-4 border-t border-outline-variant/20">
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy-consent" name="privacy-consent" required
+                                       class="mt-1 border-outline-variant/30 text-primary-container focus:ring-primary-container rounded">
+                                <label for="privacy-consent" class="text-sm text-on-surface-variant">
+                                    Ich stimme der Verarbeitung meiner Daten gemäß der <a href="static/Datenschutz.pdf" target="_blank" class="text-primary hover:underline">Datenschutzerklärung</a> zu.
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                 <button type="submit"
+                                         class="px-8 py-3 bg-primary-container text-white font-label-caps text-label-caps rounded active:scale-95 transition-all hover:shadow-[inset_0_0_12px_rgba(13,105,171,0.6)] active:bg-[#25D366] flex items-center gap-2 group">
+                                     <span>Termin vereinbaren</span>
+                                     <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" style="font-variation-settings:'FILL' 0;">arrow_forward</span>
+                                 </button>
+                            </div>
                         </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail *</label>
-                            <input type="email" id="email" name="email" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
-                                   placeholder="max.mueller@email.de">
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
-                            <input type="tel" id="phone" name="phone" required 
-                                   class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
-                                   placeholder="+49 123 4567890">
-                        </div>
-                        <div>
-                            <label for="service" class="block text-sm font-medium text-gray-700 mb-1">Leistung *</label>
-                            <select id="service" name="service" required 
-                                    class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white">
-                                <option value="">Bitte wählen Sie eine Dienstleistung</option>
-                                <option value="inspektion">Inspektion</option>
-                                <option value="wartung">Wartung</option>
-                                <option value="achsvermessung">Achsvermessung</option>
-                                <option value="diagnose">Fahrzeugdiagnose</option>
-                                <option value="fahrwerk">Reparatur von Fahrwerk und Aufhängung</option>
-                                <option value="bremsen">Bremsenservice</option>
-                                <option value="elektrik">Autoelektrik und Elektronik</option>
-                                <option value="klima">Klimaanlagenservice</option>
-                                <option value="reifen">Reifenmontage und Auswuchten</option>
-                                <option value="tuev">HU / AU</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
-                            <textarea id="message" name="message" rows="3" 
-                                      class="mt-1 block w-full px-4 py-2 border-2 border-gray-200 rounded-md shadow-sm focus:border-primary focus:ring-primary bg-white"
-                                      placeholder="z.B. Inspektion für VW Golf, Baujahr 2018"></textarea>
-                        </div>
-                        <div class="flex items-center mb-2">
-                            <input type="checkbox" id="privacy-consent" name="privacy-consent" required class="mr-2">
-                            <label for="privacy-consent" class="text-sm text-gray-600">Ich stimme der Verarbeitung meiner Daten gemäß der <a href="static/Datenschutz.pdf" target="_blank" class="underline hover:text-primary">Datenschutzerklärung</a> zu.</label>
-                        </div>
-                        <input type="hidden" id="selected-date" name="date">
-                        <input type="hidden" id="selected-time" name="time">
-                        <button type="submit" 
-                                class="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors">
-                            Termin vereinbaren
-                        </button>
                     </form>
+                </div>
+
+                <!-- Right Column: Contact Info + Map -->
+                <div class="lg:col-span-5 flex flex-col gap-gutter">
+                    <!-- Status Panel -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="font-label-caps text-label-caps text-on-surface uppercase mb-6">Kontaktinformationen</h3>
+                        <ul class="space-y-4 font-label-caps text-label-caps text-on-surface-variant">
+                            <li class="flex justify-between items-center border-b border-outline-variant/20 pb-2">
+                                <span>Adresse:</span>
+                                <span class="text-on-surface font-bold text-right ml-4">Hagener Str. 40, 57223 Kreuztal</span>
+                            </li>
+                            <li class="flex justify-between items-center border-b border-outline-variant/20 pb-2">
+                                <span>Telefon:</span>
+                                <span class="text-on-surface font-bold"><a href="tel:+49273227717" class="hover:text-primary transition-colors">02732 277 17</a></span>
+                            </li>
+                            <li class="flex justify-between items-center border-b border-outline-variant/20 pb-2">
+                                <span>E-Mail:</span>
+                                <span class="text-on-surface font-bold"><a href="mailto:info@kreuztaler-werkstatt.de" class="hover:text-primary transition-colors">info@kreuztaler-werkstatt.de</a></span>
+                            </li>
+                        </ul>
+                        <div class="mt-6 pt-4 border-t border-outline-variant/20">
+                            <h4 class="font-label-caps text-label-caps text-on-surface mb-3 uppercase">Öffnungszeiten</h4>
+                            <div class="grid grid-cols-2 gap-2 font-label-caps text-label-caps text-on-surface-variant">
+                                <div>Mo – Fr:</div>
+                                <div>9:00–13:00 / 14:00–17:00</div>
+                                <div class="text-secondary mt-1">Sa + So:</div>
+                                <div class="text-secondary mt-1">geschlossen</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Map -->
+                    <div class="glass-panel rounded-xl overflow-hidden relative min-h-[300px] flex-grow">
+                        <iframe
+                            src="https://maps.google.com/maps?q=Kreuztaler+Werkstatt+GmbH%2C+Hagener+Str.+40%2C+57223+Kreuztal&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                            width="100%" height="100%" style="border:0;min-height:300px;"
+                            allowfullscreen="" loading="lazy"
+                            title="Standort der Kreuztaler Werkstatt GmbH auf Google Maps">
+                        </iframe>
+                        <div class="absolute bottom-0 left-0 w-full p-4 pointer-events-none">
+                            <div class="bg-white/90 backdrop-blur-md border border-outline-variant/30 p-4 rounded-lg inline-flex flex-col gap-1 shadow-sm pointer-events-auto">
+                                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Standort</span>
+                                <span class="font-body-md font-bold text-on-surface">Hagener Str. 40</span>
+                                <span class="font-body-md text-on-surface">57223 Kreuztal</span>
+                                <a href="https://www.google.com/maps/place/Kreuztaler+Werkstatt+GmbH/@50.9639461,7.986452,17z/data=!4m16!1m9!3m8!1s0x47bc0269f6636cf9:0x5689cc919ae815b!2sHagener+Str.+40,+57223+Kreuztal!3b1!8m2!3d50.9638819!4d7.9869934!10e5!16s%2Fg%2F11c4dnv2d9!3m5!1s0x47bc0269f56ca6dd:0xcfe054ec75398d32!8m2!3d50.9640158!4d7.9869116!16s%2Fg%2F11b6bpyr8p"
+                                   target="_blank" rel="noopener"
+                                   class="mt-2 font-label-caps text-label-caps text-primary hover:text-primary-container flex items-center gap-1 transition-colors">
+                                    In Google Maps öffnen <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 0;">open_in_new</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ -->
-    <section id="faq" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4 max-w-4xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-primary mb-4">Häufige Fragen</h2>
-                <p class="text-gray-600">Die wichtigsten Antworten auf einen Blick.</p>
+    <section id="faq" class="py-20 md:py-28 bg-background">
+        <div class="container mx-auto px-4 max-w-[1280px]">
+            <!-- Hero -->
+            <div class="mb-16 grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="font-mono text-xs text-primary uppercase tracking-widest font-medium mb-3 block">Hilfe & Infos</span>
+                    <h2 class="font-headline text-3xl md:text-4xl font-bold text-on-surface mb-4">Häufige Fragen</h2>
+                    <p class="text-on-surface-variant max-w-xl leading-relaxed">
+                        Die wichtigsten Antworten auf einen Blick. Hier finden Sie Informationen zu Inspektionen, Gewährleistungen und der Terminvergabe in unserer Kreuztaler Werkstatt.
+                    </p>
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-sm border border-outline-variant/30">
+                    <img src="static/newimages/stitch/faq-workshop.jpg" alt="Werkstatt mit Diagnosegeräten" class="w-full h-[300px] object-cover">
+                </div>
             </div>
-            <div class="space-y-4">
-                <details class="bg-white rounded shadow-sm overflow-hidden group">
-                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                        <span class="font-semibold text-lg text-gray-800">Wie oft ist eine Inspektion fällig?</span>
-                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
-                    </summary>
-                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-                        In der Regel gilt: einmal pro Jahr oder alle 15.000 bis 30.000 Kilometer — je nach Hersteller und Fahrprofil. Wir prüfen anhand des Serviceplans Ihres Fahrzeugs, welche Intervalle und Arbeiten vorgesehen sind, und beraten Sie ehrlich, was wirklich ansteht.
-                    </div>
-                </details>
-                <details class="bg-white rounded shadow-sm overflow-hidden group">
-                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                        <span class="font-semibold text-lg text-gray-800">Welche Gewährleistung gilt für Reparaturen?</span>
-                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
-                    </summary>
-                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-                        Für unsere Arbeiten und die von uns verbauten Ersatzteile gilt die gesetzliche Gewährleistung. Eine zusätzliche Garantie besteht nur, wenn sie ausdrücklich vereinbart oder vom Hersteller des Ersatzteils gewährt wird.
-                    </div>
-                </details>
-                <details class="bg-white rounded shadow-sm overflow-hidden group">
-                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
-                        <span class="font-semibold text-lg text-gray-800">Muss ich vorab einen Termin vereinbaren?</span>
-                        <i class="ri-add-line ri-lg text-primary transition-transform group-open:rotate-45"></i>
-                    </summary>
-                    <div class="px-6 pb-6 text-gray-600 leading-relaxed">
-                        Ja, ein Termin ist empfehlenswert — so können wir Ihr Fahrzeug verlässlich einplanen und Wartezeiten vermeiden. Über das Formular auf dieser Seite, telefonisch unter 02732 277 17 oder per WhatsApp erreichen Sie uns werktags von 9:00 bis 17:00 Uhr.
-                    </div>
-                </details>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="py-16">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-primary mb-4">Kontakt</h2>
-                <p class="text-gray-600 max-w-3xl mx-auto">Haben Sie Fragen oder möchten Sie einen Termin vereinbaren? Kontaktieren Sie uns – wir helfen Ihnen gerne weiter!</p>
-            </div>
-            
-            <div class="flex flex-col lg:flex-row gap-12">
-                <div class="lg:w-1/2">
-                    <div class="bg-white p-6 rounded shadow-sm mb-8">
-                        <h3 class="text-xl font-semibold mb-6">Kontaktinformationen</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="flex">
-                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
-                                    <i class="ri-map-pin-line ri-lg text-primary"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">Adresse</h4>
-                                    <p class="text-gray-600">Hagener Str. 40, 57223 Kreuztal, Deutschland</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex">
-                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
-                                    <i class="ri-phone-line ri-lg text-primary"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">Telefon</h4>
-                                    <p class="text-gray-600"><a href="tel:+49273227717" class="hover:text-primary transition-colors">02732 277 17</a></p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex">
-                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
-                                    <i class="ri-mail-line ri-lg text-primary"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">E-Mail</h4>
-                                    <p class="text-gray-600">info@kreuztaler-werkstatt.de</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex">
-                                <div class="w-12 h-12 flex items-center justify-center bg-primary/10 rounded-full mr-4 flex-shrink-0">
-                                    <i class="ri-time-line ri-lg text-primary"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-gray-800">Öffnungszeiten</h4>
-                                    <p class="text-gray-600">Montag bis Freitag: 9:00–13:00 Uhr und 14:00–17:00 Uhr</p>
-                                    <p class="text-gray-600">Samstag und Sonntag: geschlossen</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8">
-                            <h4 class="font-medium text-gray-800 mb-3">Folgen Sie uns</h4>
-                            <div class="flex space-x-4">
-                                <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" rel="noopener" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-primary/10 transition-colors" title="Folgen Sie uns auf Facebook">
-                                    <i class="ri-facebook-fill ri-lg text-primary"></i>
-                                </a>
-                            </div>
-                        </div>
+            <!-- Accordion -->
+            <div class="max-w-3xl mx-auto mb-20">
+                <div class="border-b border-outline-variant/30 py-5">
+                    <button type="button" aria-expanded="false" class="accordion-button w-full flex justify-between items-center text-left focus:outline-none gap-4" onclick="toggleAccordion(this)">
+                        <h3 class="font-headline text-xl md:text-2xl text-on-surface">Wie oft ist eine Inspektion fällig?</h3>
+                        <span class="material-symbols-outlined text-primary accordion-icon flex-shrink-0">expand_more</span>
+                    </button>
+                    <div class="accordion-content mt-4">
+                        <p class="text-on-surface-variant leading-relaxed">
+                            In der Regel gilt: einmal pro Jahr oder alle 15.000 bis 30.000 Kilometer — je nach Hersteller und Fahrprofil. Wir prüfen anhand des Serviceplans Ihres Fahrzeugs, welche Intervalle und Arbeiten vorgesehen sind, und beraten Sie ehrlich, was wirklich ansteht.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="lg:w-1/2">
-                    <div class="bg-white p-6 rounded shadow-sm h-full">
-                        <h3 class="text-xl font-semibold mb-6">Standort</h3>
-                        <div class="rounded overflow-hidden h-80 relative">
-                            <iframe
-                                src="https://maps.google.com/maps?q=Kreuztaler+Werkstatt+GmbH%2C+Hagener+Str.+40%2C+57223+Kreuztal&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                                width="100%"
-                                height="100%"
-                                class="iframe-no-border"
-                                allowfullscreen=""
-                                title="Standort der Kreuztaler Werkstatt GmbH auf Google Maps">
-                            </iframe>
-                        </div>
-                        <div class="mt-4 flex justify-end">
-                            <a href="https://www.google.com/maps/place/Kreuztaler+Werkstatt+GmbH/@50.9639461,7.986452,17z/data=!4m16!1m9!3m8!1s0x47bc0269f6636cf9:0x5689cc919ae815b!2sHagener+Str.+40,+57223+Kreuztal!3b1!8m2!3d50.9638819!4d7.9869934!10e5!16s%2Fg%2F11c4dnv2d9!3m5!1s0x47bc0269f56ca6dd:0xcfe054ec75398d32!8m2!3d50.9640158!4d7.9869116!16s%2Fg%2F11b6bpyr8p?entry=ttu&g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D"
-                               target="_blank"
-                               rel="noopener"
-                               class="flex items-center text-primary font-medium hover:text-primary/80 transition-colors">
-                                <span>In Google Maps öffnen</span>
-                                <i class="ri-external-link-line ri-sm ml-1"></i>
-                            </a>
-                        </div>
+                <div class="border-b border-outline-variant/30 py-5">
+                    <button type="button" aria-expanded="false" class="accordion-button w-full flex justify-between items-center text-left focus:outline-none gap-4" onclick="toggleAccordion(this)">
+                        <h3 class="font-headline text-xl md:text-2xl text-on-surface">Welche Gewährleistung gilt für Reparaturen?</h3>
+                        <span class="material-symbols-outlined text-primary accordion-icon flex-shrink-0">expand_more</span>
+                    </button>
+                    <div class="accordion-content mt-4">
+                        <p class="text-on-surface-variant leading-relaxed">
+                            Für unsere Arbeiten und die von uns verbauten Ersatzteile gilt die gesetzliche Gewährleistung. Eine zusätzliche Garantie besteht nur, wenn sie ausdrücklich vereinbart oder vom Hersteller des Ersatzteils gewährt wird.
+                        </p>
                     </div>
                 </div>
+                <div class="border-b border-outline-variant/30 py-5">
+                    <button type="button" aria-expanded="false" class="accordion-button w-full flex justify-between items-center text-left focus:outline-none gap-4" onclick="toggleAccordion(this)">
+                        <h3 class="font-headline text-xl md:text-2xl text-on-surface">Muss ich vorab einen Termin vereinbaren?</h3>
+                        <span class="material-symbols-outlined text-primary accordion-icon flex-shrink-0">expand_more</span>
+                    </button>
+                    <div class="accordion-content mt-4">
+                        <p class="text-on-surface-variant leading-relaxed">
+                            Ja, ein Termin ist empfehlenswert — so können wir Ihr Fahrzeug verlässlich einplanen und Wartezeiten vermeiden. Über das Formular auf dieser Seite, telefonisch unter 02732 277 17 oder per WhatsApp erreichen Sie uns werktags von 9:00 bis 17:00 Uhr.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- CTA -->
+            <div class="bg-surface-container-low rounded-xl p-8 md:p-12 text-center border border-outline-variant/30 shadow-sm max-w-4xl mx-auto">
+                <h3 class="font-headline text-2xl md:text-3xl text-on-surface mb-4">Noch Fragen?</h3>
+                <p class="text-on-surface-variant mb-8 max-w-xl mx-auto">
+                    Haben Sie weitere Fragen oder ein spezifisches Anliegen? Kontaktieren Sie uns direkt – wir helfen Ihnen gerne weiter und beraten Sie kompetent.
+                </p>
+                <a href="#contact" class="inline-flex items-center gap-2 bg-primary-container text-white px-8 py-3 rounded font-medium hover:bg-primary transition-colors active:scale-95">
+                    <span>Zum Kontaktformular</span>
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
             </div>
         </div>
     </section>
@@ -1063,86 +1360,87 @@
     <!-- Footer -->
     <footer id="footer" class="relative overflow-hidden text-white">
         <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
-        <div class="absolute inset-0 bg-gray-800/80"></div>
+        <div class="absolute inset-0 bg-inverse-surface/85"></div>
         <div class="relative z-10 pt-16 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <div>
                     <div class="flex items-center mb-4">
-                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                        <div class="text-white font-['Arimo'] text-2xl font-bold">Kreuztaler Werkstatt</div>
+                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2">
+                        <div class="text-white font-headline text-xl font-bold tracking-tight">Kreuztaler Werkstatt</div>
                     </div>
-                    <p class="text-gray-400 mb-6">Ihr zuverlässiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
-                    <div class="flex space-x-4">
-                        <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" rel="noopener" class="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full hover:bg-primary/80 transition-colors" title="Folgen Sie uns auf Facebook">
-                            <i class="ri-facebook-fill ri-lg"></i>
+                    <p class="text-white/60 mb-6 text-sm">Ihr zuverlässiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
+                    <div class="flex space-x-3">
+                        <a href="https://www.facebook.com/KWerkstatt/?locale=de_DE" target="_blank" rel="noopener" class="group w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg hover:bg-[#1877F2] hover:border-[#1877F2] hover:-translate-y-1 transition-all duration-300" title="Facebook" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-white/70 group-hover:text-white transition-colors" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="https://wa.me/491797399039" target="_blank" rel="noopener" class="group w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg hover:bg-[#25D366] hover:border-[#25D366] hover:-translate-y-1 transition-all duration-300" title="WhatsApp" aria-label="WhatsApp">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-white/70 group-hover:text-white transition-colors" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        </a>
+                        <a href="mailto:info@kreuztaler-werkstatt.de" class="group w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg hover:bg-primary-container hover:border-primary-container hover:-translate-y-1 transition-all duration-300" title="E-Mail" aria-label="E-Mail">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-white/70 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+                        </a>
+                        <a href="tel:+49273227717" class="group w-10 h-10 flex items-center justify-center bg-white/5 border border-white/10 rounded-lg hover:bg-primary-container hover:border-primary-container hover:-translate-y-1 transition-all duration-300" title="Anrufen" aria-label="Anrufen">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-white/70 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                         </a>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Schnellzugriff</h4>
+                    <h4 class="font-headline text-base font-semibold mb-4 text-white/90">Schnellzugriff</h4>
                     <ul class="space-y-2">
-                        <li><a href="#hero" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
-                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">Über uns</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
-                        <li><a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+                        <li><a href="#hero" class="text-white/60 hover:text-white transition-colors text-sm">Startseite</a></li>
+                        <li><a href="#about" class="text-white/60 hover:text-white transition-colors text-sm">Über uns</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors text-sm">Leistungen</a></li>
+                        <li><a href="#faq" class="text-white/60 hover:text-white transition-colors text-sm">FAQ</a></li>
+                        <li><a href="#contact" class="text-white/60 hover:text-white transition-colors text-sm">Kontakt</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Leistungen</h4>
+                    <h4 class="font-headline text-base font-semibold mb-4 text-white/90">Leistungen</h4>
                     <ul class="space-y-2">
-                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Wartung</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">3D-Achsvermessung</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Diagnose</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Service für alle Marken</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors text-sm">Wartung</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors text-sm">3D-Achsvermessung</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors text-sm">Diagnose</a></li>
+                        <li><a href="#services" class="text-white/60 hover:text-white transition-colors text-sm">Service für alle Marken</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Kontakt</h4>
-                    <ul class="space-y-2">
-                        <li class="flex items-start">
-                            <i class="ri-map-pin-line ri-lg mr-2 mt-1"></i>
+                    <h4 class="font-headline text-base font-semibold mb-4 text-white/90">Kontakt</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start gap-2 text-white/60">
+                            <span class="material-symbols-outlined text-base mt-0.5">location_on</span>
                             <span>Hagener Str. 40, 57223 Kreuztal</span>
                         </li>
-                        <li class="flex items-start">
-                            <i class="ri-phone-line ri-lg mr-2 mt-1"></i>
+                        <li class="flex items-start gap-2 text-white/60">
+                            <span class="material-symbols-outlined text-base mt-0.5">call</span>
                             <span><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></span>
                         </li>
-                        <li class="flex items-start">
-                            <i class="ri-mail-line ri-lg mr-2 mt-1"></i>
+                        <li class="flex items-start gap-2 text-white/60">
+                            <span class="material-symbols-outlined text-base mt-0.5">mail</span>
                             <span>info@kreuztaler-werkstatt.de</span>
                         </li>
-                        <li class="flex items-start">
-                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
+                        <li class="flex items-start gap-2 text-white/60">
+                            <span class="material-symbols-outlined text-base mt-0.5">schedule</span>
                             <span>Mo-Fr: 9:00 - 17:00 Uhr</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
-                            <span>Mittagspause: 13:00 - 14:00 Uhr</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="ri-time-line ri-lg mr-2 mt-1"></i>
-                            <span>Sa-So: geschlossen</span>
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-700 pt-8">
+            <div class="border-t border-white/10 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Kreuztaler Werkstatt GmbH. Alle Rechte vorbehalten.</p>
+                    <p class="text-white/50 text-sm mb-4 md:mb-0">© 2025 Kreuztaler Werkstatt GmbH. Alle Rechte vorbehalten.</p>
                     <div class="flex space-x-6">
-                        <a href="#" onclick="openImpressumModal()" class="text-gray-400 hover:text-white text-sm transition-colors">Impressum</a>
-                        <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">Datenschutz</a>
-                        <a href="static/Nutzungsbedingungen.pdf" target="_blank" class="text-gray-400 hover:text-white text-sm transition-colors">AGB</a>
+                        <a href="#" onclick="openImpressumModal()" class="text-white/50 hover:text-white text-sm transition-colors">Impressum</a>
+                        <a href="static/Datenschutz.pdf" target="_blank" class="text-white/50 hover:text-white text-sm transition-colors">Datenschutz</a>
+                        <a href="static/Nutzungsbedingungen.pdf" target="_blank" class="text-white/50 hover:text-white text-sm transition-colors">AGB</a>
                     </div>
                 </div>
                 <div class="text-center mt-4">
-                    <a href="https://web-studio-ok.vercel.app/" target="_blank" rel="noopener" class="text-gray-400 hover:text-white text-sm transition-colors">Webentwicklung und Design</a>
+                    <a href="https://web-studio-ok.vercel.app/" target="_blank" rel="noopener" class="text-white/50 hover:text-white text-sm transition-colors">Webentwicklung und Design</a>
                 </div>
             </div>
         </div>
@@ -1150,14 +1448,14 @@
     </footer>
 
     <!-- Impressum Modal -->
-    <div id="impressumModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-lg max-w-2xl w-full mx-4 relative">
-            <button type="button" onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" title="Modal schließen">
-                <i class="ri-close-line ri-lg"></i>
+    <div id="impressumModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="glass-panel p-8 rounded-lg max-w-2xl w-full mx-4 relative">
+            <button type="button" onclick="closeImpressumModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface" title="Modal schließen">
+                <span class="material-symbols-outlined">close</span>
             </button>
-            <h2 class="text-2xl font-bold text-primary mb-6">Impressum</h2>
-            <div class="text-gray-600 space-y-4">
-                <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
+            <h2 class="font-headline text-2xl font-bold text-primary mb-6">Impressum</h2>
+            <div class="text-on-surface-variant space-y-4 text-sm">
+                <p class="font-bold text-on-surface">Kreuztaler Werkstatt GmbH</p>
                 <p>Vertreten durch den Geschäftsführer: Andre Hovanski</p>
                 <p>Hagener Straße 40</p>
                 <p>57223 Kreuztal</p>
@@ -1172,12 +1470,35 @@
         </div>
     </div>
 
-    <script src="static/share.js"></script>
+    <script>
+        function toggleAccordion(button) {
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            document.querySelectorAll('.accordion-button').forEach(btn => {
+                btn.setAttribute('aria-expanded', 'false');
+                btn.nextElementSibling.classList.remove('open');
+            });
+            if (!isExpanded) {
+                button.setAttribute('aria-expanded', 'true');
+                button.nextElementSibling.classList.add('open');
+            }
+        }
+    </script>
+    <script src="static/share.js?v=2"></script>
     <script src="static/motion.js?v=7" defer></script>
     <script src="static/perspective-showcase.js?v=5" defer></script>
     <script type="module" src="static/hero-shader.js?v=2"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Hero slideshow
+            const slides = document.querySelectorAll('#hero-slider .slide');
+            let cur = 0;
+            if (slides.length > 1) {
+                setInterval(() => {
+                    slides[cur].classList.remove('active');
+                    cur = (cur + 1) % slides.length;
+                    slides[cur].classList.add('active');
+                }, 5000);
+            }
             const lenis = new Lenis({duration:1.1,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
             window.__lenis = lenis;
             function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
@@ -1217,11 +1538,11 @@
             const mobileMenuContent = `
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center">
-                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-12 mr-2">
-                        <div class="text-primary font-['Arimo'] text-2xl">Kreuztaler Werkstatt</div>
+                        <img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2">
+                        <div class="text-primary font-headline text-xl font-bold">Kreuztaler Werkstatt</div>
                     </div>
-                    <button type="button" id="closeMobileMenu" class="text-gray-600 hover:text-primary" title="Menü schließen">
-                        <i class="ri-close-line ri-lg"></i>
+                    <button type="button" id="closeMobileMenu" class="text-on-surface-variant hover:text-primary" title="Menü schließen">
+                        <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
                 <nav class="flex flex-col">
@@ -1230,7 +1551,7 @@
                     <a href="#services" class="mobile-nav-link">Leistungen</a>
                     <a href="#faq" class="mobile-nav-link">FAQ</a>
                     <a href="#contact" class="mobile-nav-link">Kontakt</a>
-                    <a href="#appointment" class="mobile-nav-link bg-primary text-white text-center mt-4">Termin vereinbaren</a>
+                    <a href="#appointment" class="mobile-nav-link bg-primary-container text-white text-center mt-4">Termin vereinbaren</a>
                 </nav>
             `;
             
@@ -1276,48 +1597,29 @@
             const imgWrap = link.querySelector('.relative');
             if (imgWrap) imgWrap.classList.add('overflow-hidden', 'rounded-xl');
         });
-        function syncPointer(e) {
-            const cards = document.querySelectorAll('#services .grid > [data-glow]');
-            const x = e.clientX, y = e.clientY;
-            const xp = x / window.innerWidth, yp = y / window.innerHeight;
-            const hue = 210 + 180 * xp;
-            cards.forEach(card => {
-                card.style.setProperty('--x', x.toFixed(2));
-                card.style.setProperty('--xp', xp.toFixed(2));
-                card.style.setProperty('--y', y.toFixed(2));
-                card.style.setProperty('--yp', yp.toFixed(2));
-                card.style.setProperty('--hue', hue.toFixed(0));
-                card.style.boxShadow = `0 0 18px 3px hsla(${Math.round(hue)}, 100%, 60%, 0.15)`;
-            });
-        }
-        document.addEventListener('pointermove', syncPointer);
+    </script>
 
-        // Функции для работы с модальным окном Impressum
+    <script>
         function openImpressumModal() {
             document.getElementById('impressumModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
-
         function closeImpressumModal() {
             document.getElementById('impressumModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
-
-        // Закрытие модального окна при клике вне его области
         document.getElementById('impressumModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeImpressumModal();
-            }
+            if (e.target === this) closeImpressumModal();
         });
     </script>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 z-50">
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 glass-panel border-t border-outline-variant text-on-surface p-4 z-50">
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-            <p class="text-sm mb-4 md:mb-0">Wir verwenden nur technisch notwendige Cookies, um die Funktion der Website sicherzustellen.</p>
+            <p class="text-sm mb-4 md:mb-0 text-on-surface-variant">Wir verwenden nur technisch notwendige Cookies, um die Funktion der Website sicherzustellen.</p>
             <div class="flex space-x-2">
-                <button id="accept-cookies" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition-colors">Akzeptieren</button>
-                <button id="reject-cookies" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors">Ablehnen</button>
+                <button id="accept-cookies" class="bg-primary-container text-white px-4 py-2 rounded hover:bg-primary transition-colors text-sm font-medium">Akzeptieren</button>
+                <button id="reject-cookies" class="bg-surface-container-high text-on-surface px-4 py-2 rounded hover:bg-surface-container-highest transition-colors text-sm font-medium">Ablehnen</button>
             </div>
         </div>
     </div>

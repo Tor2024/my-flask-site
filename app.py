@@ -221,9 +221,9 @@ def serve_static(path):
     except Exception as e:
         return f"Ошибка при загрузке статического файла: {str(e)}", 500
 
-@app.route('/leistung-<filename>')
+@app.route('/leistung-<filename>.html')
 def serve_leistung(filename):
-    full = f'leistung-{filename}'
+    full = f'leistung-{filename}.html'
     try:
         return send_from_directory('.', full)
     except Exception:
@@ -453,29 +453,7 @@ def admin_login():
             session['admin_authed'] = True
             return redirect('/admin')
         return redirect('/access_denied')
-    # GET: show login form
-    return '''<!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin-Login · Kreuztaler Werkstatt</title>
-<link rel="icon" type="image/avif" href="/static/images/kw.avif">
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>body{font-family:'Inter',sans-serif;background:#f3f4f6;margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center}</style>
-</head><body>
-<div class="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8">
-<div class="flex items-center justify-center mb-6">
-<img src="/static/images/kw.avif" alt="Logo" class="h-14 mr-2">
-<div><div class="text-xl font-bold text-[#0055a5]">Kreuztaler Werkstatt</div><div class="text-sm text-gray-500">Admin-Bereich</div></div>
-</div>
-<form method="POST" action="/admin/login" class="space-y-4">
-<div><label for="password" class="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
-<input type="password" id="password" name="password" required autofocus class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-[#0055a5] focus:outline-none" placeholder="••••"></div>
-<button type="submit" class="w-full bg-[#0055a5] text-white py-2.5 rounded-lg font-medium hover:bg-[#003d7a] transition-colors">Anmelden</button>
-</form>
-<div class="text-center mt-4"><a href="/" class="text-sm text-gray-500 hover:text-[#0055a5]">← Zurück zur Website</a></div>
-</div>
-</body></html>'''
+    return send_from_directory(app.root_path, 'admin_login.html')
 
 @app.route('/admin/logout')
 def admin_logout():

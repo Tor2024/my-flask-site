@@ -288,90 +288,99 @@ json_raw = r'''
 '''
 SERVICES_DATA = json.loads(json_raw.replace('None', 'null'))
 
+# Remixicon → Material Symbols mapping
+RI_TO_MS = {
+    'ri-settings-3-line': 'settings',
+    'ri-service-line': 'support_agent',
+    'ri-tools-fill': 'build',
+    'ri-check-double-line': 'task_alt',
+    'ri-radar-line': 'radar',
+    'ri-search-eye-line': 'visibility',
+    'ri-steering-2-line': 'directions_car',
+    'ri-brake-line': 'disc_full',
+    'ri-flashlight-line': 'bolt',
+    'ri-snowflake-line': 'ac_unit',
+    'ri-thermometer-line': 'thermostat',
+    'ri-drinks-line': 'water_drop',
+    'ri-roadster-line': 'directions_car',
+}
+def ms(ri):
+    """Map ri-* icon class to Material Symbol name."""
+    return RI_TO_MS.get(ri, 'build')
+
 SERVICE_COLORS = [
-    ("#6b7b8d", "#4a5560", "210 15% 45%"),   # 0 Wartung - Slate Blue
-    ("#8a7f78", "#5c5550", "25 10% 50%"),    # 1 Unfallreparatur - Warm Stone
-    ("#7a8a7a", "#556055", "120 8% 40%"),    # 2 Fahrzeugdiagnose - Sage
-    ("#9a7b6b", "#6b5550", "20 15% 50%"),    # 3 Motorreparatur - Clay
-    ("#7a7a8a", "#555560", "240 8% 45%"),    # 4 Getriebereparatur - Pewter
-    ("#9a8a7a", "#6b6055", "30 10% 55%"),    # 5 Fahrwerk - Sand
-    ("#8a7a8a", "#605560", "300 8% 45%"),    # 6 Bremsenservice - Heather
-    ("#6b7a8a", "#4a5565", "210 12% 45%"),   # 7 Autoelektrik - Steel Blue
-    ("#8a8278", "#605a50", "30 8% 50%"),     # 8 Karosserie - Fawn
-    ("#7a828a", "#555a60", "210 8% 50%"),    # 9 Klimaanlage - Fog
-    ("#6b8a7a", "#4a6055", "150 12% 45%"),   # 10 Reifen - Dusty Teal
-    ("#8a7a72", "#605550", "15 10% 50%"),    # 11 TÜV - Taupe
-]
+    ("#0d69ab", "#005086", "210 100% 36%"),  # unified Stitch primary-container / primary
+] * 12
 
 HERO_VARIANTS = [4]*12
 SECTION_ORDERS = [['intro','content','benefits','process','faq','cta']]*12
-HEADER = '''    <header class="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+HEADER = '''    <header class="glass-panel sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center">
-                <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2"></a>
-                <a href="/" class="text-primary font-['Arimo'] text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
-                <span class="text-gray-400 text-xs hidden sm:inline">GmbH</span>
+                <a href="/"><img src="static/images/kw.avif" alt="Kreuztaler Werkstatt Logo" class="h-10 mr-2 logo-glow"></a>
+                <a href="/" class="text-primary font-headline text-xl mr-1 font-bold tracking-tight">Kreuztaler Werkstatt</a>
+                <span class="text-outline text-xs hidden sm:inline">GmbH</span>
             </div>
             <nav class="hidden md:flex space-x-6 text-sm">
-                <a href="/#home" class="text-gray-600 hover:text-primary transition-colors">Startseite</a>
-                <a href="/#about" class="text-gray-600 hover:text-primary transition-colors">&Uuml;ber uns</a>
+                <a href="/#home" class="text-on-surface-variant hover:text-primary transition-colors">Startseite</a>
+                <a href="/#about" class="text-on-surface-variant hover:text-primary transition-colors">&Uuml;ber uns</a>
                 <a href="/#services" class="text-primary font-medium">Leistungen</a>
-                <a href="/#faq" class="text-gray-600 hover:text-primary transition-colors">FAQ</a>
-                <a href="/#contact" class="text-gray-600 hover:text-primary transition-colors">Kontakt</a>
+                <a href="/#faq" class="text-on-surface-variant hover:text-primary transition-colors">FAQ</a>
+                <a href="/#contact" class="text-on-surface-variant hover:text-primary transition-colors">Kontakt</a>
             </nav>
             <div class="flex items-center space-x-3">
-                <a href="tel:+49273227717" class="hidden sm:flex items-center text-primary font-medium text-sm hover:underline"><i class="ri-phone-line mr-1"></i>02732 277 17</a>
-                <a href="/#appointment" class="bg-primary text-white text-sm px-4 py-2 !rounded-button whitespace-nowrap hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">Termin</a>
-                <button type="button" id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-primary p-1"><i class="ri-menu-line ri-lg"></i></button>
+                <a href="tel:+49273227717" class="hidden sm:flex items-center text-primary font-medium text-sm hover:underline"><span class="material-symbols-outlined text-base mr-1">call</span>02732 277 17</a>
+                <a href="/#appointment" class="bg-primary-container text-white text-sm px-4 py-2 rounded whitespace-nowrap hover:bg-primary transition-colors">Termin</a>
+                <button type="button" id="mobileMenuBtn" class="md:hidden text-on-surface hover:text-primary p-1"><span class="material-symbols-outlined">menu</span></button>
             </div>
         </div>
     </header>
 '''
 FOOTER_COMMON = '''    <footer id="footer" class="relative overflow-hidden text-white">
         <canvas id="footerShader" class="absolute inset-0 w-full h-full"></canvas>
-        <div class="absolute inset-0 bg-gray-900/75"></div>
+        <div class="absolute inset-0 bg-inverse-surface/92"></div>
         <div class="relative z-10 pt-12 pb-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
                 <div>
                     <div class="flex items-center mb-3">
                         <img src="static/images/kw.avif" alt="Logo" class="h-9 mr-2">
-                        <div class="text-white font-['Arimo'] text-lg font-bold">Kreuztaler Werkstatt</div>
+                        <div class="text-white font-headline text-lg font-bold">Kreuztaler Werkstatt</div>
                     </div>
-                    <p class="text-gray-400 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
+                    <p class="text-white/60 text-sm">Ihr zuverl&auml;ssiger Partner rund ums Auto in Kreuztal und Umgebung.</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Schnellzugriff</h4>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Schnellzugriff</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="/#home" class="text-gray-400 hover:text-white transition-colors">Startseite</a></li>
-                        <li><a href="/#about" class="text-gray-400 hover:text-white transition-colors">&Uuml;ber uns</a></li>
-                        <li><a href="/#services" class="text-gray-400 hover:text-white transition-colors">Leistungen</a></li>
-                        <li><a href="/#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                        <li><a href="/#contact" class="text-gray-400 hover:text-white transition-colors">Kontakt</a></li>
+                        <li><a href="/#home" class="text-white/60 hover:text-white transition-colors">Startseite</a></li>
+                        <li><a href="/#about" class="text-white/60 hover:text-white transition-colors">&Uuml;ber uns</a></li>
+                        <li><a href="/#services" class="text-white/60 hover:text-white transition-colors">Leistungen</a></li>
+                        <li><a href="/#faq" class="text-white/60 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="/#contact" class="text-white/60 hover:text-white transition-colors">Kontakt</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Leistungen</h4>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Leistungen</h4>
                     <ul class="space-y-2 text-sm">
-''' + "\n".join(f'                        <li><a href="leistung-{s["slug"]}.html" class="text-gray-400 hover:text-white transition-colors">{s["title"]}</a></li>' for s in SERVICES_DATA) + '''
+''' + "\n".join(f'                        <li><a href="leistung-{s["slug"]}.html" class="text-white/60 hover:text-white transition-colors">{s["title"]}</a></li>' for s in SERVICES_DATA) + '''
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-gray-300">Kontakt</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li class="flex items-start"><i class="ri-map-pin-line mr-2 mt-0.5"></i><span>Hagener Str. 40, 57223 Kreuztal</span></li>
-                        <li class="flex items-start"><i class="ri-phone-line mr-2 mt-0.5"></i><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></li>
-                        <li class="flex items-start"><i class="ri-mail-line mr-2 mt-0.5"></i><span>info@kreuztaler-werkstatt.de</span></li>
-                        <li class="flex items-start"><i class="ri-time-line mr-2 mt-0.5"></i><span>Mo-Fr: 9:00&ndash;17:00 Uhr</span></li>
-                        <li class="flex items-start text-gray-500"><i class="ri-time-line mr-2 mt-0.5"></i><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
+                    <h4 class="text-sm font-semibold mb-4 uppercase tracking-wider text-white/80">Kontakt</h4>
+                    <ul class="space-y-2 text-sm text-white/60">
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">location_on</span><span>Hagener Str. 40, 57223 Kreuztal</span></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">call</span><a href="tel:+49273227717" class="hover:text-white transition-colors">02732 277 17</a></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">mail</span><span>info@kreuztaler-werkstatt.de</span></li>
+                        <li class="flex items-start gap-2"><span class="material-symbols-outlined text-base">schedule</span><span>Mo-Fr: 9:00&ndash;17:00 Uhr</span></li>
+                        <li class="flex items-start text-white/50 gap-2"><span class="material-symbols-outlined text-base">schedule</span><span>Mittagspause: 13:00&ndash;14:00 Uhr</span></li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-500 text-xs">&copy; 2025 Kreuztaler Werkstatt GmbH.</p>
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-white/50 text-xs">&copy; 2025 Kreuztaler Werkstatt GmbH.</p>
                 <div class="flex space-x-4 text-xs">
-                    <a href="#" onclick="openImpressumModal()" class="text-gray-500 hover:text-white">Impressum</a>
-                    <a href="static/Datenschutz.pdf" target="_blank" class="text-gray-500 hover:text-white">Datenschutz</a>
+                    <a href="#" onclick="openImpressumModal()" class="text-white/50 hover:text-white">Impressum</a>
+                    <a href="static/Datenschutz.pdf" target="_blank" class="text-white/50 hover:text-white">Datenschutz</a>
                 </div>
             </div>
         </div>
@@ -453,7 +462,26 @@ def page_style(idx, color_hex, color_dark, hsl):
     c = color_hex
     return f'''        <style>
         :root {{ --accent: {c}; --accent-dark: {color_dark}; --accent-hsl: {hsl}; }}
+        html, body {{ background: #f9f9fc; color: #1a1c1e; }}
         body {{ font-family: 'Inter', sans-serif; }}
+        .material-symbols-outlined {{ font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }}
+        .glass-panel {{ background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid #c1c7d2; }}
+        .tech-grid {{ background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,80,134,0.025) 40px); }}
+        .gradient-text {{ background: linear-gradient(135deg, #0d69ab, #005086); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }}
+        .accent {{ color: #0d69ab; }}
+        .brand-blue {{ color: #005086; }}
+        .hairline {{ border-color: #c1c7d2; }}
+        .card-dark {{ background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); border: 1px solid #c1c7d2; border-radius: 0.25rem; transition: border-color .25s ease, box-shadow .25s ease; }}
+        .card-dark:hover {{ border-color: #0d69ab; box-shadow: 0 0 20px rgba(13,105,171,0.1); }}
+        .btn-primary {{ background: #0d69ab; color: #fff; border-radius: 0.125rem; transition: background .2s; }}
+        .btn-primary:hover {{ background: #005086; }}
+        .btn-ghost {{ background: rgba(255,255,255,0.8); backdrop-filter: blur(16px); color: #414750; border: 1px solid #c1c7d2; border-radius: 0.125rem; transition: border-color .2s, color .2s; }}
+        .btn-ghost:hover {{ border-color: #0d69ab; color: #005086; }}
+        .logo-glow {{ filter: drop-shadow(0 0 12px rgba(13,105,171,0.25)); }}
+        .check-dot {{ width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: #0d69ab; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }}
+        .step-node {{ width: 2.5rem; height: 2.5rem; border-radius: 9999px; background: #0d69ab; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 600; }}
+        .svc-row {{ border-left: 2px solid #c1c7d2; }}
+        .svc-num {{ color: rgba(13,105,171,0.6); font-family: 'JetBrains Mono', monospace; }}
         .reveal {{ opacity: 0; transform: translateY(30px); }}
         .reveal.visible {{ opacity: 1; transform: translateY(0); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }}
         .reveal-l {{ opacity: 0; transform: translateX(-24px); }}
@@ -467,7 +495,7 @@ def page_style(idx, color_hex, color_dark, hsl):
         #mobileMenu {{
             position: fixed;
             top: 0; right: 0; bottom: 0; left: 0;
-            background: #fff;
+            background: #f9f9fc;
             z-index: 1000;
             padding: 1.5rem;
             transform: translateX(100%);
@@ -487,7 +515,7 @@ def mobile_menu_script():
         const mb = document.getElementById('mobileMenuBtn');
         const mm = document.createElement('div');
         mm.id = 'mobileMenu';
-        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10"><button id="closeMobileMenu" class="text-gray-500 hover:text-primary text-2xl">&times;</button></div><nav class="flex flex-col space-y-3 text-lg"><a href="/">Startseite</a><a href="/#about">&Uuml;ber uns</a><a href="/#services">Leistungen</a><a href="/#faq">FAQ</a><a href="/#contact">Kontakt</a><a href="/#appointment" class="block bg-primary text-white text-center py-3 rounded-xl font-semibold mt-4">Termin</a></nav>';
+        mm.innerHTML = '<div class="flex justify-between items-center mb-6"><img src="static/images/kw.avif" class="h-10 logo-glow"><button id="closeMobileMenu" class="text-on-surface-variant hover:text-on-surface material-symbols-outlined" style="font-size:28px;">close</button></div><nav class="flex flex-col space-y-3 text-lg font-headline"><a href="/" class="text-on-surface-variant hover:text-on-surface">Startseite</a><a href="/#about" class="text-on-surface-variant hover:text-on-surface">&Uuml;ber uns</a><a href="/#services" class="text-on-surface-variant hover:text-on-surface">Leistungen</a><a href="/#faq" class="text-on-surface-variant hover:text-on-surface">FAQ</a><a href="/#contact" class="text-on-surface-variant hover:text-on-surface">Kontakt</a><a href="/#appointment" class="block btn-primary text-white text-center py-3 font-semibold mt-4">Termin</a></nav>';
         document.body.appendChild(mm);
         if(mb) { mb.addEventListener('click', () => mm.classList.add('active')); }
         const cm = document.getElementById('closeMobileMenu');
@@ -510,13 +538,12 @@ def build_head(svc, idx, color_hex):
     <meta property="og:image" content="static/images/kw.avif">
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={{theme:{{extend:{{colors:{{primary:'{color_hex}',secondary:'#4a4a4a'}},borderRadius:{{'none':'0px','sm':'4px','rounded':'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}}}}}</script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>tailwind.config={{theme:{{extend:{{colors:{{surface:'#f9f9fc','surface-container-lowest':'#ffffff','surface-container-low':'#f3f3f6','surface-container':'#eeeef0','surface-container-high':'#e8e8ea','surface-container-highest':'#e2e2e5','on-surface':'#1a1c1e','on-surface-variant':'#414750',outline:'#717881','outline-variant':'#c1c7d2',primary:'#005086','primary-container':'#0d69ab','on-primary':'#ffffff',secondary:'#52606d','secondary-container':'#d5e4f4',tertiary:'#484f53','tertiary-container':'#60676b',error:'#ba1a1a','inverse-surface':'#2f3133'}},borderRadius:{{DEFAULT:'0.125rem',sm:'0.125rem',lg:'0.25rem',xl:'0.5rem','2xl':'0.75rem','3xl':'1rem',full:'9999px',button:'0.25rem'}},fontFamily:{{headline:['Hanken Grotesk','sans-serif'],body:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']}},spacing:{{gutter:'24px','margin-mobile':'16px','margin-desktop':'64px','container-max':'1280px'}}}}}}}}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
@@ -524,19 +551,19 @@ def build_head(svc, idx, color_hex):
 
 def build_hero_0(svc, c):
     """Diagonal split - image fills left side with diagonal clip"""
-    return f'''    <section class="relative min-h-[60vh] flex overflow-hidden bg-gray-900">
+    return f'''    <section class="relative min-h-[60vh] flex overflow-hidden bg-surface-container-lowest">
         <div class="absolute inset-0 w-1/2 clip-diagonal z-0">
             <img src="{svc['hero_img']}" alt="{svc['title']}" class="w-full h-full object-cover">
         </div>
         <div class="absolute inset-0 z-[1]" style="background: linear-gradient(to right, transparent 50%, {c}33 100%);"></div>
         <div class="container mx-auto px-4 relative z-10 flex items-center min-h-[60vh]">
             <div class="ml-auto max-w-xl py-20 md:py-28 hero-content">
-                <span class="inline-block text-white/50 text-xs uppercase tracking-[0.2em] mb-4 font-mono">{svc['title'].upper()}</span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5 leading-[1.1]">{svc['title']}</h1>
-                <p class="text-base md:text-lg text-white/80 leading-relaxed max-w-lg">{svc['subtitle']}</p>
+                <span class="inline-block text-on-surface-variant text-xs uppercase tracking-[0.2em] mb-4 font-mono">{svc['title'].upper()}</span>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-on-surface mb-5 leading-[1.1]">{svc['title']}</h1>
+                <p class="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-lg">{svc['subtitle']}</p>
                 <div class="flex gap-3 mt-8">
-                    <a href="/#appointment" class="inline-flex items-center bg-white text-[{c}] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                    <a href="#faq-section" class="inline-flex items-center border border-white/20 text-white/80 px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors"><i class="ri-question-line mr-2"></i>FAQ</a>
+                    <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                    <a href="#faq-section" class="btn-ghost inline-flex items-center px-6 py-3 font-medium"><span class="material-symbols-outlined mr-2">quiz</span>FAQ</a>
                 </div>
             </div>
         </div>
@@ -545,16 +572,16 @@ def build_hero_0(svc, c):
 
 def build_hero_1(svc, c):
     """Full-bleed dark overlay - centered text"""
-    return f'''    <section class="relative min-h-[55vh] flex items-center justify-center overflow-hidden bg-gray-900">
+    return f'''    <section class="relative min-h-[55vh] flex items-center justify-center overflow-hidden bg-surface-container-lowest">
         <img src="{svc['hero_img']}" alt="{svc['title']}" class="absolute inset-0 w-full h-full object-cover opacity-35">
         <div class="absolute inset-0" style="background: linear-gradient(180deg, {c}dd 0%, {c}88 60%, transparent 100%);"></div>
         <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 25% 25%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
         <div class="container mx-auto px-4 relative z-10 text-center py-24 md:py-32 hero-content">
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-4 leading-[1.05] tracking-tight">{svc['title']}</h1>
-            <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">{svc['subtitle']}</p>
+            <h1 class="text-5xl md:text-7xl font-bold font-headline text-on-surface mb-4 leading-[1.05] tracking-tight">{svc['title']}</h1>
+            <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">{svc['subtitle']}</p>
             <div class="flex flex-wrap justify-center gap-3 mt-8">
-                <a href="/#appointment" class="inline-flex items-center bg-white text-[{c}] px-7 py-3.5 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"><i class="ri-calendar-line mr-2"></i>Termin vereinbaren</a>
-                <a href="/tel:+49273227717" class="inline-flex items-center bg-white/10 text-white border border-white/20 px-7 py-3.5 rounded-lg font-medium hover:bg-white/20 transition-colors"><i class="ri-phone-line mr-2"></i>02732 277 17</a>
+                <a href="/#appointment" class="btn-primary inline-flex items-center px-7 py-3.5 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin vereinbaren</a>
+                <a href="/tel:+49273227717" class="btn-ghost inline-flex items-center px-7 py-3.5 font-medium"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
             </div>
         </div>
     </section>'''
@@ -562,23 +589,23 @@ def build_hero_1(svc, c):
 def build_hero_2(svc, c, cd):
     """Technical dark - dot grid + large icon"""
     icon = svc['hero_icon']
-    return f'''    <section class="relative min-h-[50vh] flex items-center overflow-hidden" style="background: linear-gradient(160deg, {cd} 0%, #0f0f0f 100%);">
+    return f'''    <section class="relative min-h-[50vh] flex items-center overflow-hidden" style="background: linear-gradient(160deg, #f9f9fc 0%, #e2e2e5 100%);">
         <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle at center, {c} 1px, transparent 1px); background-size: 24px 24px;"></div>
         <div class="absolute top-0 right-0 w-96 h-96 opacity-20" style="background: radial-gradient(circle, {c}88 0%, transparent 70%);"></div>
         <div class="container mx-auto px-4 relative z-10 py-20 md:py-28">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="hero-content">
                     <span class="inline-block text-[{c}] text-xs uppercase tracking-[0.25em] mb-4 font-mono opacity-70">{svc['title'].upper()}</span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08]">{svc['title']}</h1>
-                    <p class="text-base md:text-lg text-gray-300 leading-relaxed">{svc['subtitle']}</p>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-on-surface mb-4 leading-[1.08]">{svc['title']}</h1>
+                    <p class="text-base md:text-lg text-on-surface-variant leading-relaxed">{svc['subtitle']}</p>
                     <div class="flex gap-3 mt-8">
-                        <a href="/#appointment" class="inline-flex items-center px-6 py-3 rounded-lg font-semibold text-white shadow-lg transition-colors" style="background:{c}; hover:opacity-90"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                        <a href="#faq-section" class="inline-flex items-center border border-white/10 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-white/5 transition-colors"><i class="ri-question-line mr-2"></i>FAQ</a>
+                        <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                        <a href="#faq-section" class="btn-ghost inline-flex items-center px-6 py-3 font-medium"><span class="material-symbols-outlined mr-2">quiz</span>FAQ</a>
                     </div>
                 </div>
                 <div class="hidden md:flex justify-center hero-icon">
                     <div class="w-32 h-32 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, {c}33, transparent); border:1px solid {c}44;">
-                        <i class="{icon} text-6xl" style="color:{c}"></i>
+                        <span class="material-symbols-outlined" style="font-size:3.5rem;color:{c};">{ms(icon)}</span>
                     </div>
                 </div>
             </div>
@@ -592,11 +619,11 @@ def build_hero_3(svc, c):
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center hero-content">
                 <span class="inline-block text-[{c}] text-xs uppercase tracking-[0.3em] mb-5 font-mono">{svc['title'].upper()}</span>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-5 leading-[1.02] tracking-tight">{svc['title']}</h1>
-                <p class="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">{svc['subtitle']}</p>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold font-headline text-on-surface mb-5 leading-[1.02] tracking-tight">{svc['title']}</h1>
+                <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">{svc['subtitle']}</p>
                 <div class="flex flex-wrap justify-center gap-3 mt-10">
-                    <a href="/#appointment" class="inline-flex items-center text-white px-7 py-3.5 rounded-lg font-semibold transition-colors shadow-lg" style="background:{c};"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                    <a href="#faq-section" class="inline-flex items-center text-gray-600 border border-gray-200 px-7 py-3.5 rounded-lg font-medium hover:border-gray-300 transition-colors"><i class="ri-question-line mr-2"></i>FAQ</a>
+                    <a href="/#appointment" class="btn-primary inline-flex items-center px-7 py-3.5 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                    <a href="#faq-section" class="btn-ghost inline-flex items-center px-7 py-3.5 font-medium"><span class="material-symbols-outlined mr-2">quiz</span>FAQ</a>
                 </div>
             </div>
         </div>
@@ -609,14 +636,14 @@ def build_hero_4(svc, c):
             <img src="{svc['hero_img']}" alt="{svc['title']}" class="absolute inset-0 w-full h-full object-cover">
             <div class="absolute inset-0" style="background: linear-gradient(to right, transparent 40%, {c}44 100%);"></div>
         </div>
-        <div class="w-full md:w-1/2 flex items-center relative" style="background:{c};">
+        <div class="w-full md:w-1/2 flex items-center relative" style="background: linear-gradient(135deg, {c}ee, {c}cc);">
             <div class="px-8 md:px-16 py-20 md:py-28 hero-content">
-                <span class="inline-block text-white/40 text-xs uppercase tracking-[0.25em] mb-4 font-mono">{svc['title'].upper()}</span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08]">{svc['title']}</h1>
-                <p class="text-base md:text-lg text-white/80 leading-relaxed">{svc['subtitle']}</p>
+                <span class="inline-block text-outline text-xs uppercase tracking-[0.25em] mb-4 font-mono">{svc['title'].upper()}</span>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-on-surface mb-4 leading-[1.08]">{svc['title']}</h1>
+                <p class="text-base md:text-lg text-on-surface-variant leading-relaxed">{svc['subtitle']}</p>
                 <div class="flex gap-3 mt-8">
-                    <a href="/#appointment" class="inline-flex items-center bg-white text-[{c}] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                    <a href="/tel:+49273227717" class="inline-flex items-center border border-white/20 text-white/80 px-6 py-3 rounded-lg font-medium hover:bg-white/10 transition-colors"><i class="ri-phone-line mr-2"></i>02732 277 17</a>
+                    <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                    <a href="/tel:+49273227717" class="btn-ghost inline-flex items-center px-6 py-3 font-medium"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
                 </div>
             </div>
         </div>
@@ -628,30 +655,30 @@ def build_hero_5(svc, c, cd):
     subtitle = svc['subtitle']
     title = svc['title']
     img = svc['hero_img']
-    bg_style = f"background: linear-gradient(180deg, #0a0a0a 0%, {cd} 100%);" + ("" if img else " opacity:0.7;")
+    bg_style = f"background: linear-gradient(180deg, #f9f9fc 0%, {cd}15 100%);" + ("" if img else " opacity:0.7;")
     return f'''    <section class="relative min-h-[55vh] flex items-center overflow-hidden" style="{bg_style}">
-        <div class="absolute inset-0 opacity-[0.07]" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px);"></div>
+        <div class="absolute inset-0 opacity-[0.07]" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,80,134,0.03) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,80,134,0.03) 40px);"></div>
         <div class="container mx-auto px-4 relative z-10 py-20 md:py-28">
             <div class="flex flex-col md:flex-row items-center gap-12">
                 <div class="flex-1 hero-content">
                     <span class="inline-block text-xs uppercase tracking-[0.25em] mb-4 font-mono" style="color:{c}99;">{title.upper()}</span>
-                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-[1.06]">{title}</h1>
-                    <p class="text-base md:text-lg text-gray-400 leading-relaxed max-w-xl">{subtitle}</p>
+                    <h1 class="text-4xl md:text-6xl font-bold text-on-surface font-headline mb-4 leading-[1.06]">{title}</h1>
+                    <p class="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-xl">{subtitle}</p>
                     <div class="flex gap-3 mt-8">
-                        <a href="/#appointment" class="inline-flex items-center text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg" style="background:{c};"><i class="ri-calendar-line mr-2"></i>Termin</a>
-                        <a href="#faq-section" class="inline-flex items-center border border-white/10 text-gray-400 px-6 py-3 rounded-lg font-medium hover:bg-white/5 transition-colors"><i class="ri-question-line mr-2"></i>FAQ</a>
+                        <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin</a>
+                        <a href="#faq-section" class="btn-ghost inline-flex items-center px-6 py-3 font-medium"><span class="material-symbols-outlined mr-2">quiz</span>FAQ</a>
                     </div>
                 </div>
                 <div class="flex-shrink-0 hero-icon">
                     <div class="w-28 h-28 rounded-full flex items-center justify-center" style="border:2px solid {c}44;">
-                        <i class="{icon} text-5xl" style="color:{c}cc;"></i>
+                        <span class="material-symbols-outlined" style="font-size:2.5rem;color:{c}cc;">{ms(icon)}</span>
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto mt-16 pt-12 border-t border-white/5 hero-stats">
-                <div class="text-center"><div class="text-2xl font-bold text-white" style="color:{c};">15+</div><div class="text-xs text-gray-500 mt-1">Jahre Erfahrung</div></div>
-                <div class="text-center"><div class="text-2xl font-bold text-white" style="color:{c};">5000+</div><div class="text-xs text-gray-500 mt-1">Reparaturen</div></div>
-                <div class="text-center"><div class="text-2xl font-bold text-white" style="color:{c};">100%</div><div class="text-xs text-gray-500 mt-1">Zufriedenheit</div></div>
+            <div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto mt-16 pt-12 border-t border-outline-variant hero-stats">
+                <div class="text-center"><div class="text-2xl font-bold font-headline text-primary-container">15+</div><div class="text-xs text-outline mt-1">Jahre Erfahrung</div></div>
+                <div class="text-center"><div class="text-2xl font-bold font-headline text-primary-container">5000+</div><div class="text-xs text-outline mt-1">Reparaturen</div></div>
+                <div class="text-center"><div class="text-2xl font-bold font-headline text-primary-container">100%</div><div class="text-xs text-outline mt-1">Zufriedenheit</div></div>
             </div>
         </div>
     </section>'''
@@ -659,10 +686,10 @@ def build_hero_5(svc, c, cd):
 HERO_BUILDERS = [build_hero_0, build_hero_1, build_hero_2, build_hero_3, build_hero_4, build_hero_5]
 
 def section_intro(svc, c):
-    return f'''    <section class="py-20 md:py-24 bg-white">
+    return f'''    <section class="py-20 md:py-24 bg-surface-container-lowest">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto reveal">
-                <p class="text-lg md:text-xl text-gray-600 leading-relaxed text-center">{svc['intro']}</p>
+                <p class="text-lg md:text-xl text-on-surface-variant leading-relaxed text-center">{svc['intro']}</p>
             </div>
         </div>
     </section>'''
@@ -670,21 +697,21 @@ def section_intro(svc, c):
 def section_process(svc, c):
     steps = svc["process"]
     n = len(steps)
-    return f'''    <section class="py-20 md:py-24 bg-gray-50">
+    return f'''    <section class="py-20 md:py-24 bg-surface-container-low">
         <div class="container mx-auto px-4">
             <div class="text-center mb-14">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">So l&auml;uft es ab</h2>
-                <p class="text-gray-500 max-w-xl mx-auto">In {n} Schritten zu Ihrem Serviceerlebnis</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3">So l&auml;uft es ab</h2>
+                <p class="text-on-surface-variant max-w-xl mx-auto">In {n} Schritten zu Ihrem Serviceerlebnis</p>
             </div>
             <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-{n} gap-6">
 ''' + "\n".join(
-        f'''                <div class="bg-white rounded-xl p-7 relative overflow-hidden reveal" style="box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);">
+        f'''                <div class="card-dark p-7 relative overflow-hidden reveal">
                     <div class="text-6xl font-black select-none absolute -top-2 -right-1" style="color:{c}08;">{i+1}</div>
                     <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style="background:{c}15;">
-                        <i class="{icon} text-xl" style="color:{c};"></i>
+                        <span class="material-symbols-outlined text-xl" style="color:{c};">{ms(icon)}</span>
                     </div>
-                    <h3 class="font-bold text-gray-900 mb-2">{head}</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                    <h3 class="font-bold font-headline text-on-surface mb-2">{head}</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">{desc}</p>
                 </div>'''
         for i, (head, desc, icon) in enumerate(steps)
     ) + '''
@@ -695,19 +722,19 @@ def section_process(svc, c):
 def section_content(svc, c):
     items = svc["sections"]
     n = len(items)
-    return f'''    <section class="py-20 md:py-24 bg-white">
+    return f'''    <section class="py-20 md:py-24 bg-surface-container-lowest">
         <div class="container mx-auto px-4">
             <div class="max-w-5xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Das Wichtigste im &Uuml;berblick</h2>
-                <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Details zu den wichtigsten Aspekten dieses Services</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">Das Wichtigste im &Uuml;berblick</h2>
+                <p class="text-on-surface-variant text-center mb-12 max-w-xl mx-auto">Details zu den wichtigsten Aspekten dieses Services</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 ''' + "\n".join(
-        f'''                    <div class="p-7 rounded-xl reveal" style="background:{c}04; border:1px solid {c}15;">
+        f'''                    <div class="card-dark p-7 reveal">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-4" style="background:{c}15;">
                             <svg class="w-4 h-4" style="color:{c};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <h3 class="font-bold text-gray-900 mb-2">{heading}</h3>
-                        <p class="text-gray-500 text-sm leading-relaxed">{body}</p>
+                        <h3 class="font-bold font-headline text-on-surface mb-2">{heading}</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed">{body}</p>
                     </div>'''
         for heading, body in items
     ) + '''
@@ -718,19 +745,19 @@ def section_content(svc, c):
 
 def section_content_3col(svc, c):
     items = svc["sections"]
-    return f'''    <section class="py-20 md:py-24 bg-white">
+    return f'''    <section class="py-20 md:py-24 bg-surface-container-lowest">
         <div class="container mx-auto px-4">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Das Wichtigste</h2>
-                <p class="text-gray-500 text-center mb-12 max-w-xl mx-auto">Alle Details auf einen Blick</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">Das Wichtigste</h2>
+                <p class="text-on-surface-variant text-center mb-12 max-w-xl mx-auto">Alle Details auf einen Blick</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 ''' + "\n".join(
-        f'''                    <div class="p-6 rounded-xl reveal" style="background:{c}04; border:1px solid {c}12;">
+        f'''                    <div class="card-dark p-6 reveal">
                         <div class="w-6 h-6 rounded flex items-center justify-center mb-3" style="background:{c}15;">
                             <svg class="w-3 h-3" style="color:{c};" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                         </div>
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2">{heading}</h3>
-                        <p class="text-gray-500 text-xs leading-relaxed">{body}</p>
+                        <h3 class="font-semibold font-headline text-on-surface text-sm mb-2">{heading}</h3>
+                        <p class="text-on-surface-variant text-xs leading-relaxed">{body}</p>
                     </div>'''
         for heading, body in items[:6]
     ) + '''
@@ -741,18 +768,18 @@ def section_content_3col(svc, c):
 
 def section_benefits(svc, c):
     items = svc["benefits"]
-    return f'''    <section class="py-20 md:py-24" style="background:{c}03;">
+    return f'''    <section class="py-20 md:py-24 bg-surface-container-low">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">Ihre Vorteile</h2>
-                <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">Warum Sie uns vertrauen sollten</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">Ihre Vorteile</h2>
+                <p class="text-on-surface-variant text-center mb-10 max-w-xl mx-auto">Warum Sie uns vertrauen sollten</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 ''' + "\n".join(
         f'''                    <div class="flex items-start gap-3 p-4 rounded-lg reveal-l">
                         <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background:{c};">
                             <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                         </div>
-                        <span class="text-gray-700 text-sm">{item}</span>
+                        <span class="text-on-surface text-sm">{item}</span>
                     </div>'''
         for item in items
     ) + '''
@@ -766,13 +793,13 @@ def section_faq(svc, c):
     return f'''    <section id="faq-section" class="py-20 md:py-24 bg-white">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-center">H&auml;ufige Fragen</h2>
-                <p class="text-gray-500 text-center mb-10 max-w-xl mx-auto">Antworten zu "{svc['title']}"</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-headline text-on-surface mb-3 text-center">H&auml;ufige Fragen</h2>
+                <p class="text-on-surface-variant text-center mb-10 max-w-xl mx-auto">Antworten zu "{svc['title']}"</p>
                 <div class="space-y-2">
 ''' + "\n".join(
-        f'''                    <details class="rounded-xl overflow-hidden reveal" style="background:{c}04; border:1px solid {c}10;">
-                        <summary class="px-6 py-4 font-medium text-gray-800 cursor-pointer list-none flex justify-between items-center text-sm">{q}</summary>
-                        <div class="px-6 pb-5 text-gray-500 text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:{c}15;">{a}</div>
+        f'''                    <details class="card-dark overflow-hidden reveal">
+                        <summary class="px-6 py-4 font-headline font-medium text-on-surface cursor-pointer list-none flex justify-between items-center text-sm">{q}</summary>
+                        <div class="px-6 pb-5 text-on-surface-variant text-sm leading-relaxed border-t pt-4 mt-0" style="border-color:{c}15;">{a}</div>
                     </details>'''
         for q, a in items
     ) + '''
@@ -782,22 +809,22 @@ def section_faq(svc, c):
     </section>'''
 
 def section_cta(svc, c, cd):
-    return f'''    <section class="py-24 relative overflow-hidden" style="background: linear-gradient(135deg, {cd} 0%, #0f0f0f 100%);">
+    return f'''    <section class="py-24 relative overflow-hidden" style="background: radial-gradient(ellipse at center, rgba(13,105,171,0.08), transparent 70%);">
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,<svg width=\\"30\\" height=\\"30\\" viewBox=\\"0 0 30 30\\" xmlns=\\"http://www.w3.org/2000/svg\\"><circle cx=\\"15\\" cy=\\"15\\" r=\\"1.5\\" fill=\\"white\\"/></svg>'); background-size: 30px 30px;"></div>
         <div class="container mx-auto px-4 relative z-10 text-center">
-            <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed font-medium">{svc['cta']}</p>
+            <p class="text-xl md:text-2xl text-on-surface max-w-3xl mx-auto mb-8 leading-relaxed font-medium">{svc['cta']}</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/#appointment" class="inline-flex items-center justify-center bg-white text-[{c}] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl"><i class="ri-calendar-line mr-2"></i>Termin online buchen</a>
-                <a href="tel:+49273227717" class="inline-flex items-center justify-center bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-colors"><i class="ri-phone-line mr-2"></i>02732 277 17</a>
+                <a href="/#appointment" class="btn-primary inline-flex items-center justify-center px-8 py-4 font-bold text-lg"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin online buchen</a>
+                <a href="tel:+49273227717" class="btn-ghost inline-flex items-center justify-center px-8 py-4 font-semibold text-lg"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
             </div>
         </div>
     </section>'''
 
 def section_cta_short(svc, c, cd):
-    return f'''    <section class="py-16 relative" style="background:{cd};">
+    return f'''    <section class="py-16 relative" style="background:rgba(13,105,171,0.06);">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-6 leading-relaxed">{svc['cta']}</p>
-            <a href="/#appointment" class="inline-flex items-center bg-white text-[{c}] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"><i class="ri-calendar-line mr-2"></i>Termin vereinbaren</a>
+            <p class="text-lg md:text-xl text-on-surface max-w-3xl mx-auto mb-6 leading-relaxed">{svc['cta']}</p>
+            <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin vereinbaren</a>
         </div>
     </section>'''
 
@@ -820,7 +847,7 @@ def build_page(svc, idx):
     parts = [
         build_head(svc, idx, color_hex),
         page_style(idx, color_hex, color_dark, hsl),
-        '</head>\n<body class="bg-gray-50">\n',
+        '</head>\n<body class="tech-grid bg-surface text-on-surface min-h-screen relative">\n    <div class="fixed top-0 left-1/4 w-96 h-96 bg-primary-container/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>\n    <div class="fixed bottom-0 right-0 w-96 h-96 bg-secondary-container/10 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>\n',
         HEADER,
     ]
     
@@ -845,15 +872,15 @@ def build_page(svc, idx):
         parts.append(section_cta(svc, c, cd))
     
     parts.append(FOOTER_COMMON)
-    parts.append('''    <div id="impressumModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-2xl max-w-lg w-full mx-4 relative">
-            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            <h2 class="text-2xl font-bold mb-6" style="color:{c};">Impressum</h2>
-            <div class="text-gray-600 space-y-2 text-sm">
+    parts.append('''    <div id="impressumModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="glass-panel p-8 rounded-xl max-w-lg w-full mx-4 relative">
+            <button onclick="closeImpressumModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface material-symbols-outlined" style="font-size:24px;">close</button>
+            <h2 class="text-2xl font-headline font-bold mb-6 text-primary">Impressum</h2>
+            <div class="text-on-surface-variant space-y-2 text-sm">
                 <p class="font-bold">Kreuztaler Werkstatt GmbH</p>
                 <p>Gesch&auml;ftsf&uuml;hrer: Andre Hovanski</p>
                 <p>Hagener Str. 40, 57223 Kreuztal</p>
-                <p>Tel: <a href="tel:+49273227717" class="hover:underline" style="color:{c};">02732 277 17</a></p>
+                <p>Tel: <a href="tel:+49273227717" class="hover:underline text-primary-container">02732 277 17</a></p>
                 <p>E-Mail: info@kreuztaler-werkstatt.de</p>
                 <hr class="my-3">
                 <p>Handelsregister: Amtsgericht Siegen, HRB 13036</p>

@@ -1,4 +1,4 @@
-// Обработка форм и функциональность сайта
+// Formular- und Website-Funktionalität
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -6,40 +6,100 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedDate = null;
     let selectedTime = null;
 
-    // Инициализация элементов календаря
-    const monthYearDisplay = document.querySelector('.flex.justify-between.items-center.mb-4 h4');
+    // Kalender-Elemente initialisieren
+    const monthYearDisplay = document.querySelector('[data-calendar-month]');
     const calendarDays = document.querySelectorAll('.calendar-day');
     const timeSlotsContainer = document.querySelector('.time-slots-container');
     const selectedDateInput = document.getElementById('selected-date');
     const selectedTimeInput = document.getElementById('selected-time');
-    
-    // Переводим сообщения для формы записи
-    const MSG_REQUIRED_FIELDS = 'Bitte füllen Sie alle Pflichtfelder aus';
-    const MSG_SELECT_DATE_TIME = 'Bitte wählen Sie Datum und Uhrzeit';
-    const MSG_SUCCESS = 'Ihre Anfrage wurde erfolgreich gesendet! Wir werden Sie in Kürze kontaktieren, um den Termin zu bestätigen.';
-    const MSG_ERROR = 'Fehler beim Senden des Formulars: ';
-    
-    // Функция для обновления отображения месяца и года
-    function updateMonthYearDisplay() {
-        const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 
-                          'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-        monthYearDisplay.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+    // ─── Toast-Benachrichtigungssystem ───────────────────────────
+    const TOAST_ICONS = {
+        error:   'error',
+        warning: 'warning',
+        info:    'info',
+        success: 'check_circle'
+    };
+
+    function showToast(type, title, message, duration) {
+        duration = duration || 5000;
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">${TOAST_ICONS[type] || 'info'}</span>
+            </div>
+            <div class="toast-body">
+                <div class="toast-title">${title}</div>
+                ${message ? `<div class="toast-msg">${message}</div>` : ''}
+            </div>
+            <button type="button" class="toast-close" aria-label="Schließen">
+                <span class="material-symbols-outlined" style="font-size:1.125rem;">close</span>
+            </button>
+            <div class="toast-bar" style="animation-duration:${duration}ms;"></div>
+        `;
+
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        const remove = () => {
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 400);
+        };
+
+        toast.querySelector('.toast-close').addEventListener('click', remove);
+        const timer = setTimeout(remove, duration);
+        toast.addEventListener('mouseenter', () => {
+            clearTimeout(timer);
+            const bar = toast.querySelector('.toast-bar');
+            if (bar) bar.style.animationPlayState = 'paused';
+        });
+        toast.addEventListener('mouseleave', () => {
+            const bar = toast.querySelector('.toast-bar');
+            if (bar) bar.style.animationPlayState = 'running';
+            setTimeout(remove, 1500);
+        });
     }
-    
-    // Функция для обновления календаря
+
+    // ─── Individuelle Validierungsnachrichten ────────────────────
+    const FIELD_MESSAGES = {
+        name:    { title: 'Name fehlt', msg: 'Bitte geben Sie Ihren Namen ein, damit wir den Termin zuordnen können.' },
+        email:   { title: 'E-Mail fehlt', msg: 'Wir benötigen Ihre E-Mail-Adresse, um die Terminbestätigung zu senden.' },
+        phone:   { title: 'Telefon fehlt', msg: 'Eine Telefonnummer hilft uns, Sie bei Rückfragen schnell zu erreichen.' },
+        service: { title: 'Leistung wählen', msg: 'Bitte wählen Sie die gewünschte Serviceleistung aus dem Dropdown.' },
+        privacy: { title: 'Einwilligung nötig', msg: 'Bitte stimmen Sie der Datenschutzerklärung zu, damit wir Ihre Anfrage bearbeiten dürfen.' },
+        date:    { title: 'Datum fehlt', msg: 'Bitte wählen Sie zuerst einen Wunschtag im Kalender aus.' },
+        time:    { title: 'Uhrzeit fehlt', msg: 'Bitte wählen Sie eine verfügbare Uhrzeit aus den Zeitfenstern.' },
+        emailInvalid: { title: 'E-Mail ungültig', msg: 'Die eingegebene E-Mail-Adresse scheint nicht korrekt zu sein. Bitte überprüfen Sie die Schreibweise.' }
+    };
+
+    // Monats- und Jahresanzeige aktualisieren
+    function updateMonthYearDisplay() {
+        const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+                          'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        if (monthYearDisplay) monthYearDisplay.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    }
+
+    // Kalender aktualisieren
     async function updateCalendar() {
         const firstDay = new Date(currentYear, currentMonth, 1);
         const lastDay = new Date(currentYear, currentMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
         const startingDay = firstDay.getDay() || 7;
-        
+
         updateMonthYearDisplay();
-        
+
         calendarDays.forEach(day => {
             day.textContent = '';
             day.className = 'calendar-day';
         });
-        
+
         let dayCounter = 1;
         for (let i = 0; i < 42; i++) {
             if (i >= startingDay - 1 && dayCounter <= daysInMonth) {
@@ -47,13 +107,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dateString = formatDateForAPI(date);
                 const dayElement = calendarDays[i];
                 dayElement.textContent = dayCounter;
-                
+
                 if (isPastDate(date) && !isToday(date)) {
-                    dayElement.classList.add('text-gray-400');
+                    dayElement.classList.add('text-outline', 'opacity-40');
                 } else if (isWeekend(date) || isGermanHoliday(date)) {
                     dayElement.classList.add('booked');
                 } else {
-                    // Проверяем, есть ли занятые слоты на эту дату
                     getBlockedSlots(dateString).then(blockedSlots => {
                         const totalSlots = getAvailableTimeSlots(date).length;
                         if (blockedSlots.length >= totalSlots) {
@@ -65,31 +124,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 }
-                
+
                 dayCounter++;
             }
         }
     }
-    
-    // Функция для проверки, является ли день выходным
+
     function isWeekend(date) {
         const day = date.getDay();
-        return day === 0 || day === 6; // 0 - воскресенье, 6 - суббота
+        return day === 0 || day === 6;
     }
-    
-    // Функция для проверки, является ли день рабочим
-    function isWorkingDay(date) {
-        return !isWeekend(date);
-    }
-    
-    // Функция для проверки, является ли дата прошедшей
+
     function isPastDate(date) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
     }
-    
-    // Функция для проверки, является ли время прошедшим
+
     function isPastTime(time, date) {
         const now = new Date();
         const [hours, minutes] = time.split(':').map(Number);
@@ -97,422 +148,347 @@ document.addEventListener('DOMContentLoaded', function() {
         slotTime.setHours(hours, minutes, 0, 0);
         return slotTime < now;
     }
-    
-    // Функция для получения доступных временных слотов
+
     function getAvailableTimeSlots(date) {
         const slots = [];
-        const startMorning = 9; // 09:00
-        const endMorning = 13; // 13:00
-        const startAfternoon = 14; // 14:00
-        const endAfternoon = 17; // 17:00
-        
-        // Добавляем утренние слоты
+        const startMorning = 9;
+        const endMorning = 13;
+        const startAfternoon = 14;
+        const endAfternoon = 17;
+
         for (let hour = startMorning; hour < endMorning; hour++) {
             const time = `${hour.toString().padStart(2, '0')}:00`;
-            slots.push({
-                time: time,
-                available: !isPastTime(time, date)
-            });
+            slots.push({ time, available: !isPastTime(time, date) });
             const time30 = `${hour.toString().padStart(2, '0')}:30`;
-            slots.push({
-                time: time30,
-                available: !isPastTime(time30, date)
-            });
+            slots.push({ time: time30, available: !isPastTime(time30, date) });
         }
-        
-        // Добавляем дневные слоты
+
         for (let hour = startAfternoon; hour < endAfternoon; hour++) {
             const time = `${hour.toString().padStart(2, '0')}:00`;
-            slots.push({
-                time: time,
-                available: !isPastTime(time, date)
-            });
+            slots.push({ time, available: !isPastTime(time, date) });
             const time30 = `${hour.toString().padStart(2, '0')}:30`;
-            slots.push({
-                time: time30,
-                available: !isPastTime(time30, date)
-            });
+            slots.push({ time: time30, available: !isPastTime(time30, date) });
         }
-        
+
         return slots;
     }
-    
-    // Функция для отправки данных записи на сервер
-    async function saveAppointment(appointmentData) {
-        try {
-            const response = await fetch('/api/appointments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(appointmentData)
-            });
 
-            if (!response.ok) {
-                throw new Error('Fehler beim Speichern der Buchung');
-            }
-
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error('Ошибка:', error);
-            throw error;
-        }
-    }
-
-    // Функция для получения занятых слотов
     async function getBlockedSlots(date) {
         try {
             const response = await fetch('/api/appointments');
-            if (!response.ok) {
-                throw new Error('Fehler beim Abrufen der Daten');
-            }
+            if (!response.ok) throw new Error('API-Fehler');
             const data = await response.json();
-            console.log('Получены данные с сервера:', data);
-            
-            // Проверяем наличие занятых слотов для указанной даты
-            const blockedSlots = data.blocked_slots[date] || [];
-            console.log('Занятые слоты для даты', date, ':', blockedSlots);
-            
-            return blockedSlots;
+            return data.blocked_slots[date] || [];
         } catch (error) {
-            console.error('Ошибка при получении занятых слотов:', error);
             return [];
         }
     }
 
-    // Обновляем функцию updateTimeSlots
+    // Zeitfenster aktualisieren
     async function updateTimeSlots(dateString) {
         const slots = getAvailableTimeSlots(new Date(dateString));
         timeSlotsContainer.innerHTML = '';
-        
-        // Получаем занятые слоты
+
         const blockedSlots = await getBlockedSlots(dateString);
-        console.log('Занятые слоты для даты', dateString, ':', blockedSlots);
-        
+
         slots.forEach(slot => {
             const button = document.createElement('button');
             button.type = 'button';
-            
-            // Определяем классы в зависимости от статуса слота
+
             const isBlocked = blockedSlots.includes(slot.time);
             const isAvailable = slot.available && !isBlocked;
-            
-            button.className = `px-4 py-2 border rounded-md text-sm font-medium transition-colors ${
-                isBlocked
-                    ? 'border-red-200 text-red-500 bg-red-50 cursor-not-allowed' 
-                    : isAvailable
-                        ? 'border-primary text-primary hover:bg-primary/5' 
-                        : 'border-gray-200 text-gray-400 cursor-not-allowed bg-gray-100'
-            }`;
-            
+
+            button.className = isBlocked
+                ? 'flex items-center justify-center gap-1 disabled'
+                : isAvailable
+                    ? 'flex items-center justify-center gap-1'
+                    : 'flex items-center justify-center gap-1 disabled';
+
             button.textContent = slot.time;
             button.disabled = !isAvailable;
-            
+
             if (isAvailable) {
                 button.onclick = async function(e) {
                     e.preventDefault();
-                    // Снимаем выделение со всех слотов
                     timeSlotsContainer.querySelectorAll('button').forEach(btn => {
-                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.remove('bg-primary-container', 'text-on-primary-container', 'border-primary-container');
                     });
-                    // Выделяем выбранный слот
-                    this.classList.add('bg-primary', 'text-white');
-                    selectedTimeInput.value = this.textContent;
+                    this.classList.add('bg-primary-container', 'text-on-primary-container', 'border-primary-container');
+                    selectedTimeInput.value = this.textContent.trim();
+                    updateSelectedDateTimeDisplay();
                 };
             } else {
-                // Добавляем иконку для занятых слотов
-                const icon = document.createElement('i');
-                icon.className = 'ri-lock-line ri-sm ml-1';
+                const icon = document.createElement('span');
+                icon.className = 'material-symbols-outlined';
+                icon.style.cssText = 'font-size:0.875rem;';
+                icon.textContent = isBlocked ? 'lock' : 'schedule';
                 button.appendChild(icon);
             }
-            
+
             timeSlotsContainer.appendChild(button);
         });
     }
-    
-    // Функция для обновления отображения выбранной даты и времени
+
+    // Ausgewählte Datum/Uhrzeit anzeigen
     function updateSelectedDateTimeDisplay() {
-        const date = new Date(selectedDateInput.value);
+        const dateVal = selectedDateInput.value;
         const time = selectedTimeInput.value;
-        
-        if (date && time) {
-            // Устанавливаем правильный часовой пояс
-            const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = localDate.toLocaleDateString('de-DE', options);
-            
-            // Создаем контейнер для отображения, если его нет
-            let displayContainer = document.getElementById('selected-date-time-display');
-            if (!displayContainer) {
-                displayContainer = document.createElement('div');
-                displayContainer.id = 'selected-date-time-display';
-                displayContainer.className = 'mt-4 p-4 bg-gray-50 rounded';
-                appointmentForm.insertBefore(displayContainer, appointmentForm.firstChild);
-            }
-            
-            displayContainer.textContent = `Ausgewählt: ${formattedDate}, ${time}`;
+        if (!dateVal || !time) return;
+
+        const date = new Date(dateVal + 'T00:00:00');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = date.toLocaleDateString('de-DE', options);
+
+        let displayContainer = document.getElementById('selected-date-time-display');
+        const appointmentForm = document.getElementById('appointment-form');
+        if (!displayContainer && appointmentForm) {
+            displayContainer = document.createElement('div');
+            displayContainer.id = 'selected-date-time-display';
+            displayContainer.className = 'p-3 bg-primary-container/5 border border-primary-container/20 rounded-md flex items-center gap-2 text-sm';
+            appointmentForm.insertBefore(displayContainer, appointmentForm.firstChild);
+        }
+        if (displayContainer) {
+            displayContainer.innerHTML = `<span class="material-symbols-outlined text-primary-container" style="font-size:1.125rem;">event_available</span><span class="text-on-surface"><strong>${formattedDate}</strong> &middot; ${time} Uhr</span>`;
         }
     }
-    
-    // Функция для проверки, является ли дата сегодняшней
+
     function isToday(date) {
         const today = new Date();
         return date.getDate() === today.getDate() &&
                date.getMonth() === today.getMonth() &&
                date.getFullYear() === today.getFullYear();
     }
-    
-    // Функция для проверки немецких праздников
+
+    // Deutsche Feiertage
     function isGermanHoliday(date) {
         const year = date.getFullYear();
-        const month = date.getMonth() + 1; // Добавляем 1, чтобы месяцы начинались с 1
+        const month = date.getMonth() + 1;
         const day = date.getDate();
-        
-        // Список немецких праздников (фиксированные даты)
+
         const fixedHolidays = [
-            { month: 1, day: 1 },   // Новый год (1 января)
-            { month: 4, day: 25 },  // 25 апреля
-            { month: 5, day: 1 },   // День труда (1 мая)
-            { month: 10, day: 3 },  // День единства Германии (3 октября)
-            { month: 12, day: 25 }, // Рождество (25 декабря)
-            { month: 12, day: 26 }  // День подарков (26 декабря)
+            { month: 1, day: 1 }, { month: 4, day: 25 }, { month: 5, day: 1 },
+            { month: 10, day: 3 }, { month: 12, day: 25 }, { month: 12, day: 26 }
         ];
-        
-        // Проверка фиксированных праздников
-        for (const holiday of fixedHolidays) {
-            if (month === holiday.month && day === holiday.day) {
-                return true;
-            }
+        for (const h of fixedHolidays) {
+            if (month === h.month && day === h.day) return true;
         }
-        
-        // Расчет подвижных праздников
+
         const easter = calculateEaster(year);
-        const holidays = [
-            { name: 'Karfreitag', offset: -2 },    // Страстная пятница
-            { name: 'Ostermontag', offset: 1 },    // Пасхальный понедельник
-            { name: 'Christi Himmelfahrt', offset: 39 }, // Вознесение
-            { name: 'Pfingstmontag', offset: 50 }  // Пятидесятница
-        ];
-        
-        for (const holiday of holidays) {
-            const holidayDate = new Date(easter);
-            holidayDate.setDate(easter.getDate() + holiday.offset);
-            if (month === holidayDate.getMonth() && day === holidayDate.getDate()) {
-                return true;
-            }
+        const offsets = [-2, 1, 39, 50];
+        for (const off of offsets) {
+            const hd = new Date(easter);
+            hd.setDate(easter.getDate() + off);
+            if (month === hd.getMonth() + 1 && day === hd.getDate()) return true;
         }
-        
         return false;
     }
-    
-    // Функция для расчета даты Пасхи
+
     function calculateEaster(year) {
-        const a = year % 19;
-        const b = Math.floor(year / 100);
-        const c = year % 100;
-        const d = Math.floor(b / 4);
-        const e = b % 4;
-        const f = Math.floor((b + 8) / 25);
-        const g = Math.floor((b - f + 1) / 3);
-        const h = (19 * a + b - d - g + 15) % 30;
-        const i = Math.floor(c / 4);
-        const k = c % 4;
+        const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+        const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+        const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+        const i = Math.floor(c / 4), k = c % 4;
         const l = (32 + 2 * e + 2 * i - h - k) % 7;
         const m = Math.floor((a + 11 * h + 22 * l) / 451);
         const month = Math.floor((h + l - 7 * m + 114) / 31);
         const day = ((h + l - 7 * m + 114) % 31) + 1;
-        
         return new Date(year, month - 1, day);
     }
-    
-    // Инициализация кнопок навигации
-    const calendarSection = document.querySelector('.bg-white.p-6.rounded.shadow-sm.mb-8');
-    if (calendarSection) {
-        const prevButton = calendarSection.querySelector('button:has(.ri-arrow-left-s-line)');
-        const nextButton = calendarSection.querySelector('button:has(.ri-arrow-right-s-line)');
-        
-        // Добавляем одинаковые стили для обеих кнопок
-        [prevButton, nextButton].forEach(button => {
-            if (button) {
-                button.className = 'p-2 hover:bg-gray-100 rounded-full transition-colors';
-            }
+
+    // Navigations-Buttons
+    const prevButton = document.getElementById('cal-prev');
+    const nextButton = document.getElementById('cal-next');
+
+    if (prevButton) {
+        prevButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            updateCalendar();
         });
-        
-        // Кнопка "назад"
-        if (prevButton) {
-            prevButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
-                }
-                updateCalendar();
-            });
-        }
-        
-        // Кнопка "вперед"
-        if (nextButton) {
-            nextButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
-                }
-                updateCalendar();
-            });
-        }
     }
-    
-    // Обработка выбора даты
+    if (nextButton) {
+        nextButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            updateCalendar();
+        });
+    }
+
+    // Datumauswahl
     calendarDays.forEach(day => {
         day.addEventListener('click', function() {
-            if (this.classList.contains('text-gray-400') || this.classList.contains('booked')) return;
-            
-            // Снимаем выделение со всех дней
+            if (this.classList.contains('opacity-40') || this.classList.contains('booked')) return;
+            if (!this.textContent.trim()) return;
+
             calendarDays.forEach(d => d.classList.remove('selected'));
-            
-            // Выделяем выбранный день
             this.classList.add('selected');
-            
-            // Получаем выбранную дату
+
             const selectedDay = parseInt(this.textContent);
-            const selectedDate = new Date(currentYear, currentMonth, selectedDay);
-            
-            // Форматируем дату для сохранения
-            const formattedDate = formatDateForAPI(selectedDate);
+            const selDate = new Date(currentYear, currentMonth, selectedDay);
+            const formattedDate = formatDateForAPI(selDate);
             selectedDateInput.value = formattedDate;
-            
-            // Обновляем доступные временные слоты
+
             updateTimeSlots(formattedDate);
         });
     });
-    
-    // Инициализация календаря
+
     updateCalendar();
     updateSelectedDateTimeDisplay();
 
-    // Обработка отправки формы
+    // ─── Formular absenden mit individueller Validierung ─────────
     const appointmentForm = document.getElementById('appointment-form');
     if (appointmentForm) {
         appointmentForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Проверка обязательных полей
-            const requiredFields = appointmentForm.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.classList.add('border-red-500');
-                } else {
-                    field.classList.remove('border-red-500');
-                }
+
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            const service = document.getElementById('service');
+            const privacy = document.getElementById('privacy-consent');
+
+            // Pflichtfelder einzeln prüfen — erste Lücke gewinnt
+            const checks = [
+                { el: name,    key: 'name' },
+                { el: email,   key: 'email', validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+                { el: phone,   key: 'phone' },
+                { el: service, key: 'service' }
+            ];
+
+            // Visuelles Reset
+            [name, email, phone, service].forEach(el => {
+                if (el) el.classList.remove('border-error', 'ring-1', 'ring-error');
             });
-            
-            if (!isValid) {
-                alert(MSG_REQUIRED_FIELDS);
+
+            let firstError = null;
+            for (const c of checks) {
+                if (!c.el || !c.el.value.trim()) {
+                    firstError = FIELD_MESSAGES[c.key];
+                    c.el && c.el.classList.add('border-error');
+                    break;
+                }
+                if (c.validate && !c.validate(c.el.value.trim())) {
+                    firstError = FIELD_MESSAGES.emailInvalid;
+                    c.el.classList.add('border-error');
+                    break;
+                }
+            }
+
+            if (!firstError && privacy && !privacy.checked) {
+                firstError = FIELD_MESSAGES.privacy;
+            }
+            if (!firstError && !selectedDateInput.value) {
+                firstError = FIELD_MESSAGES.date;
+            }
+            if (!firstError && !selectedTimeInput.value) {
+                firstError = FIELD_MESSAGES.time;
+            }
+
+            if (firstError) {
+                showToast('warning', firstError.title, firstError.msg);
                 return;
             }
-            
-            // Проверка выбора даты и времени
-            if (!selectedDateInput.value || !selectedTimeInput.value) {
-                alert(MSG_SELECT_DATE_TIME);
-                return;
-            }
-            
-            // Сбор данных формы
+
             const formData = {
                 date: selectedDateInput.value,
                 time: selectedTimeInput.value,
-                client: {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value
-                },
-                service: document.getElementById('service').value,
+                client: { name: name.value, email: email.value, phone: phone.value },
+                service: service.value,
                 message: document.getElementById('message').value
             };
-            
+
+            // Submit-Button sperren + Ladeanzeige
+            const submitBtn = appointmentForm.querySelector('button[type="submit"]');
+            const btnLabel = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span><span>Wird gesendet…</span>';
+            }
+
             try {
-                // Отправка данных на сервер
                 const response = await fetch('/api/appointments', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify(formData)
                 });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Ошибка при отправке формы');
-                }
-                
-                const result = await response.json();
-                
-                // Автооткрытие WhatsApp с данными формы
-                const serviceSelect = document.getElementById('service');
-                const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
-                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte bestätigen Sie meine Anfrage.`);
-                window.open(`https://wa.me/491797399039?text=${waText}`, '_blank');
 
-                // Показ сообщения об успехе
-                const successMessage = document.createElement('div');
-                successMessage.className = 'mt-6 p-6 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl shadow-sm text-center transform transition-all success-message-container';
-                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Server antwortet nicht');
+                }
+
+                await response.json();
+
+                const serviceText = service.options[service.selectedIndex].text;
+                const waText = encodeURIComponent(`Guten Tag, ich habe soeben einen Termin auf Ihrer Website angefragt.\n\n*Name:* ${formData.client.name}\n*Telefon:* ${formData.client.phone}\n*Leistung:* ${serviceText}\n*Datum:* ${formData.date}\n*Uhrzeit:* ${formData.time}\n*Nachricht:* ${formData.message || '-'}\n\nBitte bestätigen Sie meine Anfrage.`);
                 const waUrl = `https://wa.me/491797399039?text=${waText}`;
 
+                // Erfolgsmeldung im Luminous-Precision-Stil
+                const successMessage = document.createElement('div');
+                successMessage.className = 'glass-panel rounded-xl p-8 text-center relative overflow-hidden';
                 successMessage.innerHTML = `
-                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white shadow-md">
-                        <i class="ri-check-line ri-3x"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-green-800 mb-2">Terminanfrage erfolgreich!</h3>
-                    <p class="text-green-700 mb-6 leading-relaxed">Ihre Anfrage wurde sicher übermittelt. Wir werden uns in Kürze melden.</p>
-                    
-                    <div class="bg-white p-5 rounded-xl shadow-sm mb-6 inline-block text-left w-full max-w-sm border border-gray-100">
-                        <p class="text-sm text-gray-600 mb-4 text-center">Für eine besonders schnelle Bestätigung können Sie uns Ihre Details direkt per WhatsApp senden:</p>
-                        <a href="${waUrl}" target="_blank" rel="noopener" class="flex items-center justify-center w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            <i class="ri-whatsapp-line ri-xl mr-2"></i>
-                            Details per WhatsApp senden
-                        </a>
+                    <div class="absolute inset-0 bg-primary-container/5 pointer-events-none"></div>
+                    <div class="relative">
+                        <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-primary-container/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary-container" style="font-size:2rem; font-variation-settings:'FILL' 1;">check_circle</span>
+                        </div>
+                        <h3 class="font-headline text-2xl text-on-surface mb-2">Terminanfrage übermittelt</h3>
+                        <p class="text-on-surface-variant mb-6 max-w-sm mx-auto leading-relaxed">
+                            Vielen Dank, <strong class="text-on-surface">${formData.client.name}</strong>!
+                            Ihre Anfrage für <strong class="text-primary">${serviceText}</strong> am
+                            <strong class="text-on-surface">${formData.date}</strong> um
+                            <strong class="text-on-surface">${formData.time} Uhr</strong> ist eingegangen.
+                            Wir melden uns zur Bestätigung.
+                        </p>
+                        <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-4 max-w-sm mx-auto">
+                            <p class="font-mono text-xs text-on-surface-variant uppercase tracking-wider mb-3">Schnellere Bestätigung</p>
+                            <a href="${waUrl}" target="_blank" rel="noopener"
+                               class="flex items-center justify-center gap-2 w-full bg-primary-container text-on-primary-container py-3 px-4 rounded-md font-medium transition-all hover:shadow-[inset_0_0_12px_rgba(13,105,171,0.6)] active:scale-95">
+                                <span class="material-symbols-outlined">forum</span>
+                                <span>Details per WhatsApp senden</span>
+                            </a>
+                        </div>
+                        <button type="button" id="new-appointment-btn"
+                                class="mt-4 font-mono text-xs text-on-surface-variant hover:text-primary transition-colors uppercase tracking-wider">
+                            Neue Anfrage stellen
+                        </button>
                     </div>
                 `;
-                
-                // Скрываем форму и показываем сообщение
+
                 appointmentForm.style.display = 'none';
                 appointmentForm.parentNode.insertBefore(successMessage, appointmentForm);
-                
-                // Очистка формы
-                appointmentForm.reset();
-                selectedDateInput.value = '';
-                selectedTimeInput.value = '';
+
+                document.getElementById('new-appointment-btn').addEventListener('click', function() {
+                    successMessage.remove();
+                    appointmentForm.style.display = '';
+                    appointmentForm.reset();
+                    selectedDateInput.value = '';
+                    selectedTimeInput.value = '';
+                    const disp = document.getElementById('selected-date-time-display');
+                    if (disp) disp.remove();
+                    calendarDays.forEach(d => d.classList.remove('selected'));
+                    timeSlotsContainer.innerHTML = '';
+                    updateCalendar();
+                });
+
+                showToast('success', 'Anfrage gesendet', 'Wir melden uns innerhalb der Geschäftszeiten zur Bestätigung.', 6000);
             } catch (error) {
-                console.error('Ошибка:', error);
-                alert(MSG_ERROR + error.message);
+                showToast('error', 'Senden fehlgeschlagen',
+                    'Ihre Anfrage konnte nicht übermittelt werden. Bitte versuchen Sie es erneut oder rufen Sie uns an: 02732 277 17.', 8000);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = btnLabel;
+                }
             }
         });
     }
 
-    // Добавляем функцию форматирования даты для API
     function formatDateForAPI(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    // Вставка дней недели на немецком
-    // Найти контейнер с днями недели и заменять их на немецкие
-    const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-    const weekRow = document.querySelectorAll('.grid.grid-cols-7.gap-1.text-center.mb-2 > div');
-    if (weekRow && weekRow.length === 7) {
-        dayNames.forEach((name, idx) => {
-            weekRow[idx].textContent = name;
-        });
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
     }
 });
