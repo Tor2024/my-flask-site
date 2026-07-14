@@ -240,10 +240,12 @@ def serve_leistung(filename):
 @app.route('/api/appointments', methods=['GET'])
 def get_appointments():
     data = read_appointments()
-    # Добавляем человекочитаемое название услуги для админки
-    for appt in data.get('appointments', []):
-        appt['service_label'] = SERVICE_LABELS.get(appt['service'], appt['service'])
-    return jsonify(data)
+    # ponytail: публичный эндпоинт отдаёт только слоты, без PII клиентов
+    public_appointments = [
+        {'date': a.get('date'), 'time': a.get('time'), 'status': a.get('status')}
+        for a in data.get('appointments', [])
+    ]
+    return jsonify({'appointments': public_appointments, 'blocked_slots': data.get('blocked_slots', {})})
 
 @app.route('/api/admin/blocked_slots', methods=['POST'])
 def update_blocked_slots():
@@ -525,8 +527,8 @@ def admin_get_appointments():
             appt['service_label'] = SERVICE_LABELS.get(appt['service'], appt['service'])
         return jsonify(data)
     except Exception as e:
-        print(f"Ошибка при загрузке записей: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Ошибка при загрузке записей: {e}")
+        return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
 
 @app.route('/api/appointments/<appointment_id>/status', methods=['PUT'])
 def update_appointment_status(appointment_id):
@@ -556,7 +558,7 @@ def update_appointment_status(appointment_id):
         return jsonify({'message': 'Статус успешно обновлен', 'status': new_status})
         
     except Exception as e:
-        print(f"Ошибка при обновлении статуса: {str(e)}")
+        logger.error(f"Ошибка при обновлении статуса: {e}")
         return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
 
 @app.route('/api/appointments/<appointment_id>', methods=['DELETE'])
@@ -590,7 +592,7 @@ def delete_appointment(appointment_id):
         return jsonify({'message': 'Запись успешно удалена'})
         
     except Exception as e:
-        print(f"Ошибка при удалении записи: {str(e)}")
+        logger.error(f"Ошибка при удалении записи: {e}")
         return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
 
 @app.route('/api/analytics', methods=['GET'])

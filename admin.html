@@ -602,9 +602,8 @@
                         method: 'DELETE'
                     });
                     if (!response.ok) throw new Error('Fehler beim Löschen');
-                    appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
-                    filteredAppointments = filteredAppointments.filter(a => a.id !== id);
-                    renderAppointmentsTable();
+                    await fetchAppointmentsData();
+                    fetchStats();
                     showToast(`Termin von ${name} am ${date} um ${time} gelöscht.`, 'success');
                 } catch (err) {
                     showToast(`Termin von ${name} konnte nicht gelöscht werden.`, 'error');
@@ -653,7 +652,7 @@
             });
 
             const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
-            const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
+            const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString && appt.status !== 'отменено').map(appt => appt.time);
             const totalSlots = TIME_SLOTS.length;
             const adminBlocked = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
             const unavailable = adminBlocked + bookedSlots.length;
@@ -714,7 +713,7 @@
         }
 
         TIME_SLOTS.forEach(slot => {
-            const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
+            const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot && appt.status !== 'отменено');
             const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot) && !isBookedByUser;
             const el = document.createElement('div');
             el.classList.add('time-slot');

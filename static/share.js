@@ -100,6 +100,23 @@ document.addEventListener('DOMContentLoaded', function() {
             day.className = 'calendar-day';
         });
 
+        // ponytail: один fetch на весь рендер, не 30
+        let blockMap = {};
+        try {
+            const resp = await fetch('/api/appointments');
+            if (resp.ok) {
+                const data = await resp.json();
+                const blocked = data.blocked_slots || {};
+                const appts = data.appointments || [];
+                const allDates = new Set([...Object.keys(blocked), ...appts.map(a => a.date)]);
+                for (const d of allDates) {
+                    const bl = blocked[d] || [];
+                    const bk = appts.filter(a => a.date === d && a.status !== 'отменено').map(a => a.time);
+                    blockMap[d] = [...new Set([...bl, ...bk])];
+                }
+            }
+        } catch (e) {}
+
         let dayCounter = 1;
         for (let i = 0; i < 42; i++) {
             if (i >= startingDay - 1 && dayCounter <= daysInMonth) {
@@ -113,16 +130,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (isWeekend(date) || isGermanHoliday(date)) {
                     dayElement.classList.add('booked');
                 } else {
-                    getBlockedSlots(dateString).then(blockedSlots => {
-                        const totalSlots = getAvailableTimeSlots(date).length;
-                        if (blockedSlots.length >= totalSlots) {
-                            dayElement.classList.add('booked');
-                        } else if (blockedSlots.length > 0) {
-                            dayElement.classList.add('partially');
-                        } else {
-                            dayElement.classList.add('available');
-                        }
-                    });
+                    const blockedSlots = blockMap[dateString] || [];
+                    const totalSlots = getAvailableTimeSlots(date).length;
+                    if (blockedSlots.length >= totalSlots) {
+                        dayElement.classList.add('booked');
+                    } else if (blockedSlots.length > 0) {
+                        dayElement.classList.add('partially');
+                    } else {
+                        dayElement.classList.add('available');
+                    }
                 }
 
                 dayCounter++;
