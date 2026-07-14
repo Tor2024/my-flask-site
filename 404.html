@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 · Seite nicht gefunden · Kreuztaler Werkstatt GmbH</title>
+    <link rel="icon" type="image/avif" href="static/images/kw.avif">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>tailwind.config={theme:{extend:{colors:{'on-primary-fixed':'#001d35','surface-container-lowest':'#ffffff','tertiary-container':'#60676b','secondary':'#52606d','surface-container-low':'#f3f3f6','on-surface':'#1a1c1e','surface':'#f9f9fc','outline-variant':'#c1c7d2','primary':'#005086','primary-container':'#0d69ab','secondary-container':'#d5e4f4','on-primary':'#ffffff','surface-container':'#eeeef0','surface-variant':'#e2e2e5','background':'#f9f9fc','inverse-surface':'#2f3133','outline':'#717881','tertiary':'#484f53','surface-container-highest':'#e2e2e5','on-surface-variant':'#414750','error':'#ba1a1a','on-background':'#1a1c1e','surface-container-high':'#e8e8ea'},borderRadius:{'none':'0','sm':'0.125rem',DEFAULT:'0.125rem','md':'0.25rem','lg':'0.5rem','xl':'0.75rem','2xl':'1rem','3xl':'1.5rem','full':'9999px','button':'0.25rem'},fontFamily:{'headline':['Hanken Grotesk','sans-serif'],'body':['Inter','sans-serif'],'mono':['JetBrains Mono','monospace']}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles.css?v=2">
+    <style>
+        :root { --accent: #0d69ab; --accent-dark: #005086; }
+        html, body { background: #f9f9fc; color: #1a1c1e; }
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text { background: linear-gradient(135deg, #0d69ab, #005086); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-primary { background: #0d69ab; color: #fff; border-radius: 0.125rem; transition: background .2s; }
+        .btn-primary:hover { background: #005086; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="text-center max-w-md">
+        <div class="text-[120px] font-headline font-extrabold leading-none gradient-text mb-2">404</div>
+        <h1 class="text-2xl font-headline font-semibold text-[#1a1c1e] mb-2">Seite nicht gefunden</h1>
+        <p class="text-[#414750] text-sm leading-relaxed mb-8">
+            Die von Ihnen angeforderte Seite existiert nicht oder wurde verschoben.
+        </p>
+        <a href="/" class="btn-primary inline-block px-6 py-3 text-sm font-medium no-underline">Zur Startseite</a>
+    </div>
+</body>
+</html>

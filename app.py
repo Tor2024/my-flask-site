@@ -47,13 +47,16 @@ if not os.path.exists(VISITS_FILE):
 
 # Словарь соответствий value → название услуги
 SERVICE_LABELS = {
+    'inspektion': 'Inspektion',
     'wartung': 'Wartung',
+    'achsvermessung': 'Achsvermessung',
     'diagnose': 'Fahrzeugdiagnose',
     'fahrwerk': 'Reparatur von Fahrwerk und Aufhängung',
     'bremsen': 'Bremsenservice',
     'elektrik': 'Autoelektrik und Elektronik',
     'klima': 'Klimaanlagenservice',
-    'reifen': 'Reifenmontage und Auswuchten'
+    'reifen': 'Reifenmontage und Auswuchten',
+    'tuev': 'TÜV-/AU-Untersuchung'
 }
 
 # Функции для работы с данными
@@ -175,7 +178,7 @@ def send_daily_reminders():
 
         # Проходим по всем записям
         for appt in appointments:
-            if appt.get('date') == tomorrow and appt.get('status') != 'отменен':
+            if appt.get('date') == tomorrow and appt.get('status') != 'отменено':
                 client = appt.get('client', {})
                 email = client.get('email')
                 name = client.get('name')
@@ -220,6 +223,10 @@ def serve_static(path):
         return send_from_directory('static', path)
     except Exception as e:
         return f"Ошибка при загрузке статического файла: {str(e)}", 500
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.root_path, '404.html'), 404
 
 @app.route('/leistung-<filename>.html')
 def serve_leistung(filename):
@@ -314,6 +321,12 @@ def update_blocked_slots():
                     appointments_data['blocked_slots'][date].append(slot)
 
             appointments_data['blocked_slots'][date].sort()
+        elif action == 'unblock_all':
+            if date in appointments_data['blocked_slots']:
+                booked_slots = [appt['time'] for appt in appointments_data['appointments'] if appt['date'] == date]
+                appointments_data['blocked_slots'][date] = [s for s in appointments_data['blocked_slots'][date] if s in booked_slots]
+                if not appointments_data['blocked_slots'][date]:
+                    del appointments_data['blocked_slots'][date]
         elif action == 'unblock_range':
             start_time = data.get('start_time')
             end_time = data.get('end_time')
@@ -343,8 +356,33 @@ def update_blocked_slots():
                 # Если больше нет заблокированных слотов на эту дату, удаляем дату
                 if not appointments_data['blocked_slots'][date]:
                     del appointments_data['blocked_slots'][date]
+        elif action == 'block_many':
+            times = data.get('times', [])
+            if not times:
+                return jsonify({'error': 'Zeiten sind erforderlich'}), 400
+            booked_slots = [appt['time'] for appt in appointments_data['appointments'] if appt['date'] == date]
+            conflict = [t for t in times if t in booked_slots]
+            if conflict:
+                return jsonify({'error': f'Bereits gebucht: {", ".join(conflict)}'}), 400
+            if date not in appointments_data['blocked_slots']:
+                appointments_data['blocked_slots'][date] = []
+            for slot in times:
+                if slot not in appointments_data['blocked_slots'][date]:
+                    appointments_data['blocked_slots'][date].append(slot)
+            appointments_data['blocked_slots'][date].sort()
+        elif action == 'unblock_many':
+            times = data.get('times', [])
+            if not times:
+                return jsonify({'error': 'Zeiten sind erforderlich'}), 400
+            if date in appointments_data['blocked_slots']:
+                appointments_data['blocked_slots'][date] = [
+                    slot for slot in appointments_data['blocked_slots'][date]
+                    if slot not in times
+                ]
+                if not appointments_data['blocked_slots'][date]:
+                    del appointments_data['blocked_slots'][date]
         else:
-            return jsonify({'error': 'Неизвестное действие. Используйте "block", "unblock", "block_all", "block_range" или "unblock_range"'}), 400
+            return jsonify({'error': 'Unbekannte Aktion'}), 400
 
         save_appointments(appointments_data)
         return jsonify({'success': True, 'blocked_slots': appointments_data['blocked_slots']})
@@ -394,6 +432,11 @@ def create_appointment():
                 appointment['time'] == data['time']):
                 return jsonify({'error': 'Dieser Termin ist bereits vergeben'}), 400
         
+        # Проверка, что слот не заблокирован администратором
+        if appointments_data.get('blocked_slots', {}).get(data['date']) and \
+           data['time'] in appointments_data['blocked_slots'][data['date']]:
+            return jsonify({'error': 'Dieser Termin ist nicht verfügbar'}), 400
+
         # Добавление новой записи
         new_appointment = {
             'id': f"{data['date']}_{data['time']}_{datetime.now().timestamp()}",
@@ -407,11 +450,6 @@ def create_appointment():
         }
         
         appointments_data['appointments'].append(new_appointment)
-        
-        # Обновление заблокированных слотов
-        if data['date'] not in appointments_data['blocked_slots']:
-            appointments_data['blocked_slots'][data['date']] = []
-        appointments_data['blocked_slots'][data['date']].append(data['time'])
         
         # Сохранение данных
         save_appointments(appointments_data)
@@ -483,7 +521,8 @@ def admin_get_appointments():
         return auth_fail
     try:
         data = read_appointments()
-        print(f"Загружены записи: {data}")
+        for appt in data.get('appointments', []):
+            appt['service_label'] = SERVICE_LABELS.get(appt['service'], appt['service'])
         return jsonify(data)
     except Exception as e:
         print(f"Ошибка при загрузке записей: {str(e)}")
@@ -491,6 +530,9 @@ def admin_get_appointments():
 
 @app.route('/api/appointments/<appointment_id>/status', methods=['PUT'])
 def update_appointment_status(appointment_id):
+    auth_fail = require_admin()
+    if auth_fail:
+        return auth_fail
     try:
         data = request.get_json()
         new_status = data.get('status')
@@ -519,6 +561,9 @@ def update_appointment_status(appointment_id):
 
 @app.route('/api/appointments/<appointment_id>', methods=['DELETE'])
 def delete_appointment(appointment_id):
+    auth_fail = require_admin()
+    if auth_fail:
+        return auth_fail
     try:
         appointments = read_appointments()
         found = False
@@ -526,16 +571,13 @@ def delete_appointment(appointment_id):
         # Ищем запись для удаления
         for i, appointment in enumerate(appointments['appointments']):
             if appointment['id'] == appointment_id:
-                # Удаляем время из заблокированных слотов
-                if appointment['date'] in appointments['blocked_slots']:
-                    appointments['blocked_slots'][appointment['date']] = [
-                        time for time in appointments['blocked_slots'][appointment['date']]
-                        if time != appointment['time']
-                    ]
-                    # Если больше нет заблокированных слотов на эту дату, удаляем дату
-                    if not appointments['blocked_slots'][appointment['date']]:
-                        del appointments['blocked_slots'][appointment['date']]
-                
+                # Чистим blocked_slots от удалённой записи
+                appt_date = appointment.get('date')
+                appt_time = appointment.get('time')
+                if appt_date and appt_time and appt_date in appointments.get('blocked_slots', {}):
+                    appointments['blocked_slots'][appt_date] = [s for s in appointments['blocked_slots'][appt_date] if s != appt_time]
+                    if not appointments['blocked_slots'][appt_date]:
+                        del appointments['blocked_slots'][appt_date]
                 # Удаляем запись
                 del appointments['appointments'][i]
                 found = True

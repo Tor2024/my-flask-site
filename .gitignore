@@ -1,3 +1,9 @@
+# Runtime data
+data/backups/
+
+# Large video files (use webm instead)
+*.mp4
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

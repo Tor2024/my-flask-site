@@ -42,13 +42,14 @@
         /* Calendar */
         .calendar-day { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 0.25rem; transition: all 0.15s; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; border: 1px solid transparent; }
         .calendar-day:hover { background-color: #eeeef0; }
-        .calendar-day.available { background-color: rgba(13, 105, 171, 0.10); color: #005086; border-color: rgba(13, 105, 171, 0.20); }
-        .calendar-day.available:hover { background-color: rgba(13, 105, 171, 0.20); }
-        .calendar-day.partially { background-color: rgba(254, 186, 66, 0.10); color: #7f5600; border-color: rgba(254, 186, 66, 0.30); }
-        .calendar-day.partially:hover { background-color: rgba(254, 186, 66, 0.20); }
-        .calendar-day.booked { background-color: rgba(186, 26, 26, 0.05); color: rgba(186, 26, 26, 0.60); border-color: rgba(186, 26, 26, 0.10); cursor: not-allowed; }
-        .calendar-day.blocked-admin { background-color: rgba(0, 80, 134, 0.08); color: #005086; border-color: rgba(0, 80, 134, 0.20); }
-        .calendar-day.blocked-admin:hover { background-color: rgba(0, 80, 134, 0.18); }
+        .calendar-day.available { background-color: rgba(22, 163, 74, 0.15); color: #15803d; border-color: rgba(22, 163, 74, 0.35); }
+        .calendar-day.available:hover { background-color: rgba(22, 163, 74, 0.25); }
+        .calendar-day.partially { background-color: rgba(254, 186, 66, 0.25); color: #92400e; border-color: rgba(254, 186, 66, 0.50); }
+        .calendar-day.partially:hover { background-color: rgba(254, 186, 66, 0.35); }
+        .calendar-day.fully-blocked { background-color: rgba(186, 26, 26, 0.18); color: #991b1b; border-color: rgba(186, 26, 26, 0.40); }
+        .calendar-day.fully-blocked:hover { background-color: rgba(186, 26, 26, 0.28); }
+        .calendar-day.weekend { background-color: rgba(186, 26, 26, 0.08); color: #991b1b; border-color: rgba(186, 26, 26, 0.20); }
+        .calendar-day.weekend:hover { background-color: rgba(186, 26, 26, 0.15); }
         .calendar-day.selected { background-color: #005086; color: #ffffff; border-color: #005086; font-weight: 700; box-shadow: 0 0 8px rgba(13,105,171,0.4); }
         .calendar-day.today { outline: 2px solid #0d69ab; outline-offset: -2px; font-weight: 700; }
         .calendar-day.outside { color: rgba(193,199,210,0.4); cursor: default; }
@@ -56,19 +57,22 @@
         /* Time slots */
         .time-slot { padding: 0.5rem 0.75rem; border-radius: 0.25rem; border: 1px solid rgba(193,199,210,0.3); background: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-align: center; cursor: pointer; transition: all 0.15s; color: #1a1c1e; }
         .time-slot:hover:not(.booked):not(.disabled) { border-color: #0d69ab; color: #005086; }
-        .time-slot.available { background-color: rgba(13,105,171,0.04); color: #0d69ab; }
-        .time-slot.available:hover { background-color: rgba(13,105,171,0.12); }
+        .time-slot.available { background-color: rgba(22,163,74,0.06); color: #15803d; border-color: rgba(22,163,74,0.20); }
+        .time-slot.available:hover { background-color: rgba(22,163,74,0.15); }
         .time-slot.selected { background-color: #005086; color: white; border-color: #005086; }
-        .time-slot.booked { background-color: rgba(186,26,26,0.04); color: #ba1a1a; border-color: rgba(186,26,26,0.15); cursor: not-allowed; opacity: 0.7; }
-        .time-slot.blocked-admin { background-color: rgba(0,80,134,0.04); color: #005086; border-color: rgba(0,80,134,0.15); cursor: pointer; }
-        .time-slot.blocked-admin:hover { background-color: rgba(0,80,134,0.12); }
+        .time-slot.available.selected, .time-slot.blocked-admin.selected { background-color: #005086; color: white; border-color: #005086; }
+        .time-slot.booked { background-color: rgba(186,26,26,0.08); color: #ba1a1a; border-color: rgba(186,26,26,0.25); cursor: not-allowed; opacity: 0.7; }
+        .time-slot.blocked-admin { background-color: rgba(186,26,26,0.06); color: #991b1b; border-color: rgba(186,26,26,0.20); cursor: pointer; }
+        .time-slot.blocked-admin:hover { background-color: rgba(186,26,26,0.15); }
         /* Table */
         #appointments-table th { font-family: 'Hanken Grotesk', sans-serif; font-weight: 600; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.04em; color: #52606d; background: #eeeef0; border-bottom: 2px solid #c1c7d2; }
         #appointments-table td { font-size: 0.875rem; border-bottom: 1px solid #e2e2e5; }
         #appointments-table tr:hover td { background: rgba(13,105,171,0.02); }
         /* Toast */
-        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
-        .toast { pointer-events: auto; min-width: 280px; max-width: 400px; padding: 0.875rem 1rem; border-radius: 0.125rem; color: #fff; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(0,80,134,0.12); display: flex; align-items: flex-start; gap: 0.625rem; animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; left: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; align-items: flex-end; max-width: calc(100vw - 3rem); }
+        .toast { pointer-events: auto; min-width: 0; max-width: min(400px, calc(100vw - 3rem)); width: 100%; padding: 0.875rem 1rem; border-radius: 0.125rem; color: #fff; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(0,80,134,0.12); display: flex; align-items: flex-start; gap: 0.625rem; animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box; }
+        .toast > span:not(.material-symbols-outlined) { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+        @media (min-width: 480px) { #toast-container { left: auto; } .toast { min-width: 280px; width: auto; } }
         .toast.fade-out { animation: toast-out 0.25s ease forwards; }
         .toast.success { background: #0d69ab; }
         .toast.error { background: #ba1a1a; }
@@ -162,31 +166,6 @@
                 <h2 class="text-2xl font-headline font-bold text-on-surface">Datum und Uhrzeit blockieren</h2>
             </div>
 
-            <!-- Legend -->
-            <div class="flex flex-wrap items-center gap-5 mb-8 p-4 bg-surface-container-low rounded border border-outline-variant/50">
-                <span class="text-xs font-headline font-semibold text-on-surface-variant uppercase tracking-wider mr-1">Legende</span>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(13,105,171,0.10)] border border-[rgba(13,105,171,0.20)]"></span>
-                    <span class="text-sm text-on-surface-variant">Verfügbar</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(254,186,66,0.10)] border border-[rgba(254,186,66,0.30)]"></span>
-                    <span class="text-sm text-on-surface-variant">Teilweise belegt</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(186,26,26,0.05)] border border-[rgba(186,26,26,0.10)]"></span>
-                    <span class="text-sm text-on-surface-variant">Gebucht</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-sm bg-[rgba(0,80,134,0.08)] border border-[rgba(0,80,134,0.20)]"></span>
-                    <span class="text-sm text-on-surface-variant">Vom Admin blockiert</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3.5 h-3.5 rounded-sm bg-[#005086] shadow-[0_0_4px_rgba(13,105,171,0.4)]"></span>
-                    <span class="text-sm text-on-surface-variant">Ausgewählt</span>
-                </div>
-            </div>
-
             <!-- Calendar -->
             <div class="md:grid md:grid-cols-2 md:gap-8">
                 <div>
@@ -225,57 +204,28 @@
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="mt-8 space-y-4 border-t border-outline-variant/50 pt-6">
-                <!-- Single slot -->
-                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">schedule</span>
-                        <h4 class="text-base font-headline font-semibold text-on-surface">Einzelner Slot</h4>
-                    </div>
-                    <p class="text-sm text-on-surface-variant mb-3">Zuerst Datum und Slot wählen, dann sperren oder freigeben.</p>
-                    <button id="block-unblock-button" type="button" class="btn-primary py-2 px-5" disabled>
-                        Bitte Slot auswählen
-                    </button>
+            <!-- Unified blocking panel -->
+            <div class="mt-6 p-5 bg-surface-container-low rounded border border-outline-variant/30">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">lock_clock</span>
+                    <h4 class="text-base font-headline font-semibold text-on-surface">Zeitfenster verwalten</h4>
                 </div>
-
-                <!-- Range -->
-                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">swap_horiz</span>
-                        <h4 class="text-base font-headline font-semibold text-on-surface">Zeitbereich</h4>
-                    </div>
-                    <p class="text-sm text-on-surface-variant mb-3">Mehrere Slots auf einmal sperren oder freigeben.</p>
-                    <div class="flex flex-wrap gap-3 items-end">
-                        <div>
-                            <label for="range-start-time" class="block text-xs font-mono text-on-surface-variant mb-1 uppercase tracking-wider">Von</label>
-                            <select id="range-start-time" class="px-3 py-2 text-sm" aria-label="Startzeit wählen">
-                                <option value="">Startzeit</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="range-end-time" class="block text-xs font-mono text-on-surface-variant mb-1 uppercase tracking-wider">Bis</label>
-                            <select id="range-end-time" class="px-3 py-2 text-sm" aria-label="Endzeit wählen">
-                                <option value="">Endzeit</option>
-                            </select>
-                        </div>
-                        <button type="button" id="block-range-button" class="btn-amber px-4 py-2" disabled>Bereich sperren</button>
-                        <button type="button" id="unblock-range-button" class="btn-primary px-4 py-2" disabled>Bereich freigeben</button>
-                    </div>
+                <p class="text-sm text-on-surface-variant mb-4">Datum wählen, dann Slots antippen zum Auswählen. Mehrfachauswahl möglich.</p>
+                <div class="flex flex-wrap gap-4 mb-4 text-xs text-on-surface-variant">
+                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:rgba(22,163,74,0.25);border:1px solid rgba(22,163,74,0.40)"></span> Frei</span>
+                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:rgba(254,186,66,0.35);border:1px solid rgba(254,186,66,0.55)"></span> Teilweise</span>
+                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:rgba(186,26,26,0.25);border:1px solid rgba(186,26,26,0.40)"></span> Belegt / Gesperrt</span>
+                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#005086"></span> Ausgewählt</span>
                 </div>
-
-                <!-- Entire date -->
-                <div class="p-5 bg-surface-container-low rounded border border-outline-variant/30">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="material-symbols-outlined text-primary" style="font-size:1.25rem">event_busy</span>
-                        <h4 class="text-base font-headline font-semibold text-on-surface">Gesamtes Datum</h4>
-                    </div>
-                    <p class="text-sm text-on-surface-variant mb-3">Alle Slots des gewählten Datums auf einmal sperren oder freigeben.</p>
-                    <div class="flex flex-wrap gap-3">
-                        <button type="button" id="block-date-button" class="btn-danger py-2 px-5">Datum sperren</button>
-                        <button type="button" id="unblock-date-button" class="btn-secondary py-2 px-5">Datum freigeben</button>
-                    </div>
+                <div id="slot-status-bar" class="text-sm font-medium text-on-surface mb-3 hidden"></div>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <button type="button" id="block-selection-btn" class="btn-amber py-2 px-5" disabled>Auswahl sperren</button>
+                    <button type="button" id="unblock-selection-btn" class="btn-primary py-2 px-5" disabled>Auswahl freigeben</button>
+                    <span class="text-outline-variant mx-1 hidden sm:inline">|</span>
+                    <button type="button" id="block-all-btn" class="btn-danger py-2 px-5">Ganztägig sperren</button>
+                    <button type="button" id="unblock-all-btn" class="btn-secondary py-2 px-5">Ganztägig freigeben</button>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -335,6 +285,21 @@
 
     <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
+    <!-- Confirmation Modal (generic) -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="glass-panel-strong max-w-sm w-full mx-4 p-6" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 mb-4">
+                <span id="confirmModalIcon" class="material-symbols-outlined" style="font-size:28px;">warning</span>
+                <h2 id="confirmModalTitle" class="text-lg font-headline font-semibold text-[#1a1c1e]"></h2>
+            </div>
+            <p id="confirmModalBody" class="text-sm text-[#414750] mb-6 leading-relaxed"></p>
+            <div class="flex justify-end gap-3">
+                <button id="confirmModalNo" type="button" class="btn-ghost px-4 py-2 text-sm cursor-pointer">Abbrechen</button>
+                <button id="confirmModalYes" type="button" class="btn-danger px-4 py-2 text-sm cursor-pointer">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
@@ -343,14 +308,51 @@
         const t = document.createElement('div');
         t.className = `toast ${type}`;
         t.setAttribute('role', 'status');
-        t.innerHTML = `<span class="material-symbols-outlined">${icon}</span><span></span>`;
-        t.querySelector('span').textContent = message;
+        t.innerHTML = `<span class="material-symbols-outlined">${icon}</span><span class="toast-msg"></span>`;
+        t.lastElementChild.textContent = message;
         container.appendChild(t);
         setTimeout(() => {
             t.classList.add('fade-out');
             t.addEventListener('animationend', () => t.remove(), { once: true });
         }, 3500);
         t.addEventListener('click', () => t.remove());
+    }
+
+    function showConfirmModal({ title, body, icon = 'warning', iconColor = '#ba1a1a', confirmText = 'Bestätigen', confirmClass = 'btn-danger', onConfirm }) {
+        const modal = document.getElementById('confirmModal');
+        if (!modal) { if (confirm(body)) onConfirm(); return; }
+        const iconEl = document.getElementById('confirmModalIcon');
+        const titleEl = document.getElementById('confirmModalTitle');
+        const bodyEl = document.getElementById('confirmModalBody');
+        const yesBtn = document.getElementById('confirmModalYes');
+        const noBtn = document.getElementById('confirmModalNo');
+
+        iconEl.textContent = icon;
+        iconEl.style.color = iconColor;
+        titleEl.textContent = title;
+        bodyEl.textContent = body;
+        yesBtn.textContent = confirmText;
+        yesBtn.className = confirmClass + ' px-4 py-2 text-sm cursor-pointer';
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        function cleanup() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            yesBtn.removeEventListener('click', onYes);
+            noBtn.removeEventListener('click', onNo);
+            modal.removeEventListener('click', onOverlay);
+            document.removeEventListener('keydown', onEsc);
+        }
+        function onYes() { cleanup(); onConfirm(); }
+        function onNo() { cleanup(); }
+        function onOverlay(e) { if (e.target === modal) cleanup(); }
+        function onEsc(e) { if (e.key === 'Escape') cleanup(); }
+        yesBtn.addEventListener('click', onYes);
+        noBtn.addEventListener('click', onNo);
+        modal.addEventListener('click', onOverlay);
+        document.addEventListener('keydown', onEsc);
     }
 
     function debounce(fn, wait) {
@@ -363,7 +365,7 @@
 
     let currentMonth = new Date();
     let selectedDate = null;
-    let selectedTime = null;
+    let selectedSlots = new Set();
     let appointmentsData = { appointments: [], blocked_slots: {} };
     let filteredAppointments = [];
     let sortField = '';
@@ -372,7 +374,11 @@
     const calendarGrid = document.getElementById('calendar-grid');
     const currentMonthYear = document.getElementById('current-month-year');
     const timeSlotsContainer = document.getElementById('time-slots-container');
-    const blockUnblockButton = document.getElementById('block-unblock-button');
+    const blockSelectionBtn = document.getElementById('block-selection-btn');
+    const unblockSelectionBtn = document.getElementById('unblock-selection-btn');
+    const blockAllBtn = document.getElementById('block-all-btn');
+    const unblockAllBtn = document.getElementById('unblock-all-btn');
+    const slotStatusBar = document.getElementById('slot-status-bar');
     const prevMonthButton = document.getElementById('prev-month');
     const nextMonthButton = document.getElementById('next-month');
 
@@ -570,6 +576,7 @@
                     body: JSON.stringify({ status })
                 });
                 if (!response.ok) throw new Error('Fehler beim Aktualisieren');
+                await fetchAppointmentsData();
                 showToast('Status aktualisiert.', 'success');
             } catch (err) {
                 showToast('Status konnte nicht aktualisiert werden.', 'error');
@@ -584,19 +591,26 @@
             const name = btn.dataset.name || '';
             const date = btn.dataset.date || '';
             const time = btn.dataset.time || '';
-            if (!confirm(`Möchten Sie den Termin wirklich löschen?\n\nKunde: ${name}\nDatum: ${date} ${time}`)) return;
-            try {
-                const response = await fetch(`/api/appointments/${id}`, {
-                    method: 'DELETE'
-                });
-                if (!response.ok) throw new Error('Fehler beim Löschen');
-                appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
-                filteredAppointments = filteredAppointments.filter(a => a.id !== id);
-                renderAppointmentsTable();
-                showToast('Termin gelöscht.', 'success');
-            } catch (err) {
-                showToast('Termin konnte nicht gelöscht werden.', 'error');
-            }
+            showConfirmModal({
+                title: 'Termin löschen',
+                body: `Möchten Sie den Termin von ${name} am ${date} um ${time} wirklich löschen?`,
+                confirmText: 'Ja, löschen',
+                confirmClass: 'btn-danger',
+                onConfirm: async () => {
+                    try {
+                    const response = await fetch(`/api/appointments/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) throw new Error('Fehler beim Löschen');
+                    appointmentsData.appointments = appointmentsData.appointments.filter(a => a.id !== id);
+                    filteredAppointments = filteredAppointments.filter(a => a.id !== id);
+                    renderAppointmentsTable();
+                    showToast(`Termin von ${name} am ${date} um ${time} gelöscht.`, 'success');
+                } catch (err) {
+                    showToast(`Termin von ${name} konnte nicht gelöscht werden.`, 'error');
+                }
+                }
+            });
         }
     });
 
@@ -641,15 +655,18 @@
             const blockedSlots = appointmentsData.blocked_slots[dateString] || [];
             const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === dateString).map(appt => appt.time);
             const totalSlots = TIME_SLOTS.length;
-            const blockedByAdminCount = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
-            const bookedByUserCount = bookedSlots.length;
+            const adminBlocked = blockedSlots.filter(slot => !bookedSlots.includes(slot)).length;
+            const unavailable = adminBlocked + bookedSlots.length;
 
-            if (blockedByAdminCount === totalSlots) {
-                dayElement.classList.add('blocked-admin');
-            } else if (bookedByUserCount === totalSlots) {
-                dayElement.classList.add('booked');
-            } else if ((blockedByAdminCount + bookedByUserCount) > 0) {
+            const jsDate = new Date(year, month, day);
+            const isWeekend = jsDate.getDay() === 0 || jsDate.getDay() === 6;
+
+            if (unavailable >= totalSlots) {
+                dayElement.classList.add('fully-blocked');
+            } else if (unavailable > 0) {
                 dayElement.classList.add('partially');
+            } else if (isWeekend) {
+                dayElement.classList.add('weekend');
             } else {
                 dayElement.classList.add('available');
             }
@@ -660,11 +677,11 @@
 
             dayElement.addEventListener('click', () => {
                 selectedDate = dateString;
-                selectedTime = null;
+                selectedSlots.clear();
                 renderCalendar();
                 renderTimeSlots();
                 updateTimeSlotHint();
-                updateBlockUnblockButton();
+                updateActionButtons();
             });
             calendarGrid.appendChild(dayElement);
         }
@@ -681,230 +698,146 @@
 
     function renderTimeSlots() {
         timeSlotsContainer.innerHTML = '';
-        blockUnblockButton.disabled = true;
 
         if (!selectedDate) {
             timeSlotsContainer.innerHTML = '<div class="col-span-full text-center py-8 text-on-surface-variant text-sm">Wähle ein Datum, um die Verfügbarkeit zu sehen.</div>';
+            updateActionButtons();
             return;
         }
 
-        const slotsForDate = TIME_SLOTS.map(slot => {
-            const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot);
-            const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
-            return { time: slot, isBlockedByAdmin, isBookedByUser };
-        });
-
-        slotsForDate.forEach(({ time, isBlockedByAdmin, isBookedByUser }) => {
-            const timeSlotElement = document.createElement('div');
-            timeSlotElement.classList.add('time-slot');
-            timeSlotElement.textContent = time;
-            timeSlotElement.dataset.time = time;
-
-            if (isBlockedByAdmin) {
-                timeSlotElement.classList.add('blocked-admin');
-                timeSlotElement.title = 'Vom Admin gesperrt';
-                timeSlotElement.setAttribute('aria-label', `${time} — vom Admin gesperrt`);
-            } else if (isBookedByUser) {
-                timeSlotElement.classList.add('booked', 'disabled');
-                timeSlotElement.title = 'Bereits gebucht';
-                timeSlotElement.setAttribute('aria-label', `${time} — bereits gebucht`);
-            } else {
-                timeSlotElement.classList.add('available');
-                timeSlotElement.title = 'Verfügbar';
-                timeSlotElement.setAttribute('aria-label', `${time} — verfügbar`);
-            }
-
-            if (selectedTime === time) {
-                timeSlotElement.classList.add('selected');
-            }
-
-            timeSlotElement.addEventListener('click', () => {
-                if (isBookedByUser) return;
-                selectedTime = time;
-                renderTimeSlots();
-                updateBlockUnblockButton();
-            });
-            timeSlotsContainer.appendChild(timeSlotElement);
-        });
-    }
-
-    function updateBlockUnblockButton() {
-        if (selectedDate && selectedTime) {
-            const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
-            blockUnblockButton.textContent = isCurrentlyBlocked ? 'Freigeben' : 'Blockieren';
-            blockUnblockButton.disabled = false;
-        } else {
-            blockUnblockButton.textContent = 'Blockieren/Freigeben';
-            blockUnblockButton.disabled = true;
+        const selDate = new Date(selectedDate + 'T00:00:00');
+        const isWeekend = selDate.getDay() === 0 || selDate.getDay() === 6;
+        if (isWeekend) {
+            timeSlotsContainer.innerHTML = '<div class="col-span-full text-center py-8 text-[#991b1b] text-sm font-semibold flex flex-col items-center gap-2"><span class="material-symbols-outlined" style="font-size:2rem">weekend</span>Wochenende — Werkstatt geschlossen</div>';
+            updateActionButtons();
+            return;
         }
+
+        TIME_SLOTS.forEach(slot => {
+            const isBookedByUser = appointmentsData.appointments.some(appt => appt.date === selectedDate && appt.time === slot);
+            const isBlockedByAdmin = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(slot) && !isBookedByUser;
+            const el = document.createElement('div');
+            el.classList.add('time-slot');
+            el.textContent = slot;
+            el.dataset.time = slot;
+
+            if (isBookedByUser) {
+                el.classList.add('booked', 'disabled');
+                el.title = 'Bereits gebucht';
+                el.setAttribute('aria-label', `${slot} — bereits gebucht`);
+            } else if (isBlockedByAdmin) {
+                el.classList.add('blocked-admin');
+                el.title = 'Vom Admin gesperrt';
+                el.setAttribute('aria-label', `${slot} — vom Admin gesperrt`);
+            } else {
+                el.classList.add('available');
+                el.title = 'Verfügbar';
+                el.setAttribute('aria-label', `${slot} — verfügbar`);
+            }
+
+            if (selectedSlots.has(slot)) {
+                el.classList.add('selected');
+            }
+
+            el.addEventListener('click', () => {
+                if (isBookedByUser) return;
+                if (selectedSlots.has(slot)) selectedSlots.delete(slot);
+                else selectedSlots.add(slot);
+                renderTimeSlots();
+            });
+            timeSlotsContainer.appendChild(el);
+        });
+        updateActionButtons();
     }
 
-    async function handleBlockUnblock() {
-        if (!selectedDate || !selectedTime) return;
-        const isCurrentlyBlocked = appointmentsData.blocked_slots[selectedDate] && appointmentsData.blocked_slots[selectedDate].includes(selectedTime);
-        const action = isCurrentlyBlocked ? 'unblock' : 'block';
+    function updateActionButtons() {
+        if (!selectedDate) {
+            if (slotStatusBar) slotStatusBar.textContent = '';
+            blockAllBtn.disabled = true;
+            unblockAllBtn.disabled = true;
+            blockSelectionBtn.disabled = true;
+            unblockSelectionBtn.disabled = true;
+            return;
+        }
+        const selDate = new Date(selectedDate + 'T00:00:00');
+        const isWeekend = selDate.getDay() === 0 || selDate.getDay() === 6;
+        if (isWeekend) {
+            slotStatusBar.textContent = 'Wochenende — Werkstatt geschlossen';
+            blockAllBtn.disabled = true;
+            unblockAllBtn.disabled = true;
+            blockSelectionBtn.disabled = true;
+            unblockSelectionBtn.disabled = true;
+            return;
+        }
+        const blocked = appointmentsData.blocked_slots[selectedDate] || [];
+        const booked = appointmentsData.appointments.filter(a => a.date === selectedDate).map(a => a.time);
+        const adminBlocked = blocked.filter(s => !booked.includes(s)).length;
+        const free = TIME_SLOTS.filter(s => !blocked.includes(s) && !booked.includes(s)).length;
+        slotStatusBar.textContent = `${free} frei · ${adminBlocked} gesperrt · ${booked.length} gebucht · ${selectedSlots.size} ausgewählt`;
+        blockAllBtn.disabled = false;
+        unblockAllBtn.disabled = adminBlocked === 0;
+        blockSelectionBtn.disabled = selectedSlots.size === 0;
+        unblockSelectionBtn.disabled = selectedSlots.size === 0;
+    }
+
+    async function postBlockAction(action, body, successMsg, errorMsg) {
         try {
             const response = await fetch('/api/admin/blocked_slots', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: selectedDate, time: selectedTime, action })
+                body: JSON.stringify({ ...body, action })
             });
-            if (!response.ok) throw new Error('Fehler beim Aktualisieren');
+            const result = await response.json();
+            if (!response.ok) { showToast(result.error || errorMsg, 'error'); return; }
             await fetchAppointmentsData();
-            const selectedTimeBeforeReset = selectedTime;
-            renderCalendar();
-            renderTimeSlots();
-            showToast(`Slot ${selectedDate} ${selectedTimeBeforeReset || ''} wurde ${action === 'block' ? 'gesperrt' : 'freigegeben'}.`, 'success');
+            selectedSlots.clear();
+            showToast(successMsg, 'success');
         } catch (error) {
             console.error('Fehler:', error);
-            showToast('Slot-Status konnte nicht aktualisiert werden.', 'error');
+            showToast(errorMsg, 'error');
         }
     }
+
+    blockSelectionBtn.addEventListener('click', () => {
+        if (!selectedDate || selectedSlots.size === 0) return;
+        const slots = [...selectedSlots];
+        showConfirmModal({
+            title: 'Slots sperren',
+            body: `<strong>${slots.length}</strong> Slot${slots.length > 1 ? 's' : ''} am <strong>${selectedDate}</strong> sperren?<br><span class="text-xs text-on-surface-variant">${slots.join(', ')}</span>`,
+            confirmText: 'Ja, sperren',
+            onConfirm: () => postBlockAction('block_many', { date: selectedDate, times: slots }, `${slots.length} Slot${slots.length > 1 ? 's' : ''} gesperrt.`, 'Slots konnten nicht gesperrt werden.')
+        });
+    });
+
+    unblockSelectionBtn.addEventListener('click', () => {
+        if (!selectedDate || selectedSlots.size === 0) return;
+        const slots = [...selectedSlots];
+        showConfirmModal({
+            title: 'Slots freigeben',
+            body: `<strong>${slots.length}</strong> Slot${slots.length > 1 ? 's' : ''} am <strong>${selectedDate}</strong> freigeben?<br><span class="text-xs text-on-surface-variant">${slots.join(', ')}</span>`,
+            confirmText: 'Ja, freigeben',
+            confirmClass: 'btn-primary',
+            onConfirm: () => postBlockAction('unblock_many', { date: selectedDate, times: slots }, `${slots.length} Slot${slots.length > 1 ? 's' : ''} freigegeben.`, 'Slots konnten nicht freigegeben werden.')
+        });
+    });
 
     prevMonthButton.addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         selectedDate = null;
-        selectedTime = null;
+        selectedSlots.clear();
         renderCalendar();
         renderTimeSlots();
         updateTimeSlotHint();
-        updateBlockUnblockButton();
     });
 
     nextMonthButton.addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         selectedDate = null;
-        selectedTime = null;
+        selectedSlots.clear();
         renderCalendar();
         renderTimeSlots();
         updateTimeSlotHint();
-        updateBlockUnblockButton();
     });
-
-    blockUnblockButton.addEventListener('click', handleBlockUnblock);
-
-    function getTimeIndex(time) {
-        return TIME_SLOTS.indexOf(time);
-    }
-
-    function getSlotsInRange(startTime, endTime) {
-        const startIndex = getTimeIndex(startTime);
-        const endIndex = getTimeIndex(endTime);
-        if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) return [];
-        return TIME_SLOTS.slice(startIndex, endIndex + 1);
-    }
-
-    function updateRangeBlockButton() {
-        const startTime = document.getElementById('range-start-time').value;
-        const endTime = document.getElementById('range-end-time').value;
-        const blockButton = document.getElementById('block-range-button');
-        const unblockButton = document.getElementById('unblock-range-button');
-        const isValidRange = selectedDate && startTime && endTime && getTimeIndex(startTime) <= getTimeIndex(endTime);
-        blockButton.disabled = !isValidRange;
-        unblockButton.disabled = !isValidRange;
-    }
-
-    document.getElementById('range-start-time').addEventListener('change', function() {
-        const startTime = this.value;
-        const endSelect = document.getElementById('range-end-time');
-        const currentEndValue = endSelect.value;
-        endSelect.innerHTML = '<option value="">Endzeit</option>';
-        if (startTime) {
-            const startIndex = getTimeIndex(startTime);
-            TIME_SLOTS.slice(startIndex).forEach(time => {
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                if (time === currentEndValue) option.selected = true;
-                endSelect.appendChild(option);
-            });
-        } else {
-            TIME_SLOTS.forEach(time => {
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                endSelect.appendChild(option);
-            });
-        }
-        updateRangeBlockButton();
-    });
-
-    document.getElementById('range-end-time').addEventListener('change', updateRangeBlockButton);
-
-    document.getElementById('block-range-button').addEventListener('click', async function() {
-        if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
-        const startTime = document.getElementById('range-start-time').value;
-        const endTime = document.getElementById('range-end-time').value;
-        if (!startTime) { showToast('Bitte Startzeit wählen.', 'info'); return; }
-        if (!endTime) { showToast('Bitte Endzeit wählen.', 'info'); return; }
-        const startIndex = getTimeIndex(startTime);
-        const endIndex = getTimeIndex(endTime);
-        if (startIndex >= endIndex) { showToast('Startzeit muss vor Endzeit liegen.', 'error'); return; }
-        const slotsToBlock = getSlotsInRange(startTime, endTime);
-        if (slotsToBlock.length === 0) { showToast('Ungültiger Zeitbereich.', 'error'); return; }
-        const bookedSlots = appointmentsData.appointments.filter(appt => appt.date === selectedDate && slotsToBlock.includes(appt.time)).map(appt => appt.time);
-        if (bookedSlots.length > 0) { showToast(`Bereits gebucht: ${bookedSlots.join(", ")}`, "error"); return; }
-        if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} sperren?`)) return;
-        try {
-            const response = await fetch('/api/admin/blocked_slots', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: selectedDate, start_time: startTime, end_time: endTime, action: 'block_range' })
-            });
-            const result = await response.json();
-            if (!response.ok) { showToast(result.error || "Zeitbereich konnte nicht gesperrt werden.", "error"); return; }
-            await fetchAppointmentsData();
-            showToast(`Zeitbereich ${startTime} - ${endTime} gesperrt.`, "success");
-            document.getElementById('range-start-time').value = '';
-            document.getElementById('range-end-time').value = '';
-            updateRangeBlockButton();
-        } catch (error) {
-            console.error('Fehler:', error);
-            showToast('Zeitbereich konnte nicht gesperrt werden.', 'error');
-        }
-    });
-
-    document.getElementById('unblock-range-button').addEventListener('click', async function() {
-        if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
-        const startTime = document.getElementById('range-start-time').value;
-        const endTime = document.getElementById('range-end-time').value;
-        if (!startTime) { showToast('Bitte Startzeit wählen.', 'info'); return; }
-        if (!endTime) { showToast('Bitte Endzeit wählen.', 'info'); return; }
-        const startIndex = getTimeIndex(startTime);
-        const endIndex = getTimeIndex(endTime);
-        if (startIndex >= endIndex) { showToast('Startzeit muss vor Endzeit liegen.', 'error'); return; }
-        const slotsToUnblock = getSlotsInRange(startTime, endTime);
-        if (slotsToUnblock.length === 0) { showToast('Ungültiger Zeitbereich.', 'error'); return; }
-        const blockedSlotsInRange = appointmentsData.blocked_slots[selectedDate] ? appointmentsData.blocked_slots[selectedDate].filter(slot => slotsToUnblock.includes(slot)) : [];
-        if (blockedSlotsInRange.length === 0) { showToast('Keine gesperrten Slots in diesem Bereich.', 'info'); return; }
-        if (!confirm(`Zeitbereich ${startTime} - ${endTime} am ${selectedDate} freigeben?`)) return;
-        try {
-            const response = await fetch('/api/admin/blocked_slots', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: selectedDate, start_time: startTime, end_time: endTime, action: 'unblock_range' })
-            });
-            const result = await response.json();
-            if (!response.ok) { showToast(result.error || "Konnte nicht freigegeben werden.", "error"); return; }
-            await fetchAppointmentsData();
-            showToast(`Zeitbereich ${startTime} - ${endTime} freigegeben.`, "success");
-            document.getElementById('range-start-time').value = '';
-            document.getElementById('range-end-time').value = '';
-            updateRangeBlockButton();
-        } catch (error) {
-            console.error('Fehler:', error);
-            showToast('Zeitbereich konnte nicht freigegeben werden.', 'error');
-        }
-    });
-
-    function populateTimeSelects() {
-        const start = document.getElementById('range-start-time');
-        const end = document.getElementById('range-end-time');
-        TIME_SLOTS.forEach(t => {
-            start.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
-            end.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`);
-        });
-    }
 
     function wireSearchClear() {
         const input = document.getElementById('search-input');
@@ -923,42 +856,28 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        populateTimeSelects();
         wireSearchClear();
         fetchAppointmentsData();
         fetchStats();
         updateTimeSlotHint();
-        document.getElementById('block-date-button').addEventListener('click', async function() {
+        blockAllBtn.addEventListener('click', () => {
             if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
-            if (!confirm('Wirklich alle Slots des gewählten Datums sperren?')) return;
-            try {
-                const response = await fetch('/api/admin/blocked_slots', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: selectedDate, time: null, action: 'block_all' })
-                });
-                if (!response.ok) throw new Error('Sperren fehlgeschlagen');
-                await fetchAppointmentsData();
-                showToast('Datum vollständig gesperrt.', 'success');
-            } catch (error) {
-                showToast('Datum konnte nicht gesperrt werden.', 'error');
-            }
+            showConfirmModal({
+                title: 'Ganztägig sperren',
+                body: 'Wirklich <strong>alle Slots</strong> des gewählten Datums sperren?',
+                confirmText: 'Ja, sperren',
+                onConfirm: () => postBlockAction('block_all', { date: selectedDate, action: 'block_all' }, 'Datum vollständig gesperrt.', 'Datum konnte nicht gesperrt werden.')
+            });
         });
-        document.getElementById('unblock-date-button').addEventListener('click', async function() {
+        unblockAllBtn.addEventListener('click', () => {
             if (!selectedDate) { showToast('Bitte zuerst ein Datum wählen.', 'info'); return; }
-            if (!confirm('Wirklich alle Slots des gewählten Datums freigeben?')) return;
-            try {
-                const response = await fetch('/api/admin/blocked_slots', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: selectedDate, time: null, action: 'unblock_all' })
-                });
-                if (!response.ok) throw new Error('Freigeben fehlgeschlagen');
-                await fetchAppointmentsData();
-                showToast('Datum vollständig freigegeben.', 'success');
-            } catch (error) {
-                showToast('Datum konnte nicht freigegeben werden.', 'error');
-            }
+            showConfirmModal({
+                title: 'Ganztägig freigeben',
+                body: 'Wirklich <strong>alle Slots</strong> des gewählten Datums freigeben?',
+                confirmText: 'Ja, freigeben',
+                confirmClass: 'btn-primary',
+                onConfirm: () => postBlockAction('unblock_all', { date: selectedDate, action: 'unblock_all' }, 'Datum vollständig freigegeben.', 'Datum konnte nicht freigegeben werden.')
+            });
         });
     });
 

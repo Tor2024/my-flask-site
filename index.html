@@ -91,7 +91,7 @@
         .service-card:hover .tech-specs { opacity: 1; transform: translateY(0); }
         .tech-specs { transition: all 0.3s ease-out; opacity: 0; transform: translateY(10px); }
         .hero-overlay {
-            background: linear-gradient(180deg, rgba(252, 249, 248, 0.1) 0%, rgba(252, 249, 248, 0.9) 100%);
+            background: linear-gradient(180deg, rgba(0, 80, 134, 0.25) 0%, rgba(0, 80, 134, 0.92) 100%);
         }
         .accordion-content {
             transition: max-height 0.35s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
@@ -607,27 +607,21 @@
 
     <!-- Hero Section -->
     <section id="hero" class="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden border-b border-outline-variant/20">
-        <!-- Background Slideshow -->
-        <div class="absolute inset-0 z-0" id="hero-slider">
-            <div class="slide active absolute inset-0">
-                <img src="static/images/hero1.webp" alt="Kfz-Service" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="slide absolute inset-0">
-                <img src="static/images/hero2.webp" alt="Auto-Reparatur" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="slide absolute inset-0">
-                <img src="static/images/hero3.webp" alt="Fahrzeugdiagnose" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="slide absolute inset-0">
-                <img src="static/images/hero4.webp" alt="Werkstatt" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="slide absolute inset-0">
-                <img src="static/images/hero5.webp" alt="Auto-Wartung" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="slide absolute inset-0">
-                <img src="static/images/hero6.webp" alt="Fahrzeugservice" class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50">
-            </div>
-            <div class="absolute inset-0 hero-overlay mix-blend-screen"></div>
+        <!-- Background Video -->
+        <div class="absolute inset-0 z-0" id="hero-video-wrap">
+            <video autoplay muted loop playsinline preload="auto"
+                   class="w-full h-full object-cover object-center filter brightness-110 contrast-125 saturate-50"
+                   style="transform: scale(1.18); transform-origin: left center;"
+                   poster="static/images/hero1.webp"
+                   onloadedmetadata="this.currentTime=8">
+                <source src="static/video/hero.webm" type="video/webm">
+                <source src="static/video/hero1.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 hero-overlay"></div>
+            <button id="hero-sound-btn" type="button" aria-label="Ton ein/aus"
+                    class="absolute top-4 right-4 md:top-6 md:right-6 z-20 w-11 h-11 rounded-full glass-panel flex items-center justify-center text-on-surface hover:bg-white/95 transition-all duration-300 hover:scale-105 group">
+                <span id="hero-sound-icon" class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">volume_off</span>
+            </button>
         </div>
         <!-- System Online Badge -->
         <div class="absolute top-24 left-4 md:left-8 glass-panel px-4 py-2 rounded glow-active z-10 hidden md:flex items-center gap-3 animate-pulse">
@@ -651,9 +645,9 @@
                 </div>
             </div>
         </div>
-        <div class="container mx-auto px-4 relative z-10 text-center flex flex-col items-center">
-            <h1 class="font-headline text-4xl md:text-[64px] font-bold mb-6 tracking-tight leading-none text-on-surface bg-clip-text text-transparent bg-gradient-to-r from-on-surface to-tertiary">Kfz-Meisterbetrieb in Kreuztal – Service und Reparatur für Fahrzeuge aller Marken</h1>
-            <p class="text-base md:text-lg mb-10 text-on-surface-variant max-w-2xl">Professioneller Service, moderne Technik und individuelle Betreuung für Ihr Fahrzeug in Kreuztal.</p>
+        <div class="container mx-auto px-4 md:px-8 relative z-10 text-left flex flex-col items-start">
+            <h1 class="font-headline text-4xl md:text-[64px] font-bold mb-6 tracking-tight leading-none text-white max-w-4xl">Kfz-Meisterbetrieb in Kreuztal – Service und Reparatur für Fahrzeuge aller Marken</h1>
+            <p class="text-base md:text-lg mb-10 text-white/90 max-w-2xl">Professioneller Service, moderne Technik und individuelle Betreuung für Ihr Fahrzeug in Kreuztal.</p>
             <div class="flex flex-col sm:flex-row gap-4">
                 <a href="#appointment" class="bg-primary-container text-white px-8 py-4 rounded whitespace-nowrap font-medium hover:bg-primary transition-colors flex items-center justify-center gap-2 group">
                     Termin vereinbaren
@@ -677,7 +671,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
+                <a href="leistung-wartung.html" class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
                     <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors duration-500 z-0"></div>
                     <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-inspektion.jpg" alt="Inspektion" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -692,9 +686,9 @@
                         <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
                         <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden md:translate-y-8">
+                <a href="leistung-fahrwerk-aufhaengung.html" class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden md:translate-y-8">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                     <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-achsvermessung.jpg" alt="Achsvermessung" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -709,9 +703,9 @@
                         <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
                         <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
+                <a href="leistung-fahrzeugdiagnose.html" class="glass-panel p-8 rounded-xl flex flex-col h-full group hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 relative overflow-hidden">
                     <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-secondary/5 rounded-full blur-2xl group-hover:bg-secondary/10 transition-colors duration-500 z-0"></div>
                     <div class="-mx-8 -mt-8 mb-8 h-48 overflow-hidden relative z-0">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-diagnose.jpg" alt="Diagnose & Elektronik" width="400" height="192" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -726,7 +720,7 @@
                         <span class="font-mono text-xs uppercase tracking-widest text-tertiary font-medium">Mehr erfahren</span>
                         <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_right_alt</span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -851,7 +845,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter">
                 <!-- 1. Wartung -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-wartung.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-wartung.jpg" alt="Wartung" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
@@ -874,9 +868,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 2. Fahrwerk & Aufhängung -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-fahrwerk-aufhaengung.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-fahrwerk.jpg" alt="Fahrwerk & Aufhängung" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
@@ -895,9 +889,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 3. Fahrzeugdiagnose -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-fahrzeugdiagnose.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-diagnose.jpg" alt="Fahrzeugdiagnose" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
@@ -920,9 +914,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 4. Bremsenservice -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-bremsenservice.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-bremsen.jpg" alt="Bremsenservice" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
@@ -941,9 +935,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 5. Autoelektrik & Elektronik -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-autoelektrik-elektronik.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-elektrik.jpg" alt="Autoelektrik & Elektronik" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
@@ -962,9 +956,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 6. Klimaanlagenservice -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-klimaanlagenservice.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-klima.jpg" alt="Klimaanlagenservice" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
@@ -983,9 +977,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 7. Reifenservice & Auswuchten -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-reifenservice-auswuchten.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-reifen.jpg" alt="Reifenservice & Auswuchten" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
@@ -1004,9 +998,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
                 <!-- 8. HU / AU -->
-                <div class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
+                <a href="leistung-hu-au.html" class="service-card bg-white/80 backdrop-blur-md border border-outline-variant/50 rounded-xl overflow-hidden flex flex-col group" data-glow>
                     <div class="h-48 overflow-hidden relative">
                         <img loading="lazy" decoding="async" src="static/newimages/stitch/svc-hu-au.jpg" alt="HU / AU" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-mono border border-outline-variant/30 flex items-center space-x-2">
@@ -1029,7 +1023,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -1489,16 +1483,6 @@
     <script type="module" src="static/hero-shader.js?v=2"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Hero slideshow
-            const slides = document.querySelectorAll('#hero-slider .slide');
-            let cur = 0;
-            if (slides.length > 1) {
-                setInterval(() => {
-                    slides[cur].classList.remove('active');
-                    cur = (cur + 1) % slides.length;
-                    slides[cur].classList.add('active');
-                }, 5000);
-            }
             const lenis = new Lenis({duration:1.1,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
             window.__lenis = lenis;
             function raf(t){lenis.raf(t);requestAnimationFrame(raf)}
@@ -1740,6 +1724,43 @@ requestAnimationFrame(frame);})();
         clearTimeout(hard);
         setTimeout(done, 400);
     });
+})();
+</script>
+<script>
+// ===== Hero video sound toggle with smooth fade =====
+(function(){
+    var btn = document.getElementById('hero-sound-btn');
+    var icon = document.getElementById('hero-sound-icon');
+    var video = document.querySelector('#hero-video-wrap video');
+    if(!btn || !icon || !video) return;
+    var TARGET = 0.7;
+    var muted = true;
+    var raf = null;
+    function fadeTo(target, done){
+        cancelAnimationFrame(raf);
+        var step = function(){
+            var cur = video.volume;
+            var diff = target - cur;
+            if(Math.abs(diff) < 0.02){ video.volume = target; if(done) done(); return; }
+            video.volume = Math.max(0, Math.min(1, cur + diff * 0.12));
+            raf = requestAnimationFrame(step);
+        };
+        step();
+    }
+    btn.addEventListener('click', function(){
+        if(muted){
+            muted = false;
+            video.muted = false;
+            video.volume = 0;
+            icon.textContent = 'volume_up';
+            fadeTo(TARGET);
+        } else {
+            muted = true;
+            icon.textContent = 'volume_off';
+            fadeTo(0, function(){ video.muted = true; });
+        }
+    });
+    // Pause sound when video scrolls out of view (optional: keep playing)
 })();
 </script>
 </body>

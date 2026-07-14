@@ -178,7 +178,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('/api/appointments');
             if (!response.ok) throw new Error('API-Fehler');
             const data = await response.json();
-            return data.blocked_slots[date] || [];
+            const blocked = data.blocked_slots[date] || [];
+            const booked = (data.appointments || [])
+                .filter(appt => appt.date === date && appt.status !== 'отменено')
+                .map(appt => appt.time);
+            return [...new Set([...blocked, ...booked])];
         } catch (error) {
             return [];
         }
@@ -445,9 +449,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-4 max-w-sm mx-auto">
                             <p class="font-mono text-xs text-on-surface-variant uppercase tracking-wider mb-3">Schnellere Bestätigung</p>
                             <a href="${waUrl}" target="_blank" rel="noopener"
-                               class="flex items-center justify-center gap-2 w-full bg-primary-container text-on-primary-container py-3 px-4 rounded-md font-medium transition-all hover:shadow-[inset_0_0_12px_rgba(13,105,171,0.6)] active:scale-95">
-                                <span class="material-symbols-outlined">forum</span>
-                                <span>Details per WhatsApp senden</span>
+                               style="background:#25D366;color:#fff;"
+                               class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-md font-medium transition-all hover:shadow-lg active:scale-95">
+                                <span class="material-symbols-outlined" style="color:#fff;">forum</span>
+                                <span style="color:#fff;">Details per WhatsApp senden</span>
                             </a>
                         </div>
                         <button type="button" id="new-appointment-btn"
