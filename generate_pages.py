@@ -580,7 +580,7 @@ def build_hero_1(svc, c):
             <h1 class="text-5xl md:text-7xl font-bold font-headline text-on-surface mb-4 leading-[1.05] tracking-tight">{svc['title']}</h1>
             <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed">{svc['subtitle']}</p>
             <div class="flex flex-wrap justify-center gap-3 mt-8">
-                <a href="/#appointment" class="btn-primary inline-flex items-center px-7 py-3.5 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin vereinbaren</a>
+                <a href="/#appointment" class="btn-primary inline-flex items-center px-7 py-3.5 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Wunschtermin anfragen</a>
                 <a href="/tel:+49273227717" class="btn-ghost inline-flex items-center px-7 py-3.5 font-medium"><span class="material-symbols-outlined mr-2">call</span>02732 277 17</a>
             </div>
         </div>
@@ -824,7 +824,7 @@ def section_cta_short(svc, c, cd):
     return f'''    <section class="py-16 relative" style="background:rgba(13,105,171,0.06);">
         <div class="container mx-auto px-4 text-center">
             <p class="text-lg md:text-xl text-on-surface max-w-3xl mx-auto mb-6 leading-relaxed">{svc['cta']}</p>
-            <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Termin vereinbaren</a>
+            <a href="/#appointment" class="btn-primary inline-flex items-center px-6 py-3 font-semibold"><span class="material-symbols-outlined mr-2">calendar_month</span>Wunschtermin anfragen</a>
         </div>
     </section>'''
 

@@ -56,7 +56,8 @@ SERVICE_LABELS = {
     'elektrik': 'Autoelektrik und Elektronik',
     'klima': 'Klimaanlagenservice',
     'reifen': 'Reifenmontage und Auswuchten',
-    'tuev': 'TÜV-/AU-Untersuchung'
+    'tuev': 'TÜV-/AU-Untersuchung',
+    'sonstige': 'Sonstige Reparatur'
 }
 
 # Функции для работы с данными
